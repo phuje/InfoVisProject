@@ -1,15 +1,25 @@
 <html>
   <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
-      .node circle {
+
+      .bubbles {
+        stroke-width: .5px;
         stroke: #3a403d;
-        stroke-width: 0.5px;
+        opacity: .8
+      }
+      .bubbles:hover {
+        stroke: black;
+        opacity: 1.0;
       }
     </style>
   </head>
   <body>
-    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
     <script>
+      var numberPersons = 7665;
       var KupferstichS = 0,
         PortraitP = 0,
         MuenzeM = 0,
@@ -20,14 +30,12 @@
         MuenzeM: 0,
         SteinmetzF: 0
       };
-
       var extraMale = {
         KupferstichS: 0,
         PortraitP: 0,
         MuenzeM: 0,
         SteinmetzF: 0
       };
-
       var extraFemale = {
         KupferstichS: 0,
         PortraitP: 0,
@@ -35,21 +43,27 @@
         SteinmetzF: 0
       };
 
+      //all persons with a picture
       var dataAll = {
+        descr: "Number of people with a depiction: ",
         number: 0
+      };
+
+      //all even those without picture, hardcoded for now
+      var personsAll = {
+        descr: "Number of people without a depiction: ",
+        number: numberPersons
       };
 
       var width = window.innerWidth,
         height = window.innerHeight,
-        sizeDivisor = 100,
+        sizeDivisor = 50,
         nodePadding = 2.5;
-
       var svg = d3
         .select("body")
         .append("svg")
         .attr("width", width)
         .attr("height", height);
-
       var color = d3.scaleOrdinal([
         "#66c2a5",
         "#fc8d62",
@@ -60,7 +74,6 @@
         "#e5c494",
         "#b3b3b3"
       ]);
-
       var simulation = d3
         .forceSimulation()
         .force(
@@ -85,13 +98,13 @@
             .y(height * 0.5)
         )
         .force("charge", d3.forceManyBody().strength(-15));
-
       d3.csv(
         "https://raw.githubusercontent.com/phuje/Data-test/master/person-abb.csv",
         function(data) {
-          //d3.csv("https://raw.githubusercontent.com/phuje/Data-test/master/person-abb.csv", types, function(data){
           dataAll.number = data.length;
-          dataAll.radius = data.length;
+          dataAll.radius = data.length/sizeDivisor;
+          personsAll.number = (numberPersons-dataAll.number);
+          personsAll.radius = personsAll.number/sizeDivisor;
           for (var i = 0; i < data.length; i++) {
             data[i].geb = parseInt(data[i].geb);
             data[i].tod = parseInt(data[i].tod);
@@ -138,13 +151,16 @@
           console.log("Abbildung Male: ", extraMale);
           console.log("Abbildung Female: ", extraFemale);
           //if (error) throw error;
-
           // sort the nodes so that the bigger ones are at the back
           //data = data.sort(function(a,b){ return b.size - a.size; });
-
           //update the simulation based on the data
+
+          var dataNode = [personsAll, dataAll];
+          console.log("Node: ", dataNode);
+
+
           simulation
-            .nodes(data)
+            .nodes(dataNode)
             .force(
               "collide",
               d3
@@ -166,57 +182,100 @@
                 });
             });
 
+            // ---------------------------//
+            //      TOOLTIP               //
+            // ---------------------------//
+
+            // -1- Create a tooltip div that is hidden by default:
+            var tooltip = d3.select("body")
+              .append("div")
+                .style("opacity", 0)
+                .attr("class", "tooltip")
+                .style("background-color", "black")
+                .style("border-radius", "5px")
+                .style("padding", "10px")
+                .style("color", "white")
+                .style("position", "absolute")
+
+            // -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
+            var showTooltip = function(d) {
+              tooltip
+                .transition()
+                .duration(200)
+              tooltip
+                .style("opacity", 1)
+                .html(d.descr+d.number)
+                .style("left", (d3.mouse(this)[0]+30) + "px")
+                .style("top", (d3.mouse(this)[1]+30) + "px")
+            }
+            var moveTooltip = function(d) {
+              console.log("movetooltip");
+              tooltip
+                .style("left", (d3.mouse(this)[0]+30) + "px")
+                .style("top", (d3.mouse(this)[1]+30) + "px")
+            }
+            var hideTooltip = function(d) {
+              tooltip
+                .transition()
+                .duration(200)
+                .style("opacity", 0)
+            }
+
+
           var node = svg
             .append("g")
             .attr("class", "node")
             .selectAll("circle")
-            .data(data)
+            .data(dataNode)
             .enter()
             .append("circle")
-            .attr("r", function(d) {
-              return d.radius;
-            })
-            .attr("fill", function(d) {
-              return color(d.continent);
-            })
-            .attr("cx", function(d) {
-              return d.x;
-            })
-            .attr("cy", function(d) {
-              return d.y;
-            })
-            .call(
-              d3
-                .drag()
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                .on("end", dragended)
-            );
+              .attr("class", function(d) { return "bubbles"/* + d.continent */})
+              .attr("r", function(d) {
+                return d.radius;
+              })
+              .attr("fill", function(d) {
+                return color(d.descr);
+              })
+              .attr("cx", function(d) {
+                return d.x;
+              })
+              .attr("cy", function(d) {
+                return d.y;
+              })
+              .on("mouseover", showTooltip)
+              .on("mousemove", moveTooltip )
+              .on("mouseleave", hideTooltip)
+              .call(
+                d3
+                  .drag()
+                  .on("start", dragstarted)
+                  .on("drag", dragged)
+                  .on("end", dragended)
+              );
+
+
+            
+
         }
       );
-
       function dragstarted(d) {
         if (!d3.event.active) simulation.alphaTarget(0.03).restart();
         d.fx = d.x;
         d.fy = d.y;
       }
-
       function dragged(d) {
         d.fx = d3.event.x;
         d.fy = d3.event.y;
       }
-
       function dragended(d) {
         if (!d3.event.active) simulation.alphaTarget(0.03);
         d.fx = null;
         d.fy = null;
       }
-
       function countAbbildung(d) {
         if (d.abb !== null) {
         }
       }
-
       function types(d) {
         //console.log(d);
         // d.gdp = +d.gdp;
