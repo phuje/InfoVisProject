@@ -1,0 +1,229 @@
+<html>
+  <head>
+    <style>
+      .node circle {
+        stroke: #3a403d;
+        stroke-width: 0.5px;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
+      var KupferstichS = 0,
+        PortraitP = 0,
+        MuenzeM = 0,
+        SteinmetzF = 0;
+      var extra = {
+        KupferstichS: 0,
+        PortraitP: 0,
+        MuenzeM: 0,
+        SteinmetzF: 0
+      };
+
+      var extraMale = {
+        KupferstichS: 0,
+        PortraitP: 0,
+        MuenzeM: 0,
+        SteinmetzF: 0
+      };
+
+      var extraFemale = {
+        KupferstichS: 0,
+        PortraitP: 0,
+        MuenzeM: 0,
+        SteinmetzF: 0
+      };
+
+      var dataAll = {
+        number: 0
+      };
+
+      var width = window.innerWidth,
+        height = window.innerHeight,
+        sizeDivisor = 100,
+        nodePadding = 2.5;
+
+      var svg = d3
+        .select("body")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      var color = d3.scaleOrdinal([
+        "#66c2a5",
+        "#fc8d62",
+        "#8da0cb",
+        "#e78ac3",
+        "#a6d854",
+        "#ffd92f",
+        "#e5c494",
+        "#b3b3b3"
+      ]);
+
+      var simulation = d3
+        .forceSimulation()
+        .force(
+          "forceX",
+          d3
+            .forceX()
+            .strength(0.1)
+            .x(width * 0.5)
+        )
+        .force(
+          "forceY",
+          d3
+            .forceY()
+            .strength(0.1)
+            .y(height * 0.5)
+        )
+        .force(
+          "center",
+          d3
+            .forceCenter()
+            .x(width * 0.5)
+            .y(height * 0.5)
+        )
+        .force("charge", d3.forceManyBody().strength(-15));
+
+      d3.csv(
+        "https://raw.githubusercontent.com/phuje/Data-test/master/person-abb.csv",
+        function(data) {
+          //d3.csv("https://raw.githubusercontent.com/phuje/Data-test/master/person-abb.csv", types, function(data){
+          dataAll.number = data.length;
+          dataAll.radius = data.length;
+          for (var i = 0; i < data.length; i++) {
+            data[i].geb = parseInt(data[i].geb);
+            data[i].tod = parseInt(data[i].tod);
+            data[i].alter = data[i].tod - data[i].geb;
+            //console.log(data[i]);
+            switch (data[i].abb) {
+              case "S":
+                extra.KupferstichS++;
+                if (data[i].sex === "m") {
+                  extraMale.KupferstichS++;
+                } else if (data[i].sex === "w") {
+                  extraFemale.KupferstichS++;
+                }
+                break;
+              case "P":
+                extra.PortraitP++;
+                if (data[i].sex === "m") {
+                  extraMale.PortraitP++;
+                } else if (data[i].sex === "w") {
+                  extraFemale.PortraitP++;
+                }
+                break;
+              case "M":
+                extra.MuenzeM++;
+                if (data[i].sex === "m") {
+                  extraMale.MuenzeM++;
+                } else if (data[i].sex === "w") {
+                  extraFemale.MuenzeM++;
+                }
+                break;
+              case "F":
+                extra.SteinmetzF++;
+                if (data[i].sex === "m") {
+                  extraMale.SteinmetzF++;
+                } else if (data[i].sex === "w") {
+                  extraFemale.SteinmetzF++;
+                }
+                break;
+              default:
+                break;
+            }
+          }
+          console.log("Abbildungen Insgesamt: ", extra);
+          console.log("Abbildung Male: ", extraMale);
+          console.log("Abbildung Female: ", extraFemale);
+          //if (error) throw error;
+
+          // sort the nodes so that the bigger ones are at the back
+          //data = data.sort(function(a,b){ return b.size - a.size; });
+
+          //update the simulation based on the data
+          simulation
+            .nodes(data)
+            .force(
+              "collide",
+              d3
+                .forceCollide()
+                .strength(0.5)
+                .radius(function(d) {
+                  console.log(d);
+                  return d.radius + nodePadding;
+                })
+                .iterations(1)
+            )
+            .on("tick", function(d) {
+              node
+                .attr("cx", function(d) {
+                  return d.x;
+                })
+                .attr("cy", function(d) {
+                  return d.y;
+                });
+            });
+
+          var node = svg
+            .append("g")
+            .attr("class", "node")
+            .selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("r", function(d) {
+              return d.radius;
+            })
+            .attr("fill", function(d) {
+              return color(d.continent);
+            })
+            .attr("cx", function(d) {
+              return d.x;
+            })
+            .attr("cy", function(d) {
+              return d.y;
+            })
+            .call(
+              d3
+                .drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended)
+            );
+        }
+      );
+
+      function dragstarted(d) {
+        if (!d3.event.active) simulation.alphaTarget(0.03).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      }
+
+      function dragged(d) {
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
+      }
+
+      function dragended(d) {
+        if (!d3.event.active) simulation.alphaTarget(0.03);
+        d.fx = null;
+        d.fy = null;
+      }
+
+      function countAbbildung(d) {
+        if (d.abb !== null) {
+        }
+      }
+
+      function types(d) {
+        //console.log(d);
+        // d.gdp = +d.gdp;
+        // d.size = +d.gdp / sizeDivisor;
+        // d.size < 3 ? d.radius = 3 : d.radius = d.size;
+        //return d;
+      }
+    </script>
+  </body>
+</html>
