@@ -4,6 +4,16 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
+      body{
+          font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+
+      html{
+        box-sizing: border-box;
+      }
+      *, *:before, *:after{
+        box-sizing: inherit;
+      }
 
       .bubbles {
         stroke-width: .5px;
@@ -14,9 +24,40 @@
         stroke: black;
         opacity: 1.0;
       }
+
+      #header{
+        width: 100%;
+        height: 50px;
+        padding: 10px;
+        text-align:center;
+        background-color: aliceblue;
+      }
+
+      #datavis{
+        width: 75%;
+        float: left;
+      }
+
+      .filterOptions{
+        width: 25%;
+        float: left;
+        padding: 10px;
+      }
+
+      
     </style>
   </head>
   <body>
+      <div id="header">People and their depictions in the Habsburger Kaiserhof</div>
+      <div id="datavis"></div>
+      <div class="filterOptions"><h4>Filter the data here:</h4> <br>
+          Split persons with/without depiction: <input onclick="updateVis()" type="checkbox" id="checkWithDepiction"><br>
+          Split gender: <input onclick="updateVis()" type="checkbox" id="checkGender"><br>
+          Split type of depiction: <input onclick="updateVis()" type="checkbox" id="checkPicType"><br>
+        
+      </div>
+
+
     <script src="https://d3js.org/d3.v4.js"></script>
     <script>
       var numberPersons = 7665;
@@ -55,14 +96,16 @@
         number: numberPersons
       };
 
-      var width = window.innerWidth,
+      //width, height info of datavis svg in pixel
+      var margin = {top: 50/*, right: 30, bottom: 30, left: 55*/},
+        width = window.innerWidth*0.75,
         height = window.innerHeight,
-        sizeDivisor = 50,
+        sizeDivisor = 30,
         nodePadding = 2.5;
       var svg = d3
-        .select("body")
+        .select("#datavis")
         .append("svg")
-        .attr("width", width)
+        .attr("width", "100%")
         .attr("height", height);
       var color = d3.scaleOrdinal([
         "#66c2a5",
@@ -88,16 +131,55 @@
           d3
             .forceY()
             .strength(0.1)
-            .y(height * 0.5)
+            .y((height+margin.top)* 0.5)
         )
         .force(
           "center",
           d3
             .forceCenter()
             .x(width * 0.5)
-            .y(height * 0.5)
+            .y((height+margin.top)* 0.5)
         )
         .force("charge", d3.forceManyBody().strength(-15));
+
+      // ---------------------------//
+      //      TOOLTIP               //
+      // ---------------------------//
+
+      // -1- Create a tooltip div that is hidden by default:
+      var tooltip = d3.select("#datavis")
+        .append("div")
+          .style("opacity", 0)
+          .attr("class", "tooltip")
+          .style("background-color", "black")
+          .style("border-radius", "5px")
+          .style("padding", "10px")
+          .style("color", "white")
+          .style("position", "absolute")
+
+      // -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
+      var showTooltip = function(d) {
+        tooltip
+          .transition()
+          .duration(200)
+        tooltip
+          .style("opacity", 1)
+          .html(d.descr+d.number)
+          .style("left", (d3.mouse(this)[0]+30) + "px")
+          .style("top", (d3.mouse(this)[1]+30) + "px")
+      }
+      var moveTooltip = function(d) {
+        tooltip
+          .style("left", (d3.mouse(this)[0]+30) + "px")
+          .style("top", (d3.mouse(this)[1]+30) + "px")
+      }
+      var hideTooltip = function(d) {
+        tooltip
+          .transition()
+          .duration(200)
+          .style("opacity", 0)
+      }
+
       d3.csv(
         "https://raw.githubusercontent.com/phuje/Data-test/master/person-abb.csv",
         function(data) {
@@ -153,111 +235,14 @@
           //if (error) throw error;
           // sort the nodes so that the bigger ones are at the back
           //data = data.sort(function(a,b){ return b.size - a.size; });
+
+
           //update the simulation based on the data
-
-          var dataNode = [personsAll, dataAll];
-          console.log("Node: ", dataNode);
-
-
-          simulation
-            .nodes(dataNode)
-            .force(
-              "collide",
-              d3
-                .forceCollide()
-                .strength(0.5)
-                .radius(function(d) {
-                  console.log(d);
-                  return d.radius + nodePadding;
-                })
-                .iterations(1)
-            )
-            .on("tick", function(d) {
-              node
-                .attr("cx", function(d) {
-                  return d.x;
-                })
-                .attr("cy", function(d) {
-                  return d.y;
-                });
-            });
-
-            // ---------------------------//
-            //      TOOLTIP               //
-            // ---------------------------//
-
-            // -1- Create a tooltip div that is hidden by default:
-            var tooltip = d3.select("body")
-              .append("div")
-                .style("opacity", 0)
-                .attr("class", "tooltip")
-                .style("background-color", "black")
-                .style("border-radius", "5px")
-                .style("padding", "10px")
-                .style("color", "white")
-                .style("position", "absolute")
-
-            // -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
-            var showTooltip = function(d) {
-              tooltip
-                .transition()
-                .duration(200)
-              tooltip
-                .style("opacity", 1)
-                .html(d.descr+d.number)
-                .style("left", (d3.mouse(this)[0]+30) + "px")
-                .style("top", (d3.mouse(this)[1]+30) + "px")
-            }
-            var moveTooltip = function(d) {
-              console.log("movetooltip");
-              tooltip
-                .style("left", (d3.mouse(this)[0]+30) + "px")
-                .style("top", (d3.mouse(this)[1]+30) + "px")
-            }
-            var hideTooltip = function(d) {
-              tooltip
-                .transition()
-                .duration(200)
-                .style("opacity", 0)
-            }
-
-
-          var node = svg
-            .append("g")
-            .attr("class", "node")
-            .selectAll("circle")
-            .data(dataNode)
-            .enter()
-            .append("circle")
-              .attr("class", function(d) { return "bubbles"/* + d.continent */})
-              .attr("r", function(d) {
-                return d.radius;
-              })
-              .attr("fill", function(d) {
-                return color(d.descr);
-              })
-              .attr("cx", function(d) {
-                return d.x;
-              })
-              .attr("cy", function(d) {
-                return d.y;
-              })
-              .on("mouseover", showTooltip)
-              .on("mousemove", moveTooltip )
-              .on("mouseleave", hideTooltip)
-              .call(
-                d3
-                  .drag()
-                  .on("start", dragstarted)
-                  .on("drag", dragged)
-                  .on("end", dragended)
-              );
-
-
-            
+          updateVis()
 
         }
       );
+
       function dragstarted(d) {
         if (!d3.event.active) simulation.alphaTarget(0.03).restart();
         d.fx = d.x;
@@ -276,13 +261,124 @@
         if (d.abb !== null) {
         }
       }
-      function types(d) {
+      //function types(d) {
         //console.log(d);
         // d.gdp = +d.gdp;
         // d.size = +d.gdp / sizeDivisor;
         // d.size < 3 ? d.radius = 3 : d.radius = d.size;
         //return d;
+      //}
+
+      function updateVis(){
+        //saves by which parameters the bubbles should be split
+        var splitParams = {
+          depiction: 0,
+          gender:0,
+          typeOfPic:0
+        }
+
+        splitParams.depiction = document.getElementById("checkWithDepiction").checked ? 1 : 0;
+        splitParams.gender = document.getElementById("checkGender").checked ? 1 : 0;
+        splitParams.typeOfPic = document.getElementById("checkPicType").checked ? 1 : 0;
+
+        console.log(splitParams);
+        addBubbles(splitParams);
       }
+
+      function addBubbles(splitParams){
+
+
+        var arr = [splitParams.depiction, splitParams.gender, splitParams.typeOfPic];
+
+        var dataNode= [];
+        if( arraysEqual([1, 0, 0], arr)){
+          dataNode = [personsAll, dataAll];
+        } else{ // [0, 0, 0]
+          dataNode = [{descr: "Total number of people in dataset: ", number: numberPersons, radius: (numberPersons/sizeDivisor)}];
+        }
+
+
+        //remove old circles <g> element
+        d3.selectAll(".node").remove();
+
+        simulation
+          .nodes(dataNode)
+          .force(
+            "collide",
+            d3
+              .forceCollide()
+              .strength(0.5)
+              .radius(function(d) {
+                console.log(d);
+                return d.radius + nodePadding;
+              })
+              .iterations(1)
+          )
+          .on("tick", function(d) {
+            node
+              .attr("cx", function(d) {
+                return d.x;
+              })
+              .attr("cy", function(d) {
+                return d.y;
+              });
+          });
+
+
+
+        var node = svg
+        .append("g")
+        .attr("class", "node")
+        .selectAll("circle")
+        .data(dataNode)
+        .enter()
+        .append("circle")
+          .attr("class", function(d) { return "bubbles"})
+          .attr("r", function(d) {
+            return d.radius;
+          })
+          .attr("fill", function(d) {
+            return color(d.descr);
+          })
+          .attr("cx", function(d) {
+            return d.x;
+          })
+          .attr("cy", function(d) {
+            return d.y;
+          })
+          .on("mouseover", showTooltip)
+          .on("mousemove", moveTooltip )
+          .on("mouseleave", hideTooltip)
+          .call(
+            d3
+              .drag()
+              .on("start", dragstarted)
+              .on("drag", dragged)
+              .on("end", dragended)
+          );
+
+        
+      }
+
+
+    function arraysEqual(a, b) {
+      if (a === b) return true;
+      if (a == null || b == null) return false;
+      if (a.length != b.length) return false;
+
+      // If you don't care about the order of the elements inside
+      // the array, you should sort both arrays here.
+      // Please note that calling sort on an array will modify that array.
+      // you might want to clone your array first.
+
+      for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+      }
+      return true;
+    }
     </script>
+
+
+
   </body>
 </html>
