@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stacked area chart test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://d3js.org/d3.v4.js"></script>
+  <style type = "text/css">
+	body{
+        padding: 0;
+        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+  </style>
+  
+</head>
+
+<body>
+
+<h2>Arten der Abbildung im Habsburger Kaiserhof</h2>
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz"></div>
+
+  
+  <script>
+
+	// set the dimensions and margins of the graph
+	var margin = {top: 20, right: 30, bottom: 30, left: 55},
+		width = 1200 - margin.left - margin.right,
+		height = 400 - margin.top - margin.bottom;
+
+	// append the svg object to the body of the page
+	var svg = d3.select("#my_dataviz")
+	  .append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+	  .append("g")
+		.attr("transform",
+			  "translate(" + margin.left + "," + margin.top + ")");
+
+	var fillWithZeros = function(d){
+		for(var i =0; i < d.length; i++){
+			d[i] = 0;
+		}
+	}
+
+	// Parse the Data
+	d3.csv("https://raw.githubusercontent.com/phuje/Data-test/master/person-abb.csv", function(data) {
+
+		console.log("data", data);
+		var row = {year: 0, S: 0, P:0, M:0, F:0};
+		var dataset = new Array(numberYears);
+		var numberYears = 795;
+		var startYear  = 1009;
+
+		var ScountYears = new Array(numberYears);
+		fillWithZeros(ScountYears);
+		var PcountYears = new Array(numberYears);
+		fillWithZeros(PcountYears);
+		var McountYears = new Array(numberYears);
+		fillWithZeros(McountYears);
+		var FcountYears = new Array(numberYears);
+		fillWithZeros(FcountYears);
+
+		for (var i = 0; i < data.length; i++) {
+			data[i].geb = parseInt(data[i].geb);
+			data[i].tod = parseInt(data[i].tod);
+			if(data[i].geb == null || data[i].tod == null){continue;}
+
+			switch (data[i].abb) {
+              case "S":
+                for(var j =(data[i].geb-startYear); j <= (data[i].tod-startYear); j++){
+					ScountYears[j]++;
+				}
+                /*if (data[i].sex === "m") {
+                  extraMale.KupferstichS++;
+                } else if (data[i].sex === "w") {
+                  extraFemale.KupferstichS++;
+                }*/
+                break;
+              case "P":
+			  	for(var j =(data[i].geb-startYear); j <= (data[i].tod-startYear); j++){
+					PcountYears[j]++;
+				}
+                /*if (data[i].sex === "m") {
+                  extraMale.PortraitP++;
+                } else if (data[i].sex === "w") {
+                  extraFemale.PortraitP++;
+                }*/
+                break;
+              case "M":
+			  	for(var j =(data[i].geb-startYear); j <= (data[i].tod-startYear); j++){
+					McountYears[j]++;
+				}
+                /*if (data[i].sex === "m") {
+                  extraMale.MuenzeM++;
+                } else if (data[i].sex === "w") {
+                  extraFemale.MuenzeM++;
+                }*/
+                break;
+              case "F":
+			  	for(var j =(data[i].geb-startYear); j <= (data[i].tod-startYear); j++){
+					FcountYears[j]++;
+				}
+                /*if (data[i].sex === "m") {
+                  extraMale.SteinmetzF++;
+                } else if (data[i].sex === "w") {
+                  extraFemale.SteinmetzF++;
+                }*/
+                break;
+              default:
+                break;
+            }
+
+		}	
+
+		for(var i = 0; i < numberYears; i++){
+			dataset[i] = {year: startYear+i, S: ScountYears[i], P: PcountYears[i], M: McountYears[i], F: FcountYears[i]};
+		}
+		console.log("ScountYears",ScountYears)
+		console.log("dataset ",dataset);
+
+	  // List of groups = header of the csv files
+	  var keys = ["S", "P", "M", "F"];
+
+	  // Add X axis
+	  var x = d3.scaleLinear()
+		.domain(d3.extent(dataset, function(d) { return d.year; }))
+		.range([ 0, width ]);
+	  svg.append("g")
+		.attr("transform", "translate(0," + height + ")")
+		.call(d3.axisBottom(x).ticks(5));
+
+	  // Add Y axis
+	  var y = d3.scaleLinear()
+		.domain([0, 800])
+		.range([ height, 0 ]);
+	  svg.append("g")
+		.call(d3.axisLeft(y));
+
+	  // color palette
+	  var color = d3.scaleOrdinal()
+		.domain(keys)
+		.range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf'])
+
+	  //stack the data?
+	  var stackedData = d3.stack()
+		.keys(keys)
+		(dataset)
+		console.log("This is the stack result: ", stackedData)
+
+	  // Show the areas
+	  svg
+		.selectAll("mylayers")
+		.data(stackedData)
+		.enter()
+		.append("path")
+		  .style("fill", function(d) { console.log(d.key) ; return color(d.key); })
+		  .attr("d", d3.area()
+			.x(function(d, i) { return x(d.data.year); })
+			.y0(function(d) { return y(d[0]); })
+			.y1(function(d) { return y(d[1]); })
+		)
+
+	})
+
+</script>
+
+</body>
+</html>
