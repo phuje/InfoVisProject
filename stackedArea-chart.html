@@ -10,6 +10,36 @@
         padding: 0;
         font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
+
+	.layer{
+		stroke-width: .5px;
+        stroke: #3a403d;
+        opacity: .8
+	}
+
+	.layer:hover {
+        stroke: black;
+        opacity: 1.0;
+    }
+
+	/*#my_dataviz {
+		display: inline-block;
+		position: relative;
+		width: 100%;
+		padding-bottom: 100%;
+		vertical-align: top;
+		overflow: hidden;
+	}
+	.svg-content {
+		display: inline-block;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}*/
+
+
+
+
   </style>
   
 </head>
@@ -26,11 +56,12 @@
 	// set the dimensions and margins of the graph
 	var margin = {top: 20, right: 30, bottom: 30, left: 55},
 		width = 1200 - margin.left - margin.right,
-		height = 400 - margin.top - margin.bottom;
+		height = 500 - margin.top - margin.bottom;
 
 	// append the svg object to the body of the page
 	var svg = d3.select("#my_dataviz")
 	  .append("svg")
+	  	.attr("class", ".svg-content")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
 	  .append("g")
@@ -42,6 +73,20 @@
 			d[i] = 0;
 		}
 	}
+
+	var colorArray = ["#3A01DF", "#FF0040", "#FACC2E", "#6E6E6E"];
+
+	var getColor = function(key){
+		switch(key){
+			case "S": return colorArray[0]; break;
+			case "P": return colorArray[1]; break;
+			case "M": return colorArray[2]; break;
+			case "F": return colorArray[3]; break;
+			default:
+                break;
+		}
+	}
+
 
 	// Parse the Data
 	d3.csv("https://raw.githubusercontent.com/phuje/Data-test/master/person-abb.csv", function(data) {
@@ -138,9 +183,63 @@
 		.call(d3.axisLeft(y));
 
 	  // color palette
-	  var color = d3.scaleOrdinal()
+	  /*var color = d3.scaleOrdinal()
 		.domain(keys)
-		.range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf'])
+		.range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf'])*/
+
+
+	// ---------------------------//
+	//      TOOLTIP               //
+	// ---------------------------//
+
+	// -1- Create a tooltip div that is hidden by default:
+	var tooltip = d3.select("#my_dataviz")
+	.append("div")
+		.style("opacity", 0)
+		.attr("class", "tooltip")
+		.style("background-color", "black")
+		.style("border-radius", "5px")
+		.style("padding", "10px")
+		.style("color", "white")
+		.style("position", "absolute")
+
+	// -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
+	var showTooltip = function(d) {
+		
+	tooltip
+		.transition()
+		.duration(200)
+	tooltip
+		.style("opacity", 1)
+		.html(getHoverText(d))
+		.style("left", (d3.mouse(this)[0]+30) + "px")
+		.style("top", (d3.mouse(this)[1]+30) + "px")
+	}
+	var moveTooltip = function(d) {
+	tooltip
+		.style("left", (d3.mouse(this)[0]+30) + "px")
+		.style("top", (d3.mouse(this)[1]+30) + "px")
+	}
+	var hideTooltip = function(d) {
+	tooltip
+		.transition()
+		.duration(200)
+		.style("opacity", 0)
+	}
+
+	var getHoverText = function(d){
+		console.log("getHovertext", d);
+		var type = "";
+		switch(d.key){
+			case "S": type = "Kupferstiche"; break;
+			case "P": type = "Porträts"; break;
+			case "M": type = "Münzen"; break;
+			case "F": type = "Steinmetzarbeiten"; break;
+			default: break;
+		}
+
+		return type;
+	}
 
 	  //stack the data?
 	  var stackedData = d3.stack()
@@ -154,12 +253,18 @@
 		.data(stackedData)
 		.enter()
 		.append("path")
-		  .style("fill", function(d) { console.log(d.key) ; return color(d.key); })
+		  .style("fill", function(d) { return getColor(d.key); })
+		  .attr("class", "layer")
+		  .on("mouseover", showTooltip)
+		  .on("mousemove", moveTooltip )
+		  .on("mouseleave", hideTooltip)
 		  .attr("d", d3.area()
 			.x(function(d, i) { return x(d.data.year); })
-			.y0(function(d) { return y(d[0]); })
-			.y1(function(d) { return y(d[1]); })
+			.y0(function(d) { return y(d[0]); }) //lower y
+			.y1(function(d) { return y(d[1]); }) //higher y
+		
 		)
+
 
 	})
 
