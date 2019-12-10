@@ -87,6 +87,9 @@
 		}
 	}
 
+	var t = d3.transition()
+   		.duration(2000);
+
 
 	// Parse the Data
 	d3.csv("https://raw.githubusercontent.com/phuje/Data-test/master/person-abb.csv", function(data) {
@@ -161,7 +164,6 @@
 		for(var i = 0; i < numberYears; i++){
 			dataset[i] = {year: startYear+i, S: ScountYears[i], P: PcountYears[i], M: McountYears[i], F: FcountYears[i]};
 		}
-		console.log("ScountYears",ScountYears)
 		console.log("dataset ",dataset);
 
 	  // List of groups = header of the csv files
@@ -228,7 +230,6 @@
 	}
 
 	var getHoverText = function(d){
-		console.log("getHovertext", d);
 		var type = "";
 		switch(d.key){
 			case "S": type = "Kupferstiche"; break;
@@ -241,32 +242,108 @@
 		return type;
 	}
 
-	  //stack the data?
-	  var stackedData = d3.stack()
+	var showDetail = function(d){
+
+		d3.selectAll(".layer").remove();
+		hideTooltip(d);
+
+		console.log("showDetail", d);
+		switch(d.key){
+			case "S": 
+				type = "Kupferstiche"; 
+				for(var i = 0; i < numberYears; i++){
+					dataset[i] = {year: startYear+i, S: ScountYears[i], P: 0, M: 0, F: 0};
+				}
+				break;
+			case "P": 
+				type = "Porträts"; 
+				for(var i = 0; i < numberYears; i++){
+					dataset[i] = {year: startYear+i, S: 0, P: PcountYears[i], M: 0, F: 0};
+				}
+				break;
+			case "M": 
+				type = "Münzen"; 
+				for(var i = 0; i < numberYears; i++){
+					dataset[i] = {year: startYear+i, S: 0, P: 0, M: McountYears[i], F: 0};
+				}
+				break;
+			case "F": 
+				type = "Steinmetzarbeiten"; 
+				for(var i = 0; i < numberYears; i++){
+					dataset[i] = {year: startYear+i, S: 0, P: 0, M: 0, F: FcountYears[i]};
+				}
+				break;
+			default: break;
+		}
+		
+		//stack the data?
+		var stackedData = d3.stack()
 		.keys(keys)
 		(dataset)
-		console.log("This is the stack result: ", stackedData)
+	
+		var area = d3.area()
+				.x(function(d, i) { return x(d.data.year); })
+				.y0(function(d) { return y(d[0]); }) //lower y
+				.y1(function(d) { return y(d[1]); }) //higher y
 
-	  // Show the areas
-	  svg
-		.selectAll("mylayers")
-		.data(stackedData)
-		.enter()
-		.append("path")
-		  .style("fill", function(d) { return getColor(d.key); })
-		  .attr("class", "layer")
-		  .on("mouseover", showTooltip)
-		  .on("mousemove", moveTooltip )
-		  .on("mouseleave", hideTooltip)
-		  .attr("d", d3.area()
-			.x(function(d, i) { return x(d.data.year); })
-			.y0(function(d) { return y(d[0]); }) //lower y
-			.y1(function(d) { return y(d[1]); }) //higher y
+		// Show the areas
+		svg
+			.selectAll("mylayers")
+			.data(stackedData)
+			.enter()
+			.append("path")
+			.style("fill", function(d) { return getColor(d.key); })
+			.attr("class", "layer")
+			.on("mouseover", showTooltip)
+			.on("mousemove", moveTooltip )
+			.on("mouseleave", hideTooltip)
+			.on("click", showAll)
+			.attr("d", area)
+
+
+	}
+
+	var showAll = function(d){
+		d3.selectAll(".layer").remove();
+		console.log("showAll");
+
+		for(var i = 0; i < numberYears; i++){
+			dataset[i] = {year: startYear+i, S: ScountYears[i], P: PcountYears[i], M: McountYears[i], F: FcountYears[i]};
+		}
+
+		//stack the data?
+		var stackedData = d3.stack()
+			.keys(keys)
+			(dataset)
+			console.log("This is the stack result: ", stackedData)
+
 		
-		)
+		var area = d3.area()
+				.x(function(d, i) { return x(d.data.year); })
+				.y0(function(d) { return y(d[0]); }) //lower y
+				.y1(function(d) { return y(d[1]); }) //higher y
+
+		// Show the areas
+		svg
+			.selectAll("mylayers")
+			.data(stackedData)
+			.enter()
+			.append("path")
+			.style("fill", function(d) { return getColor(d.key); })
+			.attr("class", "layer")
+			.on("mouseover", showTooltip)
+			.on("mousemove", moveTooltip )
+			.on("mouseleave", hideTooltip)
+			.on("click", showDetail)
+			.attr("d", area)
+
+	}
+
+	showAll();
 
 
 	})
+
 
 </script>
 
