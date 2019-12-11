@@ -29,8 +29,8 @@
 
       #header {
         width: 100%;
-        height: 50px;
-        padding: 10px;
+        height: 100px;
+        padding: 5px;
         text-align: center;
         background-color: aliceblue;
       }
@@ -49,7 +49,8 @@
   </head>
   <body>
     <div id="header">
-      People and their depictions in the Habsburger Kaiserhof
+      <h4>People and their depictions in the Habsburger Kaiserhof</h4>
+      Each person was depicted maximum once.
     </div>
     <div id="datavis"></div>
     <div class="filterOptions">
@@ -73,7 +74,7 @@
       var margin = { top: 50 /*, right: 30, bottom: 30, left: 55*/ },
         width = window.innerWidth * 0.75,
         height = window.innerHeight,
-        sizeDivisor = 30,
+        sizeDivisor = 25,
         nodePadding = 2.5;
       var svg = d3
         .select("#datavis")
@@ -153,6 +154,9 @@
       };
 
       var numberPersons = 7665;
+      var numberMenTotal = 6401;
+      var numberWomenTotal = 1264;
+
       var KupferstichS = 0,
         PortraitP = 0,
         MuenzeM = 0,
@@ -198,8 +202,108 @@
       //all even those without picture, hardcoded for now
       var personsAll = {
         descr: "Number of people without a depiction: ",
+        radius: 0,
         number: numberPersons
       };
+
+      var maleAll = {
+        descr: "Number of men in dataset: ",
+        number: numberMenTotal,
+        radius: numberMenTotal/sizeDivisor
+      };
+
+      var femaleAll = {
+        descr: "Number of women in dataset: ",
+        number: numberWomenTotal,
+        radius: numberWomenTotal/sizeDivisor
+      };
+
+      var femaleWithoutPic = {
+        descr: "Number of women without a depiction: ",
+        radius: 0,
+        number: 0
+      };
+
+      var maleWithoutPic = {
+        descr: "Number of men without a depiction: ",
+        radius: 0,
+        number: 0
+      };
+
+
+      //hardcoded numbers for now
+      var kupferstichS= {
+        descr: "Number of Kupferstiche: ",
+        radius: 881/sizeDivisor,
+        number: 881
+      };
+
+      var portraitP= {
+        descr: "Number of portraits: ",
+        radius: 673/sizeDivisor,
+        number: 673
+      };
+
+      var steinmetzF= {
+        descr: "Number of Steinmetzarbeiten: ",
+        radius: 113/sizeDivisor,
+        number: 113
+      };
+
+      var muenzeM= {
+        descr: "Number of coin depictions: ",
+        radius: 168/sizeDivisor,
+        number: 168
+      };
+
+      var kupferstichFem= {
+        descr: "Number of Kupferstiche of women: ",
+        radius: 71/sizeDivisor,
+        number: 71
+      };
+
+      var kupferstichMale= {
+        descr: "Number of Kupferstiche of men: ",
+        radius: 810/sizeDivisor,
+        number: 810
+      };
+
+      var portraitFem= {
+        descr: "Number of portraits of women: ",
+        radius: 162/sizeDivisor,
+        number: 162
+      };
+
+      var portraitMale= {
+        descr: "Number of portraits of men: ",
+        radius: 511/sizeDivisor,
+        number: 511
+      };
+
+      var steinmetzFem= {
+        descr: "Number of Steinmetzarbeiten of women: ",
+        radius: 15/sizeDivisor,
+        number: 15
+      };
+
+      var steinmetzMale= {
+        descr: "Number of Steinmetzarbeiten of men: ",
+        radius: 98/sizeDivisor,
+        number: 98
+      };
+
+      var muenzeFem= {
+        descr: "Number of coin depictions of women: ",
+        radius: 10/sizeDivisor,
+        number: 10
+      };
+
+      var muenzeMale= {
+        descr: "Number of coin depictions of men: ",
+        radius: 158/sizeDivisor,
+        number: 158
+      };
+
 
       d3.csv(
         "https://raw.githubusercontent.com/phuje/Data-test/master/person-abb.csv",
@@ -212,9 +316,14 @@
             data[i].geb = parseInt(data[i].geb);
             data[i].tod = parseInt(data[i].tod);
             data[i].alter = data[i].tod - data[i].geb;
+
+
+
             data[i].sex === "m" ? maleWithPic.number++ : femaleWithPic.number++;
             maleWithPic.radius = maleWithPic.number / sizeDivisor;
             femaleWithPic.radius = femaleWithPic.number / sizeDivisor;
+
+
             //console.log(data[i]);
             switch (data[i].abb) {
               case "S":
@@ -253,6 +362,14 @@
                 break;
             }
           }
+
+          
+          femaleWithoutPic.number = numberWomenTotal-femaleWithPic.number;
+          femaleWithoutPic.radius = femaleWithoutPic.number / sizeDivisor;
+          maleWithoutPic.number = numberMenTotal-maleWithPic.number;
+          maleWithoutPic.radius = maleWithoutPic.number / sizeDivisor;
+
+
           console.log("Abbildungen Insgesamt: ", extra);
           console.log("Abbildung Male: ", extraMale);
           console.log("Abbildung Female: ", extraFemale);
@@ -310,7 +427,7 @@
           ? 1
           : 0;
 
-        console.log(splitParams);
+        console.log("splitparams",splitParams);
         addBubbles(splitParams);
       }
 
@@ -320,13 +437,21 @@
           splitParams.gender,
           splitParams.typeOfPic
         ];
+        console.log("arr", arr);
 
         var dataNode = [];
         if (arraysEqual([1, 0, 0], arr)) {
           dataNode = [personsAll, personWithPic];
         } else if (arraysEqual([1, 1, 0], arr)) {
-          dataNode = [maleWithPic, femaleWithPic];
-        } else {
+          dataNode = [maleWithPic, femaleWithPic, maleWithoutPic, femaleWithoutPic];
+        } else if (arraysEqual([0, 1, 0], arr)) {
+          dataNode = [maleAll, femaleAll];
+        } else if (arraysEqual([0, 0, 1], arr) || arraysEqual([1, 0, 1], arr)) {
+          dataNode = [kupferstichS, portraitP, steinmetzF, muenzeM];
+        } else if (arraysEqual([0, 1, 1], arr) || arraysEqual([1, 1, 1], arr)) {
+          dataNode = [kupferstichFem, portraitFem, steinmetzFem, muenzeFem, kupferstichMale, portraitMale, steinmetzMale, muenzeMale];
+        } 
+        else {
           // [0, 0, 0]
           dataNode = [
             {
@@ -407,7 +532,7 @@
         // Please note that calling sort on an array will modify that array.
         // you might want to clone your array first.
 
-        for (var i = 0; i < a.length; ++i) {
+        for (var i = 0; i < a.length; i++) {
           if (a[i] !== b[i]) return false;
         }
         return true;
