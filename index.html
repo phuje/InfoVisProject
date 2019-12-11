@@ -4,101 +4,74 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
-      body{
-          font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      body {
+        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
       }
 
-      html{
+      html {
         box-sizing: border-box;
       }
-      *, *:before, *:after{
+      *,
+      *:before,
+      *:after {
         box-sizing: inherit;
       }
 
       .bubbles {
-        stroke-width: .5px;
+        stroke-width: 0.5px;
         stroke: #3a403d;
-        opacity: .8
+        opacity: 0.8;
       }
       .bubbles:hover {
         stroke: black;
-        opacity: 1.0;
+        opacity: 1;
       }
 
-      #header{
+      #header {
         width: 100%;
         height: 50px;
         padding: 10px;
-        text-align:center;
+        text-align: center;
         background-color: aliceblue;
       }
 
-      #datavis{
+      #datavis {
         width: 75%;
         float: left;
       }
 
-      .filterOptions{
+      .filterOptions {
         width: 25%;
         float: left;
         padding: 10px;
       }
-
-      
     </style>
   </head>
   <body>
-      <div id="header">People and their depictions in the Habsburger Kaiserhof</div>
-      <div id="datavis"></div>
-      <div class="filterOptions"><h4>Filter the data here:</h4> <br>
-          Split persons with/without depiction: <input onclick="updateVis()" type="checkbox" id="checkWithDepiction"><br>
-          Split gender: <input onclick="updateVis()" type="checkbox" id="checkGender"><br>
-          Split type of depiction: <input onclick="updateVis()" type="checkbox" id="checkPicType"><br>
-        
-      </div>
-
+    <div id="header">
+      People and their depictions in the Habsburger Kaiserhof
+    </div>
+    <div id="datavis"></div>
+    <div class="filterOptions">
+      <h4>Filter the data here:</h4>
+      <br />
+      Split persons with/without depiction:
+      <input
+        onclick="updateVis()"
+        type="checkbox"
+        id="checkWithDepiction"
+      /><br />
+      Split gender:
+      <input onclick="updateVis()" type="checkbox" id="checkGender" /><br />
+      Split type of depiction:
+      <input onclick="updateVis()" type="checkbox" id="checkPicType" /><br />
+    </div>
 
     <script src="https://d3js.org/d3.v4.js"></script>
     <script>
-      var numberPersons = 7665;
-      var KupferstichS = 0,
-        PortraitP = 0,
-        MuenzeM = 0,
-        SteinmetzF = 0;
-      var extra = {
-        KupferstichS: 0,
-        PortraitP: 0,
-        MuenzeM: 0,
-        SteinmetzF: 0
-      };
-      var extraMale = {
-        KupferstichS: 0,
-        PortraitP: 0,
-        MuenzeM: 0,
-        SteinmetzF: 0
-      };
-      var extraFemale = {
-        KupferstichS: 0,
-        PortraitP: 0,
-        MuenzeM: 0,
-        SteinmetzF: 0
-      };
-
-      //all persons with a picture
-      var dataAll = {
-        descr: "Number of people with a depiction: ",
-        number: 0
-      };
-
-      //all even those without picture, hardcoded for now
-      var personsAll = {
-        descr: "Number of people without a depiction: ",
-        number: numberPersons
-      };
-
       //width, height info of datavis svg in pixel
-      var margin = {top: 50/*, right: 30, bottom: 30, left: 55*/},
-        width = window.innerWidth*0.75,
+      var margin = { top: 50 /*, right: 30, bottom: 30, left: 55*/ },
+        width = window.innerWidth * 0.75,
         height = window.innerHeight,
         sizeDivisor = 30,
         nodePadding = 2.5;
@@ -131,14 +104,14 @@
           d3
             .forceY()
             .strength(0.1)
-            .y((height+margin.top)* 0.5)
+            .y((height + margin.top) * 0.5)
         )
         .force(
           "center",
           d3
             .forceCenter()
             .x(width * 0.5)
-            .y((height+margin.top)* 0.5)
+            .y((height + margin.top) * 0.5)
         )
         .force("charge", d3.forceManyBody().strength(-15));
 
@@ -147,50 +120,101 @@
       // ---------------------------//
 
       // -1- Create a tooltip div that is hidden by default:
-      var tooltip = d3.select("#datavis")
+      var tooltip = d3
+        .select("#datavis")
         .append("div")
-          .style("opacity", 0)
-          .attr("class", "tooltip")
-          .style("background-color", "black")
-          .style("border-radius", "5px")
-          .style("padding", "10px")
-          .style("color", "white")
-          .style("position", "absolute")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "black")
+        .style("border-radius", "5px")
+        .style("padding", "10px")
+        .style("color", "white")
+        .style("position", "absolute");
 
       // -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
       var showTooltip = function(d) {
-        tooltip
-          .transition()
-          .duration(200)
+        tooltip.transition().duration(200);
         tooltip
           .style("opacity", 1)
-          .html(d.descr+d.number)
-          .style("left", (d3.mouse(this)[0]+30) + "px")
-          .style("top", (d3.mouse(this)[1]+30) + "px")
-      }
+          .html(d.descr + d.number)
+          .style("left", d3.mouse(this)[0] + 30 + "px")
+          .style("top", d3.mouse(this)[1] + 30 + "px");
+      };
       var moveTooltip = function(d) {
         tooltip
-          .style("left", (d3.mouse(this)[0]+30) + "px")
-          .style("top", (d3.mouse(this)[1]+30) + "px")
-      }
+          .style("left", d3.mouse(this)[0] + 30 + "px")
+          .style("top", d3.mouse(this)[1] + 30 + "px");
+      };
       var hideTooltip = function(d) {
         tooltip
           .transition()
           .duration(200)
-          .style("opacity", 0)
-      }
+          .style("opacity", 0);
+      };
+
+      var numberPersons = 7665;
+      var KupferstichS = 0,
+        PortraitP = 0,
+        MuenzeM = 0,
+        SteinmetzF = 0;
+      var extra = {
+        KupferstichS: 0,
+        PortraitP: 0,
+        MuenzeM: 0,
+        SteinmetzF: 0
+      };
+      var extraMale = {
+        KupferstichS: 0,
+        PortraitP: 0,
+        MuenzeM: 0,
+        SteinmetzF: 0
+      };
+      var extraFemale = {
+        KupferstichS: 0,
+        PortraitP: 0,
+        MuenzeM: 0,
+        SteinmetzF: 0
+      };
+
+      //all persons with a picture
+      var personWithPic = {
+        descr: "Number of people with a depiction: ",
+        radius: 0,
+        number: 0
+      };
+
+      var femaleWithPic = {
+        descr: "Number of women with a depiction: ",
+        radius: 0,
+        number: 0
+      };
+
+      var maleWithPic = {
+        descr: "Number of men with a depiction: ",
+        radius: 0,
+        number: 0
+      };
+
+      //all even those without picture, hardcoded for now
+      var personsAll = {
+        descr: "Number of people without a depiction: ",
+        number: numberPersons
+      };
 
       d3.csv(
         "https://raw.githubusercontent.com/phuje/Data-test/master/person-abb.csv",
         function(data) {
-          dataAll.number = data.length;
-          dataAll.radius = data.length/sizeDivisor;
-          personsAll.number = (numberPersons-dataAll.number);
-          personsAll.radius = personsAll.number/sizeDivisor;
+          personWithPic.number = data.length;
+          personWithPic.radius = data.length / sizeDivisor;
+          personsAll.number = numberPersons - personWithPic.number; //person without pics
+          personsAll.radius = personsAll.number / sizeDivisor;
           for (var i = 0; i < data.length; i++) {
             data[i].geb = parseInt(data[i].geb);
             data[i].tod = parseInt(data[i].tod);
             data[i].alter = data[i].tod - data[i].geb;
+            data[i].sex === "m" ? maleWithPic.number++ : femaleWithPic.number++;
+            maleWithPic.radius = maleWithPic.number / sizeDivisor;
+            femaleWithPic.radius = femaleWithPic.number / sizeDivisor;
             //console.log(data[i]);
             switch (data[i].abb) {
               case "S":
@@ -236,10 +260,8 @@
           // sort the nodes so that the bigger ones are at the back
           //data = data.sort(function(a,b){ return b.size - a.size; });
 
-
           //update the simulation based on the data
-          updateVis()
-
+          updateVis();
         }
       );
 
@@ -262,41 +284,58 @@
         }
       }
       //function types(d) {
-        //console.log(d);
-        // d.gdp = +d.gdp;
-        // d.size = +d.gdp / sizeDivisor;
-        // d.size < 3 ? d.radius = 3 : d.radius = d.size;
-        //return d;
+      //console.log(d);
+      // d.gdp = +d.gdp;
+      // d.size = +d.gdp / sizeDivisor;
+      // d.size < 3 ? d.radius = 3 : d.radius = d.size;
+      //return d;
       //}
 
-      function updateVis(){
+      function updateVis() {
         //saves by which parameters the bubbles should be split
         var splitParams = {
           depiction: 0,
-          gender:0,
-          typeOfPic:0
-        }
+          gender: 0,
+          typeOfPic: 0
+        };
 
-        splitParams.depiction = document.getElementById("checkWithDepiction").checked ? 1 : 0;
-        splitParams.gender = document.getElementById("checkGender").checked ? 1 : 0;
-        splitParams.typeOfPic = document.getElementById("checkPicType").checked ? 1 : 0;
+        splitParams.depiction = document.getElementById("checkWithDepiction")
+          .checked
+          ? 1
+          : 0;
+        splitParams.gender = document.getElementById("checkGender").checked
+          ? 1
+          : 0;
+        splitParams.typeOfPic = document.getElementById("checkPicType").checked
+          ? 1
+          : 0;
 
         console.log(splitParams);
         addBubbles(splitParams);
       }
 
-      function addBubbles(splitParams){
+      function addBubbles(splitParams) {
+        var arr = [
+          splitParams.depiction,
+          splitParams.gender,
+          splitParams.typeOfPic
+        ];
 
-
-        var arr = [splitParams.depiction, splitParams.gender, splitParams.typeOfPic];
-
-        var dataNode= [];
-        if( arraysEqual([1, 0, 0], arr)){
-          dataNode = [personsAll, dataAll];
-        } else{ // [0, 0, 0]
-          dataNode = [{descr: "Total number of people in dataset: ", number: numberPersons, radius: (numberPersons/sizeDivisor)}];
+        var dataNode = [];
+        if (arraysEqual([1, 0, 0], arr)) {
+          dataNode = [personsAll, personWithPic];
+        } else if (arraysEqual([1, 1, 0], arr)) {
+          dataNode = [maleWithPic, femaleWithPic];
+        } else {
+          // [0, 0, 0]
+          dataNode = [
+            {
+              descr: "Total number of people in dataset: ",
+              number: numberPersons,
+              radius: numberPersons / sizeDivisor
+            }
+          ];
         }
-
 
         //remove old circles <g> element
         d3.selectAll(".node").remove();
@@ -324,16 +363,16 @@
               });
           });
 
-
-
         var node = svg
-        .append("g")
-        .attr("class", "node")
-        .selectAll("circle")
-        .data(dataNode)
-        .enter()
-        .append("circle")
-          .attr("class", function(d) { return "bubbles"})
+          .append("g")
+          .attr("class", "node")
+          .selectAll("circle")
+          .data(dataNode)
+          .enter()
+          .append("circle")
+          .attr("class", function(d) {
+            return "bubbles";
+          })
           .attr("r", function(d) {
             return d.radius;
           })
@@ -347,7 +386,7 @@
             return d.y;
           })
           .on("mouseover", showTooltip)
-          .on("mousemove", moveTooltip )
+          .on("mousemove", moveTooltip)
           .on("mouseleave", hideTooltip)
           .call(
             d3
@@ -356,29 +395,23 @@
               .on("drag", dragged)
               .on("end", dragended)
           );
-
-        
       }
 
+      function arraysEqual(a, b) {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length != b.length) return false;
 
-    function arraysEqual(a, b) {
-      if (a === b) return true;
-      if (a == null || b == null) return false;
-      if (a.length != b.length) return false;
+        // If you don't care about the order of the elements inside
+        // the array, you should sort both arrays here.
+        // Please note that calling sort on an array will modify that array.
+        // you might want to clone your array first.
 
-      // If you don't care about the order of the elements inside
-      // the array, you should sort both arrays here.
-      // Please note that calling sort on an array will modify that array.
-      // you might want to clone your array first.
-
-      for (var i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) return false;
+        for (var i = 0; i < a.length; ++i) {
+          if (a[i] !== b[i]) return false;
+        }
+        return true;
       }
-      return true;
-    }
     </script>
-
-
-
   </body>
 </html>
