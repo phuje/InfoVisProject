@@ -74,7 +74,7 @@
       var margin = { top: 50 /*, right: 30, bottom: 30, left: 55*/ },
         width = window.innerWidth * 0.75,
         height = window.innerHeight,
-        sizeDivisor = 25,
+        sizeDivisor = 50,
         nodePadding = 2.5;
       var svg = d3
         .select("#datavis")
@@ -209,13 +209,13 @@
       var maleAll = {
         descr: "Number of men in dataset: ",
         number: numberMenTotal,
-        radius: numberMenTotal/sizeDivisor
+        radius: numberMenTotal
       };
 
       var femaleAll = {
         descr: "Number of women in dataset: ",
         number: numberWomenTotal,
-        radius: numberWomenTotal/sizeDivisor
+        radius: numberWomenTotal
       };
 
       var femaleWithoutPic = {
@@ -234,84 +234,100 @@
       //hardcoded numbers for now
       var kupferstichS= {
         descr: "Number of Kupferstiche: ",
-        radius: 881/sizeDivisor,
+        radius: 881,
         number: 881
       };
 
       var portraitP= {
         descr: "Number of portraits: ",
-        radius: 673/sizeDivisor,
+        radius: 673,
         number: 673
       };
 
       var steinmetzF= {
         descr: "Number of Steinmetzarbeiten: ",
-        radius: 113/sizeDivisor,
+        radius: 113,
         number: 113
       };
 
       var muenzeM= {
         descr: "Number of coin depictions: ",
-        radius: 168/sizeDivisor,
+        radius: 168,
         number: 168
       };
 
       var kupferstichFem= {
         descr: "Number of Kupferstiche of women: ",
-        radius: 71/sizeDivisor,
+        radius: 71,
         number: 71
       };
 
       var kupferstichMale= {
         descr: "Number of Kupferstiche of men: ",
-        radius: 810/sizeDivisor,
+        radius: 810,
         number: 810
       };
 
       var portraitFem= {
         descr: "Number of portraits of women: ",
-        radius: 162/sizeDivisor,
+        radius: 162,
         number: 162
       };
 
       var portraitMale= {
         descr: "Number of portraits of men: ",
-        radius: 511/sizeDivisor,
+        radius: 511,
         number: 511
       };
 
       var steinmetzFem= {
         descr: "Number of Steinmetzarbeiten of women: ",
-        radius: 15/sizeDivisor,
+        radius: 15,
         number: 15
       };
 
       var steinmetzMale= {
         descr: "Number of Steinmetzarbeiten of men: ",
-        radius: 98/sizeDivisor,
+        radius: 98,
         number: 98
       };
 
       var muenzeFem= {
         descr: "Number of coin depictions of women: ",
-        radius: 10/sizeDivisor,
+        radius: 10,
         number: 10
       };
 
       var muenzeMale= {
         descr: "Number of coin depictions of men: ",
-        radius: 158/sizeDivisor,
+        radius: 158,
         number: 158
       };
 
+
+      var minZoom = 1;
+      var maxZoom = 5;
+      var slider = d3.select(".filterOptions").append("p").append("input")
+        .datum({})
+        .attr("type", "range")
+        .attr("value", minZoom)
+        .attr("min", minZoom)
+        .attr("max", maxZoom)
+        .attr("step", (maxZoom - minZoom) / 10000)
+        .on("input", slided);
+
+      function slided(d){
+        sizeDivisor = 50/(d3.select(this).property("value"));
+        updateVis();
+      }
 
       d3.csv(
         "https://raw.githubusercontent.com/phuje/Data-test/master/person-abb.csv",
         function(data) {
           personWithPic.number = data.length;
-          personWithPic.radius = data.length / sizeDivisor;
+          personWithPic.radius = data.length;
           personsAll.number = numberPersons - personWithPic.number; //person without pics
-          personsAll.radius = personsAll.number / sizeDivisor;
+          personsAll.radius = personsAll.number;
           for (var i = 0; i < data.length; i++) {
             data[i].geb = parseInt(data[i].geb);
             data[i].tod = parseInt(data[i].tod);
@@ -320,8 +336,8 @@
 
 
             data[i].sex === "m" ? maleWithPic.number++ : femaleWithPic.number++;
-            maleWithPic.radius = maleWithPic.number / sizeDivisor;
-            femaleWithPic.radius = femaleWithPic.number / sizeDivisor;
+            maleWithPic.radius = maleWithPic.number;
+            femaleWithPic.radius = femaleWithPic.number;
 
 
             //console.log(data[i]);
@@ -365,9 +381,9 @@
 
           
           femaleWithoutPic.number = numberWomenTotal-femaleWithPic.number;
-          femaleWithoutPic.radius = femaleWithoutPic.number / sizeDivisor;
+          femaleWithoutPic.radius = femaleWithoutPic.number;
           maleWithoutPic.number = numberMenTotal-maleWithPic.number;
-          maleWithoutPic.radius = maleWithoutPic.number / sizeDivisor;
+          maleWithoutPic.radius = maleWithoutPic.number;
 
 
           console.log("Abbildungen Insgesamt: ", extra);
@@ -457,7 +473,7 @@
             {
               descr: "Total number of people in dataset: ",
               number: numberPersons,
-              radius: numberPersons / sizeDivisor
+              radius: numberPersons
             }
           ];
         }
@@ -474,7 +490,7 @@
               .strength(0.5)
               .radius(function(d) {
                 console.log(d);
-                return d.radius + nodePadding;
+                return d.radius/sizeDivisor + nodePadding;
               })
               .iterations(1)
           )
@@ -499,7 +515,7 @@
             return "bubbles";
           })
           .attr("r", function(d) {
-            return d.radius;
+            return d.radius/sizeDivisor;
           })
           .attr("fill", function(d) {
             return color(d.descr);
