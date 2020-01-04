@@ -366,11 +366,9 @@ function updateVis() {
 
   //erste Filteroption sichtbar oder nicht sichtbar machen
   if (arr[2] == 1) {
-    d3.select("#firstFilter").style("visibility", "hidden");
-    //document.getElementById('firstFilter').disabled = true;
+    document.getElementById("checkWithDepiction").disabled = true;
   } else {
-    d3.select("#firstFilter").style("visibility", "visible");
-    //document.getElementById('firstFilter').disabled = false;
+    document.getElementById("checkWithDepiction").disabled = false;
   }
 
   var dataNode = [];
