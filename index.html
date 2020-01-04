@@ -1,5 +1,6 @@
 <html>
   <head>
+    <title>Bubble chart</title>
     <meta charset="utf-8" />
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -56,16 +57,23 @@
     <div class="filterOptions">
       <h4>Filter the data here:</h4>
       <br />
-      Split persons with/without depiction:
-      <input
+      <p id = "firstFilter">
+        <input
         onclick="updateVis()"
         type="checkbox"
         id="checkWithDepiction"
-      /><br />
-      Split gender:
-      <input onclick="updateVis()" type="checkbox" id="checkGender" /><br />
-      Split type of depiction:
-      <input onclick="updateVis()" type="checkbox" id="checkPicType" /><br />
+      />
+      Split persons with/without depiction
+      </p>
+      <p>
+        <input onclick="updateVis()" type="checkbox" id="checkGender" />
+        Split gender
+    </p>
+      <p>
+        <input onclick="updateVis()" type="checkbox" id="checkPicType" />
+        Split type of depiction
+    </p>
+    <p class="zoom">Zoom <br></p>
     </div>
 
     <script src="https://d3js.org/d3.v4.js"></script>
@@ -306,14 +314,14 @@
 
 
       var minZoom = 1;
-      var maxZoom = 5;
-      var slider = d3.select(".filterOptions").append("p").append("input")
+      var maxZoom = 10;
+      var slider = d3.select(".zoom").append("input")
         .datum({})
         .attr("type", "range")
         .attr("value", minZoom)
         .attr("min", minZoom)
         .attr("max", maxZoom)
-        .attr("step", (maxZoom - minZoom) / 10000)
+        .attr("step", (maxZoom - minZoom) / 100000)
         .on("input", slided);
 
       function slided(d){
@@ -412,10 +420,7 @@
         d.fx = null;
         d.fy = null;
       }
-      function countAbbildung(d) {
-        if (d.abb !== null) {
-        }
-      }
+
       //function types(d) {
       //console.log(d);
       // d.gdp = +d.gdp;
@@ -444,16 +449,22 @@
           : 0;
 
         console.log("splitparams",splitParams);
-        addBubbles(splitParams);
-      }
 
-      function addBubbles(splitParams) {
         var arr = [
           splitParams.depiction,
           splitParams.gender,
           splitParams.typeOfPic
         ];
-        console.log("arr", arr);
+        //console.log("arr", arr);
+
+        //erste Filteroption sichtbar oder nicht sichtbar machen
+        if(arr[2] == 1){
+          d3.select("#firstFilter").style("visibility", "hidden");
+          //document.getElementById('firstFilter').disabled = true;
+        } else{
+          d3.select("#firstFilter").style("visibility", "visible");
+          //document.getElementById('firstFilter').disabled = false;
+        }
 
         var dataNode = [];
         if (arraysEqual([1, 0, 0], arr)) {
@@ -478,6 +489,12 @@
           ];
         }
 
+
+        addBubbles(dataNode);
+      }
+
+      function addBubbles(dataNode) {
+      
         //remove old circles <g> element
         d3.selectAll(".node").remove();
 
@@ -489,7 +506,7 @@
               .forceCollide()
               .strength(0.5)
               .radius(function(d) {
-                console.log(d);
+                //console.log(d);
                 return d.radius/sizeDivisor + nodePadding;
               })
               .iterations(1)
@@ -536,6 +553,8 @@
               .on("drag", dragged)
               .on("end", dragended)
           );
+
+          simulation.alphaTarget(0.03).restart();
       }
 
       function arraysEqual(a, b) {
