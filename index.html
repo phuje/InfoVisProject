@@ -27,6 +27,16 @@
         stroke: black;
         opacity: 1;
       }
+      .layer {
+        stroke-width: 0.5px;
+        stroke: #3a403d;
+        opacity: 0.8;
+      }
+
+      .layer:hover {
+        stroke: black;
+        opacity: 1;
+      }
 
       #header {
         width: 100%;
@@ -41,6 +51,10 @@
         float: left;
       }
 
+      #stackedChart {
+        display: none;
+      }
+
       .filterOptions {
         width: 25%;
         float: left;
@@ -52,27 +66,57 @@
     <div id="header">
       <h4>People and their depictions in the Habsburger Kaiserhof</h4>
       Each person was depicted maximum once.
+
+      <div>
+        <span id="selectBubble" onclick="showBubbleChart()">
+          Bubble Chart View
+        </span>
+        <span id="selectStack" onclick="showStackedAreaChart()">
+          Stacked Area Chart View
+        </span>
+      </div>
     </div>
-    <div id="datavis"></div>
-    <div class="filterOptions">
-      <h4>Filter the data here:</h4>
-      <br />
-      <p id="firstFilter">
-        <input onclick="updateVis()" type="checkbox" id="checkWithDepiction" />
-        Split persons with/without depiction
-      </p>
-      <p>
-        <input onclick="updateVis()" type="checkbox" id="checkGender" />
-        Split gender
-      </p>
-      <p>
-        <input onclick="updateVis()" type="checkbox" id="checkPicType" />
-        Split type of depiction
-      </p>
-      <p class="zoom">Zoom <br /></p>
+
+    <div id="stackedChart"></div>
+
+    <div id="bubbleChart">
+      <div id="datavis"></div>
+      <div class="filterOptions">
+        <h4>Filter the data here:</h4>
+        <br />
+        <p id="firstFilter">
+          <input
+            onclick="updateVis()"
+            type="checkbox"
+            id="checkWithDepiction"
+          />
+          Split persons with/without depiction
+        </p>
+        <p>
+          <input onclick="updateVis()" type="checkbox" id="checkGender" />
+          Split gender
+        </p>
+        <p>
+          <input onclick="updateVis()" type="checkbox" id="checkPicType" />
+          Split type of depiction
+        </p>
+        <p class="zoom">Zoom <br /></p>
+      </div>
     </div>
 
     <script src="https://d3js.org/d3.v4.js"></script>
     <script type="text/javascript" src="bubbleChart.js"></script>
+    <script type="text/javascript" src="stackedAreaChart.js"></script>
+    <script>
+      function showBubbleChart() {
+        document.getElementById("stackedChart").style.display = "none";
+        document.getElementById("bubbleChart").style.display = "initial";
+      }
+
+      function showStackedAreaChart() {
+        document.getElementById("bubbleChart").style.display = "none";
+        document.getElementById("stackedChart").style.display = "initial";
+      }
+    </script>
   </body>
 </html>

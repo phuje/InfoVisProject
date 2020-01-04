@@ -5,7 +5,7 @@ var margin = { top: 20, right: 30, bottom: 30, left: 55 },
 
 // append the svg object to the body of the page
 var svg = d3
-  .select("#my_dataviz")
+  .select("#stackedChart")
   .append("svg")
   .attr("class", ".svg-content")
   .attr("width", width + margin.left + margin.right)
@@ -175,11 +175,11 @@ d3.csv(
     // ---------------------------//
 
     // -1- Create a tooltip div that is hidden by default:
-    var tooltip = d3
-      .select("#my_dataviz")
+    var tooltipStack = d3
+      .select("#stackedChart")
       .append("div")
       .style("opacity", 0)
-      .attr("class", "tooltip")
+      .attr("class", "tooltipStack")
       .style("background-color", "black")
       .style("border-radius", "5px")
       .style("padding", "10px")
@@ -187,21 +187,21 @@ d3.csv(
       .style("position", "absolute");
 
     // -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
-    var showTooltip = function(d) {
-      tooltip.transition().duration(200);
-      tooltip
+    var showTooltipStack = function(d) {
+      tooltipStack.transition().duration(200);
+      tooltipStack
         .style("opacity", 1)
         .html(getHoverText(d))
         .style("left", d3.mouse(this)[0] + 30 + "px")
         .style("top", d3.mouse(this)[1] + 30 + "px");
     };
-    var moveTooltip = function(d) {
-      tooltip
+    var moveTooltipStack = function(d) {
+      tooltipStack
         .style("left", d3.mouse(this)[0] + 30 + "px")
         .style("top", d3.mouse(this)[1] + 30 + "px");
     };
-    var hideTooltip = function(d) {
-      tooltip
+    var hideTooltipStack = function(d) {
+      tooltipStack
         .transition()
         .duration(200)
         .style("opacity", 0);
@@ -231,7 +231,7 @@ d3.csv(
 
     var showDetail = function(d) {
       d3.selectAll(".layer").remove();
-      hideTooltip(d);
+      hideTooltipStack(d);
 
       console.log("showDetail", d);
       switch (d.key) {
@@ -312,9 +312,9 @@ d3.csv(
           return getColor(d.key);
         })
         .attr("class", "layer")
-        .on("mouseover", showTooltip)
-        .on("mousemove", moveTooltip)
-        .on("mouseleave", hideTooltip)
+        .on("mouseover", showTooltipStack)
+        .on("mousemove", moveTooltipStack)
+        .on("mouseleave", hideTooltipStack)
         .on("click", showAll)
         .attr("d", area);
     };
@@ -359,9 +359,9 @@ d3.csv(
           return getColor(d.key);
         })
         .attr("class", "layer")
-        .on("mouseover", showTooltip)
-        .on("mousemove", moveTooltip)
-        .on("mouseleave", hideTooltip)
+        .on("mouseover", showTooltipStack)
+        .on("mousemove", moveTooltipStack)
+        .on("mouseleave", hideTooltipStack)
         .on("click", showDetail)
         .attr("d", area);
     };

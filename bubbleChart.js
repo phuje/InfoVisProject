@@ -3,7 +3,7 @@ var margin = { top: 50 /*, right: 30, bottom: 30, left: 55*/ },
   height = window.innerHeight,
   sizeDivisor = 50,
   nodePadding = 2.5;
-var svg = d3
+var svgBubble = d3
   .select("#datavis")
   .append("svg")
   .attr("width", "100%")
@@ -434,7 +434,7 @@ function addBubbles(dataNode) {
         });
     });
 
-  var node = svg
+  var node = svgBubble
     .append("g")
     .attr("class", "node")
     .selectAll("circle")
