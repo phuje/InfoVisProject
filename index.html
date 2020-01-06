@@ -40,7 +40,7 @@
 
       #header {
         width: 100%;
-        height: 100px;
+        height: 160px;
         padding: 5px;
         text-align: center;
         background-color: aliceblue;
@@ -51,8 +51,25 @@
         float: left;
       }
 
+      #selectBubble {
+        text-decoration: underline;
+      }
+
       #stackedChart {
         display: none;
+      }
+
+      #chartSelectionBox {
+        padding: 40;
+      }
+
+      .chartSelection {
+        margin-left: 40;
+        margin-right: 40;
+      }
+
+      .chartSelection:hover {
+        color: blueviolet;
       }
 
       .filterOptions {
@@ -61,11 +78,12 @@
         padding: 10px;
       }
 
-      .vlines, .hlines{
-        stroke:rgb(150,148,109);
-        shape-rendering:crispEdges;
-        stroke-width:1px;
-        stroke-opacity:0.3;
+      .vlines,
+      .hlines {
+        stroke: rgb(150, 148, 109);
+        shape-rendering: crispEdges;
+        stroke-width: 1px;
+        stroke-opacity: 0.3;
       }
     </style>
   </head>
@@ -74,19 +92,21 @@
       <h4>People and their depictions in the Habsburger Kaiserhof</h4>
       Each person was depicted maximum once.
 
-      <div>
-        <span id="selectBubble" onclick="showBubbleChart()">
-          Bubble Chart View
-        </span>
-        <span id="selectStack" onclick="showStackedAreaChart()">
-          Stacked Area Chart View
-        </span>
+      <div id="chartSelectionBox">
+        <span class="chartSelection" id="selectBubble" onclick="showBubbleChart()">Bubble Chart view</span>
+        <span class="chartSelection" id="selectStack" onclick="showStackedAreaChart()">Stacked Area Chart View</span>
       </div>
     </div>
 
     <div id="stackedChart">
       <h3>Häufigkeiten der Abbildungen über die Zeit</h3>
-      <p>In dem benutzten Datensatz wurden nur die Personen berücksichtigt, die ein Geburtsjahr und ein Todesjahr haben. Für jedes Jahr wurde eine Abbildung dazugezählt, wenn in diesem Jahr eine Person gelebt hat, deren Abbildung existiert. Denn es ist nicht aus dem Datensatz klar, in welchem Jahr die Abbildung entstanden ist. </p>
+      <p>
+        In dem benutzten Datensatz wurden nur die Personen berücksichtigt, die
+        ein Geburtsjahr und ein Todesjahr haben. Für jedes Jahr wurde eine
+        Abbildung dazugezählt, wenn in diesem Jahr eine Person gelebt hat, deren
+        Abbildung existiert. Denn es ist nicht aus dem Datensatz klar, in
+        welchem Jahr die Abbildung entstanden ist.
+      </p>
     </div>
 
     <div id="bubbleChart">
@@ -95,11 +115,7 @@
         <h4>Filter the data here:</h4>
         <br />
         <p id="firstFilter">
-          <input
-            onclick="updateVis()"
-            type="checkbox"
-            id="checkWithDepiction"
-          />
+          <input onclick="updateVis()" type="checkbox" id="checkWithDepiction"/>
           Split persons with/without depiction
         </p>
         <p>
@@ -113,19 +129,25 @@
         <p class="zoom">Zoom <br /></p>
       </div>
     </div>
-
+    <script type="text/javascript" src="variables.js"></script>
     <script src="https://d3js.org/d3.v4.js"></script>
     <script type="text/javascript" src="bubbleChart.js"></script>
     <script type="text/javascript" src="stackedAreaChart.js"></script>
     <script>
       function showBubbleChart() {
         document.getElementById("stackedChart").style.display = "none";
+        document.getElementById("selectStack").style.textDecoration = "none";
         document.getElementById("bubbleChart").style.display = "initial";
+        document.getElementById("selectBubble").style.textDecoration =
+          "underline";
       }
 
       function showStackedAreaChart() {
         document.getElementById("bubbleChart").style.display = "none";
+        document.getElementById("selectBubble").style.textDecoration = "none";
         document.getElementById("stackedChart").style.display = "initial";
+        document.getElementById("selectStack").style.textDecoration =
+          "underline";
       }
     </script>
   </body>

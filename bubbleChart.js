@@ -3,6 +3,7 @@ var margin = { top: 50 /*, right: 30, bottom: 30, left: 55*/ },
   height = window.innerHeight,
   sizeDivisor = 50,
   nodePadding = 2.5;
+
 var svgBubble = d3
   .select("#datavis")
   .append("svg")
@@ -80,156 +81,6 @@ var hideTooltip = function(d) {
     .style("opacity", 0);
 };
 
-var numberPersons = 7665;
-var numberMenTotal = 6401;
-var numberWomenTotal = 1264;
-
-var KupferstichS = 0,
-  PortraitP = 0,
-  MuenzeM = 0,
-  SteinmetzF = 0;
-var extra = {
-  KupferstichS: 0,
-  PortraitP: 0,
-  MuenzeM: 0,
-  SteinmetzF: 0
-};
-var extraMale = {
-  KupferstichS: 0,
-  PortraitP: 0,
-  MuenzeM: 0,
-  SteinmetzF: 0
-};
-var extraFemale = {
-  KupferstichS: 0,
-  PortraitP: 0,
-  MuenzeM: 0,
-  SteinmetzF: 0
-};
-
-//all persons with a picture
-var personWithPic = {
-  descr: "Number of people with a depiction: ",
-  radius: 0,
-  number: 0
-};
-
-var femaleWithPic = {
-  descr: "Number of women with a depiction: ",
-  radius: 0,
-  number: 0
-};
-
-var maleWithPic = {
-  descr: "Number of men with a depiction: ",
-  radius: 0,
-  number: 0
-};
-
-//all even those without picture, hardcoded for now
-var personsAll = {
-  descr: "Number of people without a depiction: ",
-  radius: 0,
-  number: numberPersons
-};
-
-var maleAll = {
-  descr: "Number of men in dataset: ",
-  number: numberMenTotal,
-  radius: numberMenTotal
-};
-
-var femaleAll = {
-  descr: "Number of women in dataset: ",
-  number: numberWomenTotal,
-  radius: numberWomenTotal
-};
-
-var femaleWithoutPic = {
-  descr: "Number of women without a depiction: ",
-  radius: 0,
-  number: 0
-};
-
-var maleWithoutPic = {
-  descr: "Number of men without a depiction: ",
-  radius: 0,
-  number: 0
-};
-
-//hardcoded numbers for now
-var kupferstichS = {
-  descr: "Number of Kupferstiche: ",
-  radius: 881,
-  number: 881
-};
-
-var portraitP = {
-  descr: "Number of portraits: ",
-  radius: 673,
-  number: 673
-};
-
-var steinmetzF = {
-  descr: "Number of Steinmetzarbeiten: ",
-  radius: 113,
-  number: 113
-};
-
-var muenzeM = {
-  descr: "Number of coin depictions: ",
-  radius: 168,
-  number: 168
-};
-
-var kupferstichFem = {
-  descr: "Number of Kupferstiche of women: ",
-  radius: 71,
-  number: 71
-};
-
-var kupferstichMale = {
-  descr: "Number of Kupferstiche of men: ",
-  radius: 810,
-  number: 810
-};
-
-var portraitFem = {
-  descr: "Number of portraits of women: ",
-  radius: 162,
-  number: 162
-};
-
-var portraitMale = {
-  descr: "Number of portraits of men: ",
-  radius: 511,
-  number: 511
-};
-
-var steinmetzFem = {
-  descr: "Number of Steinmetzarbeiten of women: ",
-  radius: 15,
-  number: 15
-};
-
-var steinmetzMale = {
-  descr: "Number of Steinmetzarbeiten of men: ",
-  radius: 98,
-  number: 98
-};
-
-var muenzeFem = {
-  descr: "Number of coin depictions of women: ",
-  radius: 10,
-  number: 10
-};
-
-var muenzeMale = {
-  descr: "Number of coin depictions of men: ",
-  radius: 158,
-  number: 158
-};
-
 var minZoom = 1;
 var maxZoom = 10;
 var slider = d3
@@ -249,68 +100,57 @@ function slided(d) {
 }
 
 d3.csv(
-  "https://raw.githubusercontent.com/phuje/Data-test/master/person-abb.csv",
+  "https://raw.githubusercontent.com/phuje/Data-test/master/datensatz.csv", //person-abb.csv",
   function(data) {
-    personWithPic.number = data.length;
-    personWithPic.radius = data.length;
-    personsAll.number = numberPersons - personWithPic.number; //person without pics
-    personsAll.radius = personsAll.number;
+    totalPeople.number = data.length;
     for (var i = 0; i < data.length; i++) {
+      data[i].abb === "NULL" ? noDepiction.number++ : withDepiction.number++;
       data[i].geb = parseInt(data[i].geb);
       data[i].tod = parseInt(data[i].tod);
-      data[i].alter = data[i].tod - data[i].geb;
+      data[i].alter = isNaN(data[i].tod - data[i].geb)
+        ? null
+        : data[i].tod - data[i].geb;
 
-      data[i].sex === "m" ? maleWithPic.number++ : femaleWithPic.number++;
-      maleWithPic.radius = maleWithPic.number;
-      femaleWithPic.radius = femaleWithPic.number;
+      data[i].sex === "m" ? totalMen.number++ : totalWomen.number++;
+      if (data[i].abb === "NULL") {
+        data[i].sex === "m"
+          ? maleWithoutPic.number++
+          : femaleWithoutPic.number++;
+      } else {
+        data[i].sex === "m" ? maleWithPic.number++ : femaleWithPic.number++;
+
+        switch (data[i].abb) {
+          case "S":
+            kupferstichS.number++;
+            data[i].sex === "m"
+              ? kupferstichMale.number++
+              : kupferstichFem.number++;
+            break;
+          case "P":
+            portraitP.number++;
+            data[i].sex === "m" ? portraitMale.number++ : portraitFem.number++;
+            break;
+          case "M":
+            muenzeM.number++;
+            data[i].sex === "m" ? muenzeMale.number++ : muenzeFem.number++;
+            break;
+          case "F":
+            steinmetzF.number++;
+            data[i].sex === "m"
+              ? steinmetzMale.number++
+              : steinmetzFem.number++;
+            break;
+          default:
+            break;
+        }
+      }
 
       //console.log(data[i]);
-      switch (data[i].abb) {
-        case "S":
-          extra.KupferstichS++;
-          if (data[i].sex === "m") {
-            extraMale.KupferstichS++;
-          } else if (data[i].sex === "w") {
-            extraFemale.KupferstichS++;
-          }
-          break;
-        case "P":
-          extra.PortraitP++;
-          if (data[i].sex === "m") {
-            extraMale.PortraitP++;
-          } else if (data[i].sex === "w") {
-            extraFemale.PortraitP++;
-          }
-          break;
-        case "M":
-          extra.MuenzeM++;
-          if (data[i].sex === "m") {
-            extraMale.MuenzeM++;
-          } else if (data[i].sex === "w") {
-            extraFemale.MuenzeM++;
-          }
-          break;
-        case "F":
-          extra.SteinmetzF++;
-          if (data[i].sex === "m") {
-            extraMale.SteinmetzF++;
-          } else if (data[i].sex === "w") {
-            extraFemale.SteinmetzF++;
-          }
-          break;
-        default:
-          break;
-      }
     }
 
-    femaleWithoutPic.number = numberWomenTotal - femaleWithPic.number;
-    femaleWithoutPic.radius = femaleWithoutPic.number;
-    maleWithoutPic.number = numberMenTotal - maleWithPic.number;
-    maleWithoutPic.radius = maleWithoutPic.number;
-
-    console.log("Abbildungen Insgesamt: ", extra);
-    console.log("Abbildung Male: ", extraMale);
-    console.log("Abbildung Female: ", extraFemale);
+    console.log("Abbildungen Insgesamt: ", withDepiction.number);
+    console.log("Male: ", totalMen.number);
+    console.log("Female: ", totalWomen.number);
     //if (error) throw error;
     // sort the nodes so that the bigger ones are at the back
     //data = data.sort(function(a,b){ return b.size - a.size; });
@@ -359,13 +199,14 @@ function updateVis() {
     ? 1
     : 0;
 
-  console.log("splitparams", splitParams);
+  //console.log("splitparams", splitParams);
 
   var arr = [splitParams.depiction, splitParams.gender, splitParams.typeOfPic];
   //console.log("arr", arr);
 
-  //erste Filteroption sichtbar oder nicht sichtbar machen
+  //erste Filteroption bei Filtern nach Abbildung unanklickbar und ungeklickt machen
   if (arr[2] == 1) {
+    document.getElementById("checkWithDepiction").checked = false;
     document.getElementById("checkWithDepiction").disabled = true;
   } else {
     document.getElementById("checkWithDepiction").disabled = false;
@@ -373,11 +214,11 @@ function updateVis() {
 
   var dataNode = [];
   if (arraysEqual([1, 0, 0], arr)) {
-    dataNode = [personsAll, personWithPic];
+    dataNode = [noDepiction, withDepiction];
   } else if (arraysEqual([1, 1, 0], arr)) {
     dataNode = [maleWithPic, femaleWithPic, maleWithoutPic, femaleWithoutPic];
   } else if (arraysEqual([0, 1, 0], arr)) {
-    dataNode = [maleAll, femaleAll];
+    dataNode = [totalMen, totalWomen];
   } else if (arraysEqual([0, 0, 1], arr) || arraysEqual([1, 0, 1], arr)) {
     dataNode = [kupferstichS, portraitP, steinmetzF, muenzeM];
   } else if (arraysEqual([0, 1, 1], arr) || arraysEqual([1, 1, 1], arr)) {
@@ -393,13 +234,7 @@ function updateVis() {
     ];
   } else {
     // [0, 0, 0]
-    dataNode = [
-      {
-        descr: "Total number of people in dataset: ",
-        number: numberPersons,
-        radius: numberPersons
-      }
-    ];
+    dataNode = [totalPeople];
   }
 
   addBubbles(dataNode);
@@ -418,6 +253,7 @@ function addBubbles(dataNode) {
         .strength(0.5)
         .radius(function(d) {
           //console.log(d);
+          d.radius = d.radius !== 0 ? d.radius : d.number;
           return d.radius / sizeDivisor + nodePadding;
         })
         .iterations(1)
@@ -443,6 +279,7 @@ function addBubbles(dataNode) {
       return "bubbles";
     })
     .attr("r", function(d) {
+      d.radius = d.radius !== 0 ? d.radius : d.number;
       return d.radius / sizeDivisor;
     })
     .attr("fill", function(d) {

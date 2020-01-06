@@ -165,23 +165,41 @@ d3.csv(
       .domain([0, maxY])
       .range([height, 0]);
     svg.append("g").call(d3.axisLeft(y));
-    
-    function tW(d){ 
-      if(x(d*(1800)/100) > 0)
-        return x(d*(1800)/100); }
-		function tH(d){ return y(d*maxY/50); }
 
-	// draw vertical lines of the grid.
-	svg.selectAll(".vlines").data(d3.range(101)).enter().append("line").attr("class","vlines")
-  .attr("x1",tW).attr("y1",0)
-  .attr("x2", tW).attr("y2",function(d,i){ return d%10 ==0 && d!=50? height+12: height;});
+    function tW(d) {
+      if (x((d * 1800) / 100) > 0) return x((d * 1800) / 100);
+    }
+    function tH(d) {
+      return y((d * maxY) / 50);
+    }
 
-//draw horizontal lines of the grid.
-svg.selectAll(".hlines").data(d3.range(51)).enter().append("line").attr("class","hlines")
-  .attr("x1",function(d,i){ return d%10 ==0 && d!= 50? -12: 0;})
-  .attr("y1",tH)
-  .attr("x2", width).attr("y2",tH);
+    // draw vertical lines of the grid.
+    svg
+      .selectAll(".vlines")
+      .data(d3.range(101))
+      .enter()
+      .append("line")
+      .attr("class", "vlines")
+      .attr("x1", tW)
+      .attr("y1", 0)
+      .attr("x2", tW)
+      .attr("y2", function(d, i) {
+        return d % 10 == 0 && d != 50 ? height + 12 : height;
+      });
 
+    //draw horizontal lines of the grid.
+    svg
+      .selectAll(".hlines")
+      .data(d3.range(51))
+      .enter()
+      .append("line")
+      .attr("class", "hlines")
+      .attr("x1", function(d, i) {
+        return d % 10 == 0 && d != 50 ? -12 : 0;
+      })
+      .attr("y1", tH)
+      .attr("x2", width)
+      .attr("y2", tH);
 
     // color palette
     /*var color = d3.scaleOrdinal()
