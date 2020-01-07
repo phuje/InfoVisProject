@@ -67,12 +67,12 @@ var showTooltip = function(d) {
     .style("opacity", 1)
     .html(d.descr + d.number)
     .style("left", d3.mouse(this)[0] + 30 + "px")
-    .style("top", d3.mouse(this)[1] + 30 + "px");
+    .style("top", d3.mouse(this)[1] + 160 + 30 + "px");
 };
 var moveTooltip = function(d) {
   tooltip
     .style("left", d3.mouse(this)[0] + 30 + "px")
-    .style("top", d3.mouse(this)[1] + 30 + "px");
+    .style("top", d3.mouse(this)[1] + 160+ 30 + "px");
 };
 var hideTooltip = function(d) {
   tooltip

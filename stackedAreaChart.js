@@ -184,7 +184,8 @@ d3.csv(
       .attr("y1", 0)
       .attr("x2", tW)
       .attr("y2", function(d, i) {
-        return d % 10 == 0 && d != 50 ? height + 12 : height;
+        //return d % 10 == 0 && d != 50 ? height + 12 : height;
+        return height;
       });
 
     //draw horizontal lines of the grid.
@@ -195,7 +196,8 @@ d3.csv(
       .append("line")
       .attr("class", "hlines")
       .attr("x1", function(d, i) {
-        return d % 10 == 0 && d != 50 ? -12 : 0;
+        //return d % 10 == 0 && d != 50 ? -12 : 0;
+        return 0;
       })
       .attr("y1", tH)
       .attr("x2", width)
@@ -228,13 +230,13 @@ d3.csv(
       tooltipStack
         .style("opacity", 1)
         .html(getHoverText(d))
-        .style("left", d3.mouse(this)[0] + 30 + "px")
-        .style("top", d3.mouse(this)[1] + 30 + "px");
+        .style("left", d3.mouse(this)[0] + margin.left +30 + "px")
+        .style("top", d3.mouse(this)[1] + margin.top +160+ 80+30 + "px");
     };
     var moveTooltipStack = function(d) {
       tooltipStack
-        .style("left", d3.mouse(this)[0] + 30 + "px")
-        .style("top", d3.mouse(this)[1] + 30 + "px");
+        .style("left", d3.mouse(this)[0] + margin.left + 30 + "px")
+        .style("top", d3.mouse(this)[1] + margin.top + 160+ 80+ 30 + "px");
     };
     var hideTooltipStack = function(d) {
       tooltipStack

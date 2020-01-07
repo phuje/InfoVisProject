@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Bubble chart</title>
+    <title>Abbildungen am Habsburger Kaiserhof</title>
     <meta charset="utf-8" />
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -85,12 +85,18 @@
         stroke-width: 1px;
         stroke-opacity: 0.3;
       }
+
+      #stackedChartSubHeader{
+        margin-left: 10px;
+        height: 80px;
+      }
+
     </style>
   </head>
   <body>
     <div id="header">
-      <h4>People and their depictions in the Habsburger Kaiserhof</h4>
-      Each person was depicted maximum once.
+      <h4>Personen und ihre Abbildungen im Habsburger Kaiserhof</h4>
+      Jede Person wurde maximal einmal abgebildet.
 
       <div id="chartSelectionBox">
         <span class="chartSelection" id="selectBubble" onclick="showBubbleChart()">Bubble Chart view</span>
@@ -99,14 +105,16 @@
     </div>
 
     <div id="stackedChart">
-      <h3>Häufigkeiten der Abbildungen über die Zeit</h3>
-      <p>
-        In dem benutzten Datensatz wurden nur die Personen berücksichtigt, die
-        ein Geburtsjahr und ein Todesjahr haben. Für jedes Jahr wurde eine
-        Abbildung dazugezählt, wenn in diesem Jahr eine Person gelebt hat, deren
-        Abbildung existiert. Denn es ist nicht aus dem Datensatz klar, in
-        welchem Jahr die Abbildung entstanden ist.
-      </p>
+      <div id="stackedChartSubHeader">
+        <h3>Häufigkeiten der Abbildungen über die Zeit</h3>
+        <p>
+          In dem benutzten Datensatz wurden nur die Personen berücksichtigt, die
+          ein Geburtsjahr und ein Todesjahr haben. Für jedes Jahr wurde eine
+          Abbildung dazugezählt, wenn in diesem Jahr eine Person gelebt hat, deren
+          Abbildung existiert. Denn es ist nicht aus dem Datensatz klar, in
+          welchem Jahr die Abbildung entstanden ist.
+        </p>
+      </div>
     </div>
 
     <div id="bubbleChart">
