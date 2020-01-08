@@ -1,9 +1,3 @@
-//Stacked Area Chart
-var numberYears;
-var startYear;
-
-
-//Bubble Chart
 var totalPeople = {
   descr: "Total number of people in dataset: ",
   number: 0,

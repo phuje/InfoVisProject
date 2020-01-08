@@ -13,7 +13,7 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var fillWithZeros = function (d) {
+var fillWithZeros = function(d) {
   for (var i = 0; i < d.length; i++) {
     d[i] = 0;
   }
@@ -21,7 +21,7 @@ var fillWithZeros = function (d) {
 
 var colorArray = ["#3A01DF", "#FF0040", "#FACC2E", "#6E6E6E"];
 
-var getColor = function (key) {
+var getColor = function(key) {
   switch (key) {
     case "S":
       return colorArray[0];
@@ -41,6 +41,9 @@ var getColor = function (key) {
 };
 
 var t = d3.transition().duration(2000);
+
+var numberYears = 795;
+var startYear = 1009;
 
 var dataset = new Array(numberYears);
 
@@ -73,27 +76,27 @@ var tooltipStack = d3
   .style("position", "absolute");
 
 // -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
-var showTooltipStack = function (d) {
+var showTooltipStack = function(d) {
   tooltipStack.transition().duration(200);
   tooltipStack
     .style("opacity", 1)
     .html(getHoverText(d))
-    .style("left", d3.mouse(this)[0] + margin.left + 30 + "px")
-    .style("top", d3.mouse(this)[1] + margin.top + 160 + 80 + 30 + "px");
+    .style("left", d3.mouse(this)[0] + margin.left +30 + "px")
+    .style("top", d3.mouse(this)[1] + margin.top +160+ 80+30 + "px");
 };
-var moveTooltipStack = function (d) {
+var moveTooltipStack = function(d) {
   tooltipStack
     .style("left", d3.mouse(this)[0] + margin.left + 30 + "px")
-    .style("top", d3.mouse(this)[1] + margin.top + 160 + 80 + 30 + "px");
+    .style("top", d3.mouse(this)[1] + margin.top + 160+ 80+ 30 + "px");
 };
-var hideTooltipStack = function (d) {
+var hideTooltipStack = function(d) {
   tooltipStack
     .transition()
     .duration(200)
     .style("opacity", 0);
 };
 
-var getHoverText = function (d) {
+var getHoverText = function(d) {
   var type = "";
   switch (d.key) {
     case "S":
@@ -115,7 +118,7 @@ var getHoverText = function (d) {
   return type;
 };
 
-var showDetail = function (d) {
+var showDetail = function(d) {
   d3.selectAll(".layer").remove();
   hideTooltipStack(d);
 
@@ -178,13 +181,13 @@ var showDetail = function (d) {
 
   var area = d3
     .area()
-    .x(function (d, i) {
+    .x(function(d, i) {
       return x(d.data.year);
     })
-    .y0(function (d) {
+    .y0(function(d) {
       return y(d[0]);
     }) //lower y
-    .y1(function (d) {
+    .y1(function(d) {
       return y(d[1]);
     }); //higher y
 
@@ -194,7 +197,7 @@ var showDetail = function (d) {
     .data(stackedData)
     .enter()
     .append("path")
-    .style("fill", function (d) {
+    .style("fill", function(d) {
       return getColor(d.key);
     })
     .attr("class", "layer")
@@ -218,7 +221,7 @@ var y;
 .domain(keys)
 .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf'])*/
 
-var showAll = function (d) {
+var showAll = function(d) {
   d3.selectAll(".layer").remove();
   console.log("showAll");
 
@@ -238,13 +241,13 @@ var showAll = function (d) {
 
   var area = d3
     .area()
-    .x(function (d, i) {
+    .x(function(d, i) {
       return x(d.data.year);
     })
-    .y0(function (d) {
+    .y0(function(d) {
       return y(d[0]);
     }) //lower y
-    .y1(function (d) {
+    .y1(function(d) {
       return y(d[1]);
     }); //higher y
 
@@ -254,7 +257,7 @@ var showAll = function (d) {
     .data(stackedData)
     .enter()
     .append("path")
-    .style("fill", function (d) {
+    .style("fill", function(d) {
       return getColor(d.key);
     })
     .attr("class", "layer")
@@ -263,25 +266,25 @@ var showAll = function (d) {
     .on("mouseleave", hideTooltipStack)
     .on("click", showDetail)
     .attr("d", area);
-};
+  };
 
-function isValidData(dataItem) {
-  dataItem.geb = parseInt(dataItem.geb);
-  dataItem.tod = parseInt(dataItem.tod);
-  return !isNaN(dataItem.geb) && !isNaN(dataItem.tod);
-}
+
 
 // Parse the Data
 d3.csv(
   "https://raw.githubusercontent.com/phuje/Data-test/master/person-abb.csv",
-  function (data) {
+  function(data) {
     console.log("data", data);
-    var data = data.filter(isValidData);
-    var latestYear = Math.max.apply(Math, data.map(function (o) { return o.tod; }));
-    startYear = Math.min.apply(Math, data.map(function (o) { return o.geb; }));
-    interval = latestYear - startYear + 1;
-
+    var row = { year: 0, S: 0, P: 0, M: 0, F: 0 };
+    
     for (var i = 0; i < data.length; i++) {
+      data[i].geb = parseInt(data[i].geb);
+      data[i].tod = parseInt(data[i].tod);
+      if (data[i].geb == null || data[i].tod == null) {
+        continue;
+      }
+
+
       switch (data[i].abb) {
         case "S":
           for (
@@ -358,7 +361,7 @@ d3.csv(
     x = d3
       .scaleLinear()
       .domain(
-        d3.extent(dataset, function (d) {
+        d3.extent(dataset, function(d) {
           return d.year;
         })
       )
@@ -368,7 +371,7 @@ d3.csv(
       .append("g")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x).ticks(16));
-
+    
 
     y = d3
       .scaleLinear()
@@ -376,24 +379,24 @@ d3.csv(
       .range([height, 0]);
 
     svg.append("g").call(d3.axisLeft(y));
-
+    
     //horizontal grid
     svg.selectAll(".hlines").data(y.ticks(8)).enter()
-      .append("line")
-      .attr("class", "hlines")
-      .attr("x1", 0)
-      .attr("x2", width)
-      .attr("y1", function (d) { return y(d); })
-      .attr("y2", function (d) { return y(d); });
+    .append("line")
+        .attr("class", "hlines")
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("y1", function(d){ return y(d);})
+        .attr("y2", function(d){ return y(d);});
 
     //vertical grid
     svg.selectAll(".vlines").data(x.ticks(16)).enter()
-      .append("line")
-      .attr("class", "hlines")
-      .attr("x1", function (d) { return x(d); })
-      .attr("x2", function (d) { return x(d); })
-      .attr("y1", 0)
-      .attr("y2", height);
+    .append("line")
+        .attr("class", "hlines")
+        .attr("x1", function(d){ return x(d);})
+        .attr("x2", function(d){ return x(d);})
+        .attr("y1", 0)
+        .attr("y2", height);
 
 
     showAll();
@@ -402,7 +405,7 @@ d3.csv(
 );
 
 //filter stack button
-function filterStack() {
+function filterStack(){
   d3.selectAll(".layer").remove();
   console.log("showAll");
 
@@ -424,13 +427,13 @@ function filterStack() {
 
   var area = d3
     .area()
-    .x(function (d, i) {
+    .x(function(d, i) {
       return x(d.data.year);
     })
-    .y0(function (d) {
+    .y0(function(d) {
       return y(d[0]);
     }) //lower y
-    .y1(function (d) {
+    .y1(function(d) {
       return y(d[1]);
     }); //higher y
 
@@ -440,7 +443,7 @@ function filterStack() {
     .data(stackedData)
     .enter()
     .append("path")
-    .style("fill", function (d) {
+    .style("fill", function(d) {
       return getColor(d.key);
     })
     .attr("class", "layer")
