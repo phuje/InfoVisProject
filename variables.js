@@ -1,3 +1,12 @@
+//// stacked area chart variables
+var numberYears;
+var startYear;
+var dataset;
+var ScountYears, PcountYears, McountYears,FcountYears;
+
+
+
+//// BUBBLE CHART VARIABLES
 var totalPeople = {
   descr: "Total number of people in dataset: ",
   number: 0,

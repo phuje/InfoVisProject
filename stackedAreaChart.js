@@ -42,20 +42,6 @@ var getColor = function(key) {
 
 var t = d3.transition().duration(2000);
 
-var numberYears = 795;
-var startYear = 1009;
-
-var dataset = new Array(numberYears);
-
-var ScountYears = new Array(numberYears);
-fillWithZeros(ScountYears);
-var PcountYears = new Array(numberYears);
-fillWithZeros(PcountYears);
-var McountYears = new Array(numberYears);
-fillWithZeros(McountYears);
-var FcountYears = new Array(numberYears);
-fillWithZeros(FcountYears);
-
 // List of groups = header of the csv files
 var keys = ["S", "P", "M", "F"];
 
@@ -269,13 +255,40 @@ var showAll = function(d) {
   };
 
 
+  function isValidData(dataItem){
+    dataItem.geb = parseInt(dataItem.geb);
+    dataItem.tod = parseInt(dataItem.tod);
+    return !isNaN (dataItem.geb) && !isNaN (dataItem.tod);
+  }
+
 
 // Parse the Data
 d3.csv(
   "https://raw.githubusercontent.com/phuje/Data-test/master/person-abb.csv",
   function(data) {
     console.log("data", data);
-    var row = { year: 0, S: 0, P: 0, M: 0, F: 0 };
+    
+    var filteredData = data.filter(isValidData);
+    var latestYear = Math.max.apply(Math, filteredData.map(function(o) { return o.tod;}));
+    console.log("latestYear ", latestYear);
+    startYear = Math.min.apply(Math, filteredData.map(function (o) { return o.geb;}));
+    console.log("startYear",startYear);
+    numberYears = latestYear -startYear +1;
+    console.log("numberYears",numberYears);
+
+
+    dataset = new Array(numberYears);
+
+    ScountYears = new Array(numberYears);
+    fillWithZeros(ScountYears);
+    PcountYears = new Array(numberYears);
+    fillWithZeros(PcountYears);
+    McountYears = new Array(numberYears);
+    fillWithZeros(McountYears);
+    FcountYears = new Array(numberYears);
+    fillWithZeros(FcountYears);
+
+
     
     for (var i = 0; i < data.length; i++) {
       data[i].geb = parseInt(data[i].geb);
@@ -283,7 +296,6 @@ d3.csv(
       if (data[i].geb == null || data[i].tod == null) {
         continue;
       }
-
 
       switch (data[i].abb) {
         case "S":
@@ -347,6 +359,8 @@ d3.csv(
       }
     }
 
+
+
     for (var i = 0; i < numberYears; i++) {
       dataset[i] = {
         year: startYear + i,
@@ -357,6 +371,7 @@ d3.csv(
       };
     }
     console.log("dataset ", dataset);
+    console.log("ScountYears",ScountYears);
 
     x = d3
       .scaleLinear()
