@@ -216,8 +216,6 @@ var x;
 // Add Y axis
 var y;
 
-
-
 // color palette
 /*var color = d3.scaleOrdinal()
 .domain(keys)
@@ -285,6 +283,7 @@ d3.csv(
       if (data[i].geb == null || data[i].tod == null) {
         continue;
       }
+
 
       switch (data[i].abb) {
         case "S":
@@ -359,14 +358,6 @@ d3.csv(
     }
     console.log("dataset ", dataset);
 
-    
-    function tW(d) {
-      if (x((d * 1800) / 100) > 0) return x((d * 1800) / 100);
-    }
-    function tH(d) {
-      return y((d * maxY) / 50);
-    }
-
     x = d3
       .scaleLinear()
       .domain(
@@ -379,7 +370,7 @@ d3.csv(
     svg
       .append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x).ticks(5));
+      .call(d3.axisBottom(x).ticks(16));
     
 
     y = d3
@@ -388,37 +379,25 @@ d3.csv(
       .range([height, 0]);
 
     svg.append("g").call(d3.axisLeft(y));
-
-  // draw vertical lines of the grid.
-  svg
-    .selectAll(".vlines")
-    .data(d3.range(101))
-    .enter()
-    .append("line")
-    .attr("class", "vlines")
-    .attr("x1", tW)
-    .attr("y1", 0)
-    .attr("x2", tW)
-    .attr("y2", function(d, i) {
-      //return d % 10 == 0 && d != 50 ? height + 12 : height;
-      return height;
-    });
-
-  //draw horizontal lines of the grid.
-  svg
-    .selectAll(".hlines")
-    .data(d3.range(51))
-    .enter()
-    .append("line")
-    .attr("class", "hlines")
-    .attr("x1", function(d, i) {
-      //return d % 10 == 0 && d != 50 ? -12 : 0;
-      return 0;
-    })
-    .attr("y1", tH)
-    .attr("x2", width)
-    .attr("y2", tH);
     
+    //horizontal grid
+    svg.selectAll(".hlines").data(y.ticks(8)).enter()
+    .append("line")
+        .attr("class", "hlines")
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("y1", function(d){ return y(d);})
+        .attr("y2", function(d){ return y(d);});
+
+    //vertical grid
+    svg.selectAll(".vlines").data(x.ticks(16)).enter()
+    .append("line")
+        .attr("class", "hlines")
+        .attr("x1", function(d){ return x(d);})
+        .attr("x2", function(d){ return x(d);})
+        .attr("y1", 0)
+        .attr("y2", height);
+
 
     showAll();
   }
