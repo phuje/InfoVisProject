@@ -1,6 +1,6 @@
 // set the dimensions and margins of the graph
 var margin = { top: 20, right: 30, bottom: 30, left: 55 },
-  width = 1200 - margin.left - margin.right,
+  width = 900 - margin.left - margin.right,
   height = 500 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
@@ -12,12 +12,6 @@ var svg = d3
   .attr("height", height + margin.top + margin.bottom)
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-var fillWithZeros = function(d) {
-  for (var i = 0; i < d.length; i++) {
-    d[i] = 0;
-  }
-};
 
 var colorArray = ["#3A01DF", "#FF0040", "#FACC2E", "#6E6E6E"];
 
@@ -104,167 +98,32 @@ var getHoverText = function(d) {
   return type;
 };
 
-var showDetail = function(d) {
-  d3.selectAll(".layer").remove();
-  hideTooltipStack(d);
 
-  console.log("showDetail", d);
-  switch (d.key) {
-    case "S":
-      type = "Kupferstiche";
-      for (var i = 0; i < numberYears; i++) {
-        dataset[i] = {
-          year: startYear + i,
-          S: ScountYears[i],
-          P: 0,
-          M: 0,
-          F: 0
-        };
-      }
-      break;
-    case "P":
-      type = "Porträts";
-      for (var i = 0; i < numberYears; i++) {
-        dataset[i] = {
-          year: startYear + i,
-          S: 0,
-          P: PcountYears[i],
-          M: 0,
-          F: 0
-        };
-      }
-      break;
-    case "M":
-      type = "Münzen";
-      for (var i = 0; i < numberYears; i++) {
-        dataset[i] = {
-          year: startYear + i,
-          S: 0,
-          P: 0,
-          M: McountYears[i],
-          F: 0
-        };
-      }
-      break;
-    case "F":
-      type = "Steinmetzarbeiten";
-      for (var i = 0; i < numberYears; i++) {
-        dataset[i] = {
-          year: startYear + i,
-          S: 0,
-          P: 0,
-          M: 0,
-          F: FcountYears[i]
-        };
-      }
-      break;
-    default:
-      break;
-  }
-
-  //stack the data?
-  var stackedData = d3.stack().keys(keys)(dataset);
-
-  var area = d3
-    .area()
-    .x(function(d, i) {
-      return x(d.data.year);
-    })
-    .y0(function(d) {
-      return y(d[0]);
-    }) //lower y
-    .y1(function(d) {
-      return y(d[1]);
-    }); //higher y
-
-  // Show the areas
-  svg
-    .selectAll("mylayers")
-    .data(stackedData)
-    .enter()
-    .append("path")
-    .style("fill", function(d) {
-      return getColor(d.key);
-    })
-    .attr("class", "layer")
-    .on("mouseover", showTooltipStack)
-    .on("mousemove", moveTooltipStack)
-    .on("mouseleave", hideTooltipStack)
-    .on("click", showAll)
-    .attr("d", area);
-};
-
+// Add X, Y axis
+var x, y;
 var maxY = 800;
-
-// Add X axis
-var x;
-
-// Add Y axis
-var y;
 
 // color palette
 /*var color = d3.scaleOrdinal()
 .domain(keys)
 .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf'])*/
 
-var showAll = function(d) {
-  d3.selectAll(".layer").remove();
-  console.log("showAll");
-
-  for (var i = 0; i < numberYears; i++) {
-    dataset[i] = {
-      year: startYear + i,
-      S: ScountYears[i],
-      P: PcountYears[i],
-      M: McountYears[i],
-      F: FcountYears[i]
-    };
+var fillWithZeros = function(d) {
+  for (var i = 0; i < d.length; i++) {
+    d[i] = 0;
   }
+};
 
-  //stack the data?
-  var stackedData = d3.stack().keys(keys)(dataset);
-  console.log("This is the stack result: ", stackedData);
-
-  var area = d3
-    .area()
-    .x(function(d, i) {
-      return x(d.data.year);
-    })
-    .y0(function(d) {
-      return y(d[0]);
-    }) //lower y
-    .y1(function(d) {
-      return y(d[1]);
-    }); //higher y
-
-  // Show the areas
-  svg
-    .selectAll("mylayers")
-    .data(stackedData)
-    .enter()
-    .append("path")
-    .style("fill", function(d) {
-      return getColor(d.key);
-    })
-    .attr("class", "layer")
-    .on("mouseover", showTooltipStack)
-    .on("mousemove", moveTooltipStack)
-    .on("mouseleave", hideTooltipStack)
-    .on("click", showDetail)
-    .attr("d", area);
-  };
-
-
-  function isValidData(dataItem){
-    dataItem.geb = parseInt(dataItem.geb);
-    dataItem.tod = parseInt(dataItem.tod);
-    return !isNaN (dataItem.geb) && !isNaN (dataItem.tod);
-  }
+function isValidData(dataItem){
+  dataItem.geb = parseInt(dataItem.geb);
+  dataItem.tod = parseInt(dataItem.tod);
+  return !isNaN (dataItem.geb) && !isNaN (dataItem.tod);
+}
 
 
 // Parse the Data
 d3.csv(
-  "https://raw.githubusercontent.com/phuje/Data-test/master/person-abb.csv",
+  "https://raw.githubusercontent.com/phuje/Data-test/master/datensatz.csv",
   function(data) {
     console.log("data", data);
     
@@ -287,8 +146,6 @@ d3.csv(
     fillWithZeros(McountYears);
     FcountYears = new Array(numberYears);
     fillWithZeros(FcountYears);
-
-
     
     for (var i = 0; i < data.length; i++) {
       data[i].geb = parseInt(data[i].geb);
@@ -373,53 +230,142 @@ d3.csv(
     console.log("dataset ", dataset);
     console.log("ScountYears",ScountYears);
 
-    x = d3
-      .scaleLinear()
-      .domain(
-        d3.extent(dataset, function(d) {
-          return d.year;
-        })
-      )
-      .range([0, width]);
+    buildXYAxes();
 
-    svg
-      .append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x).ticks(16));
-    
-
-    y = d3
-      .scaleLinear()
-      .domain([0, maxY])
-      .range([height, 0]);
-
-    svg.append("g").call(d3.axisLeft(y));
-    
-    //horizontal grid
-    svg.selectAll(".hlines").data(y.ticks(8)).enter()
-    .append("line")
-        .attr("class", "hlines")
-        .attr("x1", 0)
-        .attr("x2", width)
-        .attr("y1", function(d){ return y(d);})
-        .attr("y2", function(d){ return y(d);});
-
-    //vertical grid
-    svg.selectAll(".vlines").data(x.ticks(16)).enter()
-    .append("line")
-        .attr("class", "hlines")
-        .attr("x1", function(d){ return x(d);})
-        .attr("x2", function(d){ return x(d);})
-        .attr("y1", 0)
-        .attr("y2", height);
-
+    buildGrid();
 
     showAll();
   }
 
 );
 
-//filter stack button
+function buildXYAxes(){
+  x = d3
+    .scaleLinear()
+    .domain(
+      d3.extent(dataset, function(d) {
+        return d.year;
+      })
+    )
+    .range([0, width]);
+
+  svg
+    .append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x).ticks(16));
+
+  y = d3
+    .scaleLinear()
+    .domain([0, maxY])
+    .range([height, 0]);
+
+  svg.append("g").call(d3.axisLeft(y));
+}
+
+function buildGrid(){
+      //horizontal grid
+      svg.selectAll(".hlines").data(y.ticks(8)).enter()
+      .append("line")
+          .attr("class", "hlines")
+          .attr("x1", 0)
+          .attr("x2", width)
+          .attr("y1", function(d){ return y(d);})
+          .attr("y2", function(d){ return y(d);});
+  
+      //vertical grid
+      svg.selectAll(".vlines").data(x.ticks(16)).enter()
+      .append("line")
+          .attr("class", "hlines")
+          .attr("x1", function(d){ return x(d);})
+          .attr("x2", function(d){ return x(d);})
+          .attr("y1", 0)
+          .attr("y2", height);
+}
+
+//all layers are shown
+var showAll = function(d) {
+  d3.selectAll(".layer").remove();
+  console.log("showAll");
+
+  for (var i = 0; i < numberYears; i++) {
+    dataset[i] = {
+      year: startYear + i,
+      S: ScountYears[i],
+      P: PcountYears[i],
+      M: McountYears[i],
+      F: FcountYears[i]
+    };
+  }
+
+  stackAndDisplayLayers(dataset);
+  svg.selectAll(".layer").on("click", showDetail);
+
+};
+
+//when a layer is clicked, it shows only this layer
+var showDetail = function(d) {
+  d3.selectAll(".layer").remove();
+  hideTooltipStack(d);
+
+  console.log("showDetail", d);
+  switch (d.key) {
+    case "S":
+      type = "Kupferstiche";
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          S: ScountYears[i],
+          P: 0,
+          M: 0,
+          F: 0
+        };
+      }
+      break;
+    case "P":
+      type = "Porträts";
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          S: 0,
+          P: PcountYears[i],
+          M: 0,
+          F: 0
+        };
+      }
+      break;
+    case "M":
+      type = "Münzen";
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          S: 0,
+          P: 0,
+          M: McountYears[i],
+          F: 0
+        };
+      }
+      break;
+    case "F":
+      type = "Steinmetzarbeiten";
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          S: 0,
+          P: 0,
+          M: 0,
+          F: FcountYears[i]
+        };
+      }
+      break;
+    default:
+      break;
+  }
+
+  stackAndDisplayLayers(dataset);
+  svg.selectAll(".layer").on("click", showAll);
+};
+
+//filter stack button logic, for choosing to stack specific types
 function filterStack(){
   d3.selectAll(".layer").remove();
   console.log("showAll");
@@ -437,8 +383,13 @@ function filterStack(){
     dataset[i].F = stackF ? FcountYears[i] : 0;
   }
 
+  stackAndDisplayLayers(dataset);
+  svg.selectAll(".layer").on("click", showDetail);
+}
+
+//this function stacks the data as defined in dataset and displays the corresponding layers in the chart
+function stackAndDisplayLayers(dataset){
   var stackedData = d3.stack().keys(keys)(dataset);
-  console.log("This is the stack result: ", stackedData);
 
   var area = d3
     .area()
@@ -465,7 +416,6 @@ function filterStack(){
     .on("mouseover", showTooltipStack)
     .on("mousemove", moveTooltipStack)
     .on("mouseleave", hideTooltipStack)
-    .on("click", showDetail)
+    //.on("click", showAll)
     .attr("d", area);
-
 }
