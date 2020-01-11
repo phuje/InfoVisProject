@@ -201,6 +201,7 @@ function updateBubbleChart(arr){
   } else {
     // [0, 0, 0]
     dataNode = [totalPeople];
+    resetZoom();
   }
 
   addBubbles();
@@ -280,6 +281,11 @@ function arraysEqual(a, b) {
     if (a[i] !== b[i]) return false;
   }
   return true;
+}
+
+function resetZoom(){
+  d3.select(".zoom input").property("value", minZoom);
+  slided();
 }
 
 

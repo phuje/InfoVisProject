@@ -38,13 +38,11 @@ function updateVis() {
 
   // if reset button of main filter was clicked, the views of bubble chart and stacked area chart are reset to totalNumberPeople
   function resetFilters(){
-    //TODO add change on stackedAreaChart
+    
     console.log("resetFilters()");
     d3.selectAll(".mainFilterCheckbox").property('checked', false);
   
-    //reset zoom on bubble chart
-    d3.select(".zoom input").property("value", minZoom);
-    slided();
+    resetZoom();
   
     updateVis();
   }
