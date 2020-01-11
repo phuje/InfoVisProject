@@ -94,8 +94,9 @@ var slider = d3
   .attr("step", (maxZoom - minZoom) / 100000)
   .on("input", slided);
 
-function slided(d) {
-  sizeDivisor = 50 / d3.select(this).property("value");
+//is called when zoom slider is moved - calculates the new sizeDivisor which scales the bubbles and updates the view
+function slided() {
+  sizeDivisor = 50 / d3.select(".zoom input").property("value");
   updateVis();
 }
 
@@ -309,5 +310,13 @@ function arraysEqual(a, b) {
 }
 
 function resetFilters(){
-  //TODO add
+  //TODO add change on stackedAreaChart
+  console.log("resetFilters()");
+  d3.selectAll(".mainFilterCheckbox").property('checked', false);
+
+  //reset zoom on bubble chart
+  d3.select(".zoom input").property("value", minZoom);
+  slided();
+
+  updateVis();
 }

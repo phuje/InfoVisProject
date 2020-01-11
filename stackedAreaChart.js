@@ -387,6 +387,14 @@ function filterStack(){
   svg.selectAll(".layer").on("click", showDetail);
 }
 
+function showWholeStack(){
+  showAll();
+  d3.selectAll(".stackFilterCheckbox").property('checked', true);
+}
+
+//default case
+d3.selectAll(".stackFilterCheckbox").property('checked', true);
+
 //this function stacks the data as defined in dataset and displays the corresponding layers in the chart
 function stackAndDisplayLayers(dataset){
   var stackedData = d3.stack().keys(keys)(dataset);
