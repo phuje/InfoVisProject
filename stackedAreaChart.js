@@ -516,4 +516,5 @@ function updateStackedAreaDataset(){
 function updateStackedAreaChart(){
   updateStackedAreaDataset();
   stackAndDisplayLayers();
+  svg.selectAll(".layer").on("click", showDetail);
 }
