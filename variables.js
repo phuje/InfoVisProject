@@ -8,128 +8,128 @@ var ScountYears, PcountYears, McountYears,FcountYears;
 
 //// BUBBLE CHART VARIABLES
 var totalPeople = {
-  descr: "Total number of people in dataset: ",
+  descr: "Komplette Anzahl der Personen im Datensatz: ",
   number: 0,
   radius: 0
 };
 
 var totalMen = {
-  descr: "Number of men in dataset: ",
+  descr: "Anzahl der Männer: ",
   number: 0,
   radius: 0
 };
 
 var totalWomen = {
-  descr: "Number of women in dataset: ",
+  descr: "Anzahl der Frauen: ",
   number: 0,
   radius: 0
 };
 
 //all persons with a picture
 var withDepiction = {
-  descr: "Number of people with a depiction: ",
+  descr: "Anzahl der Personen mit Abbildung: ",
   number: 0,
   radius: 0
 };
 
 var femaleWithPic = {
-  descr: "Number of women with a depiction: ",
+  descr: "Anzahl der Frauen mit Abbildung: ",
   number: 0,
   radius: 0
 };
 
 var maleWithPic = {
-  descr: "Number of men with a depiction: ",
+  descr: "Anzahl der Männer mit Abbildung: ",
   number: 0,
   radius: 0
 };
 
 var noDepiction = {
-  descr: "Number of people without a depiction: ",
+  descr: "Anzahl der Personen ohne Abbildung: ",
   number: 0,
   radius: 0
 };
 
 var femaleWithoutPic = {
-  descr: "Number of women without a depiction: ",
+  descr: "Anzahl der Frauen ohne Abbildung: ",
   number: 0,
   radius: 0
 };
 
 var maleWithoutPic = {
-  descr: "Number of men without a depiction: ",
+  descr: "Anzahl der Männer ohne Abbildung: ",
   number: 0,
   radius: 0
 };
 
 var kupferstichS = {
-  descr: "Number of Kupferstiche: ",
+  descr: "Anzahl der Kupferstiche: ",
   number: 0,
   radius: 0
 };
 
 var kupferstichFem = {
-  descr: "Number of Kupferstiche of women: ",
+  descr: "Anzahl der Kupferstiche von Frauen: ",
   number: 0,
   radius: 0
 };
 
 var kupferstichMale = {
-  descr: "Number of Kupferstiche of men: ",
+  descr: "Anzahl der Kupferstiche von Männern: ",
   number: 0,
   radius: 0
 };
 
 var portraitP = {
-  descr: "Number of portraits: ",
+  descr: "Anzahl der Portraits: ",
   number: 0,
   radius: 0
 };
 
 var portraitFem = {
-  descr: "Number of portraits of women: ",
+  descr: "Anzahl der Portraits von Frauen: ",
   number: 0,
   radius: 0
 };
 
 var portraitMale = {
-  descr: "Number of portraits of men: ",
+  descr: "Anzahl der Portraits von Männern: ",
   number: 0,
   radius: 0
 };
 
 var steinmetzF = {
-  descr: "Number of Steinmetzarbeiten: ",
+  descr: "Anzahl der Steinmetzarbeiten: ",
   number: 0,
   radius: 0
 };
 
 var steinmetzFem = {
-  descr: "Number of Steinmetzarbeiten of women: ",
+  descr: "Anzahl der Steinmetzarbeiten von Frauen: ",
   number: 0,
   radius: 0
 };
 
 var steinmetzMale = {
-  descr: "Number of Steinmetzarbeiten of men: ",
+  descr: "Anzahl der Steinmetzarbeiten von Männern: ",
   number: 0,
   radius: 0
 };
 
 var muenzeM = {
-  descr: "Number of coin depictions: ",
+  descr: "Anzahl der Münzabbildungen: ",
   number: 0,
   radius: 0
 };
 
 var muenzeFem = {
-  descr: "Number of coin depictions of women: ",
+  descr: "Anzahl der Münzabbildungen von Frauen: ",
   number: 0,
   radius: 0
 };
 
 var muenzeMale = {
-  descr: "Number of coin depictions of men: ",
+  descr: "Anzahl der Münzabbildungen von Männern: ",
   number: 0,
   radius: 0
 };
