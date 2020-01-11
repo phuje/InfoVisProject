@@ -1,19 +1,19 @@
 // set the dimensions and margins of the graph
-var margin = { top: 20, right: 30, bottom: 20, left: 30 },
-  width = document.getElementById("stackedView").offsetWidth - margin.left - margin.right,
-  height = 400 - margin.top - margin.bottom;
+var margin = { top: 20, right: 30, bottom: 50, left: 50 },
+  width = document.getElementById("stackedView").offsetWidth /*- margin.left - margin.right*/,
+  height = 600 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 var svg = d3
   .select("#stackedChart")
   .append("svg")
   .attr("class", ".svg-content")
-  .attr("width", width + margin.left + margin.right)
+  .attr("width", width/* + margin.left + margin.right*/)
   .attr("height", height + margin.top + margin.bottom)
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var colorArray = ["#3A01DF", "#FF0040", "#FACC2E", "#6E6E6E"];
+var colorArray = ["#3A01DF", "#FF0040", "#FACC2E", "#6E6E6E", "#66c2a5", "#ff9090"];
 
 var getColor = function(key) {
   switch (key) {
@@ -29,6 +29,10 @@ var getColor = function(key) {
     case "F":
       return colorArray[3];
       break;
+
+    case "N":
+      return colorArray[4];
+      break;
     default:
       break;
   }
@@ -37,7 +41,8 @@ var getColor = function(key) {
 var t = d3.transition().duration(2000);
 
 // List of groups = header of the csv files
-var keys = ["S", "P", "M", "F"];
+var keysPictures = ["S", "P", "M", "F"];
+var keysTotalPeople = ["N"];
 
 // ---------------------------//
 //      TOOLTIP               //
@@ -77,31 +82,33 @@ var hideTooltipStack = function(d) {
 };
 
 var getHoverText = function(d) {
-  var type = "";
+  var text = "";
   switch (d.key) {
     case "S":
-      type = "Kupferstiche";
+      text = "Kupferstiche";
       break;
     case "P":
-      type = "Porträts";
+      text = "Porträts";
       break;
     case "M":
-      type = "Münzen";
+      text = "Münzen";
       break;
     case "F":
-      type = "Steinmetzarbeiten";
+      text = "Steinmetzarbeiten";
       break;
+    case "N":
+      text = "Alle Personen im Datensatz mit Geburts- und Todesjahr"
     default:
       break;
   }
 
-  return type;
+  return text;
 };
 
 
 // Add X, Y axis
 var x, y;
-var maxY = 800;
+var maxY = 2500;
 
 // color palette
 /*var color = d3.scaleOrdinal()
@@ -121,7 +128,7 @@ function isValidData(dataItem){
 }
 
 
-// Parse the Data
+// Parse the Data and count numbers
 d3.csv(
   "https://raw.githubusercontent.com/phuje/Data-test/master/datensatz.csv",
   function(data) {
@@ -135,17 +142,7 @@ d3.csv(
     numberYears = latestYear -startYear +1;
     console.log("numberYears",numberYears);
 
-
-    dataset = new Array(numberYears);
-
-    ScountYears = new Array(numberYears);
-    fillWithZeros(ScountYears);
-    PcountYears = new Array(numberYears);
-    fillWithZeros(PcountYears);
-    McountYears = new Array(numberYears);
-    fillWithZeros(McountYears);
-    FcountYears = new Array(numberYears);
-    fillWithZeros(FcountYears);
+    initialiseArrays();
     
     for (var i = 0; i < data.length; i++) {
       data[i].geb = parseInt(data[i].geb);
@@ -153,6 +150,15 @@ d3.csv(
       if (data[i].geb == null || data[i].tod == null) {
         continue;
       }
+
+      for (
+        var j = data[i].geb - startYear;
+        j <= data[i].tod - startYear;
+        j++
+      ) {
+        totalPeopleCountYears[j]++;
+      }
+
 
       switch (data[i].abb) {
         case "S":
@@ -216,10 +222,8 @@ d3.csv(
       }
     }
 
-
-
     for (var i = 0; i < numberYears; i++) {
-      dataset[i] = {
+      datasetPictures[i] = {
         year: startYear + i,
         S: ScountYears[i],
         P: PcountYears[i],
@@ -227,14 +231,29 @@ d3.csv(
         F: FcountYears[i]
       };
     }
-    console.log("dataset ", dataset);
-    console.log("ScountYears",ScountYears);
+    //console.log("dataset ", dataset);
+
+    for (var i = 0; i < numberYears; i++) {
+      datasetTotalPeople[i] = {
+        year: startYear + i,
+        N: totalPeopleCountYears[i]
+      };
+    }
+
+    
+    //dataset = datasetPictures;
+    
+    updateStackedAreaDataset();
 
     buildXYAxes();
 
     buildGrid();
 
-    showAll();
+    
+    stackAndDisplayLayers();
+
+
+    //showAll();
   }
 
 );
@@ -284,11 +303,10 @@ function buildGrid(){
 
 //all layers are shown
 var showAll = function(d) {
-  d3.selectAll(".layer").remove();
   console.log("showAll");
 
   for (var i = 0; i < numberYears; i++) {
-    dataset[i] = {
+    datasetPictures[i] = {
       year: startYear + i,
       S: ScountYears[i],
       P: PcountYears[i],
@@ -297,14 +315,16 @@ var showAll = function(d) {
     };
   }
 
-  stackAndDisplayLayers(dataset);
+  dataset = datasetPictures;
+  keys = keysPictures;
+
+  stackAndDisplayLayers();
   svg.selectAll(".layer").on("click", showDetail);
 
 };
 
 //when a layer is clicked, it shows only this layer
 var showDetail = function(d) {
-  d3.selectAll(".layer").remove();
   hideTooltipStack(d);
 
   console.log("showDetail", d);
@@ -312,7 +332,7 @@ var showDetail = function(d) {
     case "S":
       type = "Kupferstiche";
       for (var i = 0; i < numberYears; i++) {
-        dataset[i] = {
+        datasetPictures[i] = {
           year: startYear + i,
           S: ScountYears[i],
           P: 0,
@@ -324,7 +344,7 @@ var showDetail = function(d) {
     case "P":
       type = "Porträts";
       for (var i = 0; i < numberYears; i++) {
-        dataset[i] = {
+        datasetPictures[i] = {
           year: startYear + i,
           S: 0,
           P: PcountYears[i],
@@ -336,7 +356,7 @@ var showDetail = function(d) {
     case "M":
       type = "Münzen";
       for (var i = 0; i < numberYears; i++) {
-        dataset[i] = {
+        datasetPictures[i] = {
           year: startYear + i,
           S: 0,
           P: 0,
@@ -348,7 +368,7 @@ var showDetail = function(d) {
     case "F":
       type = "Steinmetzarbeiten";
       for (var i = 0; i < numberYears; i++) {
-        dataset[i] = {
+        datasetPictures[i] = {
           year: startYear + i,
           S: 0,
           P: 0,
@@ -360,14 +380,15 @@ var showDetail = function(d) {
     default:
       break;
   }
+  dataset = datasetPictures;
+  keys = keysPictures;
 
-  stackAndDisplayLayers(dataset);
+  stackAndDisplayLayers();
   svg.selectAll(".layer").on("click", showAll);
 };
 
 //filter stack button logic, for choosing to stack specific types
 function filterStack(){
-  d3.selectAll(".layer").remove();
   console.log("showAll");
 
   var stackS = document.getElementById("kupferstichStack").checked ? 1 : 0;
@@ -376,17 +397,21 @@ function filterStack(){
   var stackF = document.getElementById("steinmetzStack").checked ? 1 : 0;
 
   for (var i = 0; i < numberYears; i++) {
-    dataset[i].year = startYear + i;
-    dataset[i].S = stackS ? ScountYears[i] : 0;
-    dataset[i].P = stackP ? PcountYears[i] : 0;
-    dataset[i].M = stackM ? McountYears[i] : 0;
-    dataset[i].F = stackF ? FcountYears[i] : 0;
+    datasetPictures[i].year = startYear + i;
+    datasetPictures[i].S = stackS ? ScountYears[i] : 0;
+    datasetPictures[i].P = stackP ? PcountYears[i] : 0;
+    datasetPictures[i].M = stackM ? McountYears[i] : 0;
+    datasetPictures[i].F = stackF ? FcountYears[i] : 0;
   }
 
-  stackAndDisplayLayers(dataset);
+  dataset = datasetPictures;
+  keys = keysPictures;
+
+  stackAndDisplayLayers();
   svg.selectAll(".layer").on("click", showDetail);
 }
 
+//this function is called when the stack filter reset button is pressed. it resets the stacked area chart to show all layers
 function showWholeStack(){
   showAll();
   d3.selectAll(".stackFilterCheckbox").property('checked', true);
@@ -396,8 +421,13 @@ function showWholeStack(){
 d3.selectAll(".stackFilterCheckbox").property('checked', true);
 
 //this function stacks the data as defined in dataset and displays the corresponding layers in the chart
-function stackAndDisplayLayers(dataset){
+function stackAndDisplayLayers(){
+
+  d3.selectAll(".layer").remove();
+
   var stackedData = d3.stack().keys(keys)(dataset);
+
+  console.log("stackedData: ", stackedData);
 
   var area = d3
     .area()
@@ -426,4 +456,64 @@ function stackAndDisplayLayers(dataset){
     .on("mouseleave", hideTooltipStack)
     //.on("click", showAll)
     .attr("d", area);
+}
+
+
+//initialize arrays
+function initialiseArrays(){
+
+  dataset = new Array(numberYears);
+  datasetTotalPeople = new Array(numberYears);
+  datasetPictures= new Array(numberYears);
+
+  ScountYears = new Array(numberYears);
+  fillWithZeros(ScountYears);
+  PcountYears = new Array(numberYears);
+  fillWithZeros(PcountYears);
+  McountYears = new Array(numberYears);
+  fillWithZeros(McountYears);
+  FcountYears = new Array(numberYears);
+  fillWithZeros(FcountYears);
+
+  totalPeopleCountYears = new Array(numberYears);
+  fillWithZeros(totalPeopleCountYears);
+}
+
+function updateStackedAreaDataset(){
+  if (arraysEqual([1, 0, 0], splitparamsArray)) {
+    //dataNode = [noDepiction, withDepiction];
+  } else if (arraysEqual([1, 1, 0], splitparamsArray)) {
+    //dataNode = [maleWithPic, femaleWithPic, maleWithoutPic, femaleWithoutPic];
+  } else if (arraysEqual([0, 1, 0], splitparamsArray)) {
+    //dataNode = [totalMen, totalWomen];
+  } else if (arraysEqual([0, 0, 1], splitparamsArray) || arraysEqual([1, 0, 1], splitparamsArray)) {
+    //dataNode = [kupferstichS, portraitP, steinmetzF, muenzeM];
+    dataset = datasetPictures;
+    keys = keysPictures;
+    document.getElementById("stackedFilter").style.display = "initial";
+  } else if (arraysEqual([0, 1, 1], splitparamsArray) || arraysEqual([1, 1, 1], splitparamsArray)) {
+    /*dataNode = [
+      kupferstichFem,
+      portraitFem,
+      steinmetzFem,
+      muenzeFem,
+      kupferstichMale,
+      portraitMale,
+      steinmetzMale,
+      muenzeMale
+    ];*/
+  } else {
+    // [0, 0, 0]
+    dataset = datasetTotalPeople;
+    keys = keysTotalPeople;
+    document.getElementById("stackedFilter").style.display = "none";
+    
+  }
+
+}
+
+//called by controller when filter has changed
+function updateStackedAreaChart(){
+  updateStackedAreaDataset();
+  stackAndDisplayLayers();
 }

@@ -82,7 +82,7 @@
       }
 
       .filterOptions {
-        width: 100%;
+        width: 75%;
         float: left;
         padding: 10px;
         text-align: center;
@@ -103,9 +103,15 @@
       }
 
       #stackedFilter{
-        margin-left: 10px;
-        text-align: center;
+        width: 25%;
+        /*margin-left: 10px;*/
+        /*text-align: center;*/
         padding: 10px;
+      }
+
+      #filterDiv{
+        width: 100%;
+        float: left;
       }
 
       .zoom{
@@ -168,6 +174,28 @@
         </p>
       </div>
       <div id = "stackedChart"></div>
+      
+    </div>
+
+    <div id = "filterDiv">
+      <div class="filterOptions">
+        <h4>Filtere die Daten:</h4>
+        <p id="firstFilter">
+          <input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkWithDepiction"/>
+          nach "Person besitzt Abbildung oder nicht"
+        </p>
+        <p>
+          <input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkGender" />
+          nach Geschlecht
+        </p>
+        <p>
+          <input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkPicType" />
+          nach Art der Abbildung
+        </p>
+        <button type ="button" class = "button" id="resetButton" onclick="resetFilters()">Reset</button>
+        
+      </div>
+
       <div id="stackedFilter">
         <h4>Filtere den Stack hier: </h4>
         
@@ -193,29 +221,11 @@
       </div>
     </div>
 
-    <div class="filterOptions">
-      <h4>Filtere die Daten:</h4>
-      <p id="firstFilter">
-        <input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkWithDepiction"/>
-        nach "Person besitzt Abbildung oder nicht"
-      </p>
-      <p>
-        <input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkGender" />
-        nach Geschlecht
-      </p>
-      <p>
-        <input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkPicType" />
-        nach Art der Abbildung
-      </p>
-      <button type ="button" class = "button" id="resetButton" onclick="resetFilters()">Reset</button>
-      
-    </div>
-
-
     <script type="text/javascript" src="variables.js"></script>
     <script src="https://d3js.org/d3.v4.js"></script>
     <script type="text/javascript" src="bubbleChart.js"></script>
     <script type="text/javascript" src="stackedAreaChart.js"></script>
+    <script type="text/javascript" src="controller.js"></script>
 
     <script>
       /*function showBubbleChart() {

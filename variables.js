@@ -1,14 +1,32 @@
-//// stacked area chart variables
+//general
+var splitparamsArray;
+
+
+//// STACKED AREA CHART VARIABLES ////
+
 var numberYears;
 var startYear;
+
+//dataset is an array that contains numbers for each group for each year to draw the stacked area chart
 var dataset;
+
+var datasetPictures;
+
 var ScountYears, PcountYears, McountYears,FcountYears;
 
+var totalPeopleCountYears;
+
+var datasetTotalPeople;
 
 
-//// BUBBLE CHART VARIABLES
+
+//// BUBBLE CHART VARIABLES ////
+
+//node that contains the information for all bubbles
+var dataNode = [];
+
 var totalPeople = {
-  descr: "Komplette Anzahl der Personen im Datensatz: ",
+  descr: "Gesamtanzahl der Personen im Datensatz: ",
   number: 0,
   radius: 0
 };
