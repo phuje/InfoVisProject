@@ -1,5 +1,5 @@
 var margin = { top: 10 , right: 10, bottom: 10, left: 10 },
-  width = window.innerWidth * 0.45,
+  width = document.getElementById("bubbleChart").offsetWidth - margin.left - margin.right,
   height = 600/*window.innerHeight*/ ,
   sizeDivisor = 50,
   nodePadding = 2.5;
