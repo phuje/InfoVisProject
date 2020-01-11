@@ -7,6 +7,8 @@
     <style>
       body {
         font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        margin: 0 auto;
+        background-color: #f0f0f2;
       }
 
       html {
@@ -40,23 +42,30 @@
 
       #header {
         width: 100%;
-        height: 160px;
         padding: 5px;
         text-align: center;
         background-color: aliceblue;
       }
 
       #datavis {
-        width: 75%;
+        width: 100%;
         float: left;
       }
 
-      #selectBubble {
-        text-decoration: underline;
+      #bubbleChart{
+        width: 44.5%;
+        float: left;
+        border-radius: 1em;
+        background-color: #fff;
+        margin: 0.25%;
       }
 
       #stackedView {
-        display: none;
+        width: 54.5%;
+        float: left;
+        border-radius: 1em;
+        background-color: #fff;
+        margin: 0.25%;
       }
 
       #chartSelectionBox {
@@ -73,9 +82,10 @@
       }
 
       .filterOptions {
-        width: 25%;
+        width: 100%;
         float: left;
         padding: 10px;
+        text-align: center;
       }
 
       .vlines,
@@ -87,12 +97,23 @@
       }
 
       #stackedChartSubHeader{
+        width: 100%;
         margin-left: 10px;
-        height: 100px;
+        padding: 10px;
       }
 
       #stackedFilter{
         margin-left: 10px;
+        text-align: center;
+        padding: 10px;
+      }
+
+      .zoom{
+        text-align: center;
+      }
+
+      h4{
+        text-align: center;
       }
 
     </style>
@@ -101,16 +122,19 @@
     <div id="header">
       <h4>Personen und ihre Abbildungen im Habsburger Kaiserhof</h4>
       Jede Person wurde maximal einmal abgebildet.
-
-      <div id="chartSelectionBox">
-        <span class="chartSelection" id="selectBubble" onclick="showBubbleChart()">Bubble Chart view</span>
-        <span class="chartSelection" id="selectStack" onclick="showStackedAreaChart()">Stacked Area Chart View</span>
-      </div>
     </div>
+
+    
+    <div id="bubbleChart">
+      <h4>Die Häufigkeiten über die gesamte Zeit kumuliert.</h4>
+      <div id="datavis"></div>
+      <p class="zoom">Zoom <br /></p>
+    </div>
+
 
     <div id="stackedView">
       <div id="stackedChartSubHeader">
-        <h3>Häufigkeiten der Abbildungen über die Zeit</h3>
+        <h4>Die Häufigkeiten im Zeitverlauf:</h4>
         <p>
           In dem benutzten Datensatz wurden nur die Personen berücksichtigt, die
           ein Geburtsjahr und ein Todesjahr haben. Für jedes Jahr wurde eine
@@ -144,25 +168,22 @@
       </div>
     </div>
 
-    <div id="bubbleChart">
-      <div id="datavis"></div>
-      <div class="filterOptions">
-        <h4>Filter the data here:</h4>
-        <br />
-        <p id="firstFilter">
-          <input onclick="updateVis()" type="checkbox" id="checkWithDepiction"/>
-          Split persons with/without depiction
-        </p>
-        <p>
-          <input onclick="updateVis()" type="checkbox" id="checkGender" />
-          Split gender
-        </p>
-        <p>
-          <input onclick="updateVis()" type="checkbox" id="checkPicType" />
-          Split type of depiction
-        </p>
-        <p class="zoom">Zoom <br /></p>
-      </div>
+    <div class="filterOptions">
+      <h4>Filtere die Daten:</h4>
+      <p id="firstFilter">
+        <input onclick="updateVis()" type="checkbox" id="checkWithDepiction"/>
+        nach "Person besitzt Abbildung oder nicht"
+      </p>
+      <p>
+        <input onclick="updateVis()" type="checkbox" id="checkGender" />
+        nach Geschlecht
+      </p>
+      <p>
+        <input onclick="updateVis()" type="checkbox" id="checkPicType" />
+        nach Art der Abbildung
+      </p>
+      <button type ="button" id="resetButton" onclick="resetFilters()">Reset</button>
+      
     </div>
 
 
@@ -170,22 +191,9 @@
     <script src="https://d3js.org/d3.v4.js"></script>
     <script type="text/javascript" src="bubbleChart.js"></script>
     <script type="text/javascript" src="stackedAreaChart.js"></script>
-    <script>
-      function showBubbleChart() {
-        document.getElementById("stackedView").style.display = "none";
-        document.getElementById("selectStack").style.textDecoration = "none";
-        document.getElementById("bubbleChart").style.display = "initial";
-        document.getElementById("selectBubble").style.textDecoration =
-          "underline";
-      }
 
-      function showStackedAreaChart() {
-        document.getElementById("bubbleChart").style.display = "none";
-        document.getElementById("selectBubble").style.textDecoration = "none";
-        document.getElementById("stackedView").style.display = "initial";
-        document.getElementById("selectStack").style.textDecoration =
-          "underline";
-      }
+    <script>
+
     </script>
   </body>
 </html>
