@@ -1,6 +1,6 @@
-var margin = { top: 50 /*, right: 30, bottom: 30, left: 55*/ },
-  width = window.innerWidth * 0.75,
-  height = window.innerHeight,
+var margin = { top: 10 , right: 10, bottom: 10, left: 10 },
+  width = window.innerWidth * 0.45,
+  height = 600/*window.innerHeight*/ ,
   sizeDivisor = 50,
   nodePadding = 2.5;
 
@@ -67,12 +67,12 @@ var showTooltip = function(d) {
     .style("opacity", 1)
     .html(d.descr + d.number)
     .style("left", d3.mouse(this)[0] + 30 + "px")
-    .style("top", d3.mouse(this)[1] + 160 + 30 + "px");
+    .style("top", d3.mouse(this)[1] + 120 + 30 + "px");
 };
 var moveTooltip = function(d) {
   tooltip
     .style("left", d3.mouse(this)[0] + 30 + "px")
-    .style("top", d3.mouse(this)[1] + 160+ 30 + "px");
+    .style("top", d3.mouse(this)[1] + 120+ 30 + "px");
 };
 var hideTooltip = function(d) {
   tooltip
@@ -306,4 +306,8 @@ function arraysEqual(a, b) {
     if (a[i] !== b[i]) return false;
   }
   return true;
+}
+
+function resetFilters(){
+  //TODO add
 }

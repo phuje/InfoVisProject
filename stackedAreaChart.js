@@ -1,7 +1,7 @@
 // set the dimensions and margins of the graph
 var margin = { top: 20, right: 30, bottom: 30, left: 55 },
   width = 900 - margin.left - margin.right,
-  height = 500 - margin.top - margin.bottom;
+  height = 400 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 var svg = d3
@@ -61,13 +61,13 @@ var showTooltipStack = function(d) {
   tooltipStack
     .style("opacity", 1)
     .html(getHoverText(d))
-    .style("left", d3.mouse(this)[0] + margin.left +30 + "px")
-    .style("top", d3.mouse(this)[1] + margin.top +160+ 80+30 + "px");
+    .style("left", d3.mouse(this)[0]+document.getElementById("bubbleChart").offsetWidth + "px")
+    .style("top", d3.mouse(this)[1] + margin.top +100+ 80+30 + "px");
 };
 var moveTooltipStack = function(d) {
   tooltipStack
-    .style("left", d3.mouse(this)[0] + margin.left + 30 + "px")
-    .style("top", d3.mouse(this)[1] + margin.top + 160+ 80+ 30 + "px");
+    .style("left", d3.mouse(this)[0]+document.getElementById("bubbleChart").offsetWidth  + margin.left + 30 + "px")
+    .style("top", d3.mouse(this)[1] + margin.top + 100+ 80+ 30 + "px");
 };
 var hideTooltipStack = function(d) {
   tooltipStack
