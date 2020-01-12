@@ -1,6 +1,31 @@
 //general
 var splitparamsArray;
 
+var colorArray = ["#3A01DF", "#FF0040", "#FACC2E", "#6E6E6E", "#66c2a5", "#ff9090"];
+
+var getColor = function(key) {
+  switch (key) {
+    case "S":
+      return colorArray[0];
+      break;
+    case "P":
+      return colorArray[1];
+      break;
+    case "M":
+      return colorArray[2];
+      break;
+    case "F":
+      return colorArray[3];
+      break;
+    case "N":
+      return colorArray[4];
+      break;
+    default:
+      break;
+  }
+};
+
+
 
 //// STACKED AREA CHART VARIABLES ////
 
@@ -28,7 +53,8 @@ var dataNode = [];
 var totalPeople = {
   descr: "Gesamtanzahl der Personen im Datensatz: ",
   number: 0,
-  radius: 0
+  radius: 0,
+  key: "N"
 };
 
 var totalMen = {
@@ -83,7 +109,8 @@ var maleWithoutPic = {
 var kupferstichS = {
   descr: "Anzahl der Kupferstiche: ",
   number: 0,
-  radius: 0
+  radius: 0,
+  key: "S"
 };
 
 var kupferstichFem = {
@@ -101,7 +128,8 @@ var kupferstichMale = {
 var portraitP = {
   descr: "Anzahl der Portraits: ",
   number: 0,
-  radius: 0
+  radius: 0,
+  key: "P"
 };
 
 var portraitFem = {
@@ -119,7 +147,8 @@ var portraitMale = {
 var steinmetzF = {
   descr: "Anzahl der Steinmetzarbeiten: ",
   number: 0,
-  radius: 0
+  radius: 0,
+  key: "F"
 };
 
 var steinmetzFem = {
@@ -137,7 +166,8 @@ var steinmetzMale = {
 var muenzeM = {
   descr: "Anzahl der Münzabbildungen: ",
   number: 0,
-  radius: 0
+  radius: 0,
+  key: "M"
 };
 
 var muenzeFem = {
