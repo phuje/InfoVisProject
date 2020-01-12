@@ -13,31 +13,6 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var colorArray = ["#3A01DF", "#FF0040", "#FACC2E", "#6E6E6E", "#66c2a5", "#ff9090"];
-
-var getColor = function(key) {
-  switch (key) {
-    case "S":
-      return colorArray[0];
-      break;
-    case "P":
-      return colorArray[1];
-      break;
-    case "M":
-      return colorArray[2];
-      break;
-    case "F":
-      return colorArray[3];
-      break;
-
-    case "N":
-      return colorArray[4];
-      break;
-    default:
-      break;
-  }
-};
-
 var t = d3.transition().duration(2000);
 
 // List of groups = header of the csv files

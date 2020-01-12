@@ -250,6 +250,7 @@ function addBubbles() {
       return d.radius / sizeDivisor;
     })
     .attr("fill", function(d) {
+      //console.log("get color key: "+d.key);
       return getColor(d.key);
     })
     .attr("cx", function(d) {
