@@ -7,12 +7,13 @@ var colorArray = ["#3A01DF",
 "#6E6E6E", 
 "#66c2a5", 
 "#ff9090", 
-"#fc8d62",
+"#034f84",
 "#8da0cb",
 "#e78ac3",
+"#80ced6",
 "#a6d854",
 "#ffd92f",
-"#e5c494",
+"#622569",
 "#b3b3b3"];
 
 var getColor = function(key) {
@@ -29,56 +30,56 @@ var getColor = function(key) {
     case "F":
       return colorArray[3];
       break;
-    case "N":
-      return colorArray[4];
+    case "N": //totalNumberPeople
+      return "#2196F3";
       break;
     case "male":
-      return colorArray[3];
+      return "#303F9F";
       break;
     case "female":
-      return colorArray[6];
+      return "#FF4081";
       break;
     case "pic":
-      return colorArray[7];
+      return "#FF4081";
       break;
     case "nopic":
-      return colorArray[8];
+      return "#9C27B0";
       break;
     case "femPic":
-      return colorArray[7];
+      return "#009688";
       break;
     case "malePic":
-      return colorArray[8];
+      return "#FFEB3B";
       break;
     case "femNoPic":
-      return colorArray[5];
+      return "#9C27B0";
       break;
     case "maleNoPic":
-      return colorArray[6];
+      return "#00BCD4";
       break;
     case "femS":
-      return colorArray[5];
+      return "#C8E6C9";
       break;
     case "maleS":
-      return colorArray[6];
+      return "#4CAF50";
       break;
     case "femP":
-      return colorArray[0];
+      return "#FF5252";
       break;
     case "maleP":
-      return colorArray[1];
+      return "#512DA8";
       break;
     case "femM":
-      return colorArray[2];
+      return "#E1BEE7";
       break;
     case "maleM":
-      return colorArray[3];
+      return "#E1BEE7";
       break;
     case "femF":
-      return colorArray[4];
+      return "#FF9800";
       break;
     case "maleF":
-      return colorArray[7];
+      return "#FFECB3";
       break;
     default: colorArray[0];
       break;
