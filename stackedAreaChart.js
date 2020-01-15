@@ -15,9 +15,6 @@ var svg = d3
 
 var t = d3.transition().duration(2000);
 
-// List of groups = header of the csv files
-var keysPictures = ["S", "P", "M", "F"];
-var keysTotalPeople = ["N"];
 
 // ---------------------------//
 //      TOOLTIP               //
@@ -72,7 +69,14 @@ var getHoverText = function(d) {
       text = "Steinmetzarbeiten";
       break;
     case "N":
-      text = "Alle Personen im Datensatz mit Geburts- und Todesjahr"
+      text = "Alle Personen im Datensatz mit Geburts- und Todesjahr";
+      break;
+    case "male":
+      text = "Männer";
+      break;
+    case "female":
+      text = "Frauen";
+      break;
     default:
       break;
   }
@@ -126,6 +130,7 @@ d3.csv(
         continue;
       }
 
+      //for no filter 0, 0, 0 
       for (
         var j = data[i].geb - startYear;
         j <= data[i].tod - startYear;
@@ -134,7 +139,33 @@ d3.csv(
         totalPeopleCountYears[j]++;
       }
 
+      //for gender filter
+      if(data[i].sex != null){
+        switch (data[i].sex){
+          case "m": 
+            for (
+              var j = data[i].geb - startYear;
+              j <= data[i].tod - startYear;
+              j++
+            ){
+              maleCountYears[j]++;
+            }
+          break;
+          case "w": 
+            for (
+              var j = data[i].geb - startYear;
+              j <= data[i].tod - startYear;
+              j++
+            ){
+              femaleCountYears[j]++;
+            }
+          break;
+          default: break;
+        }
+      }
+      
 
+      //filter type of depiction
       switch (data[i].abb) {
         case "S":
           for (
@@ -215,6 +246,15 @@ d3.csv(
       };
     }
 
+    for (var i = 0; i < numberYears; i++) {
+      datasetGender[i] = {
+        year: startYear + i,
+        male: maleCountYears[i],
+        female: femaleCountYears[i]
+      };
+    }
+
+    console.log("femaleArray", femaleCountYears);
     
     //dataset = datasetPictures;
     
@@ -440,6 +480,7 @@ function initialiseArrays(){
   dataset = new Array(numberYears);
   datasetTotalPeople = new Array(numberYears);
   datasetPictures= new Array(numberYears);
+  datasetGender = new Array(numberYears);
 
   ScountYears = new Array(numberYears);
   fillWithZeros(ScountYears);
@@ -452,6 +493,11 @@ function initialiseArrays(){
 
   totalPeopleCountYears = new Array(numberYears);
   fillWithZeros(totalPeopleCountYears);
+
+  maleCountYears = new Array(numberYears);
+  fillWithZeros(maleCountYears);
+  femaleCountYears = new Array(numberYears);
+  fillWithZeros(femaleCountYears);
 }
 
 function updateStackedAreaDataset(){
@@ -461,6 +507,9 @@ function updateStackedAreaDataset(){
     //dataNode = [maleWithPic, femaleWithPic, maleWithoutPic, femaleWithoutPic];
   } else if (arraysEqual([0, 1, 0], splitparamsArray)) {
     //dataNode = [totalMen, totalWomen];
+    dataset = datasetGender;
+    keys = keysGender;
+
   } else if (arraysEqual([0, 0, 1], splitparamsArray) || arraysEqual([1, 0, 1], splitparamsArray)) {
     //dataNode = [kupferstichS, portraitP, steinmetzF, muenzeM];
     dataset = datasetPictures;

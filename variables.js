@@ -90,6 +90,11 @@ var getColor = function(key) {
 
 //// STACKED AREA CHART VARIABLES ////
 
+// List of groups = header of the csv files
+var keysPictures = ["S", "P", "M", "F"];
+var keysTotalPeople = ["N"];
+var keysGender = ["male", "female"];
+
 var numberYears;
 var startYear;
 
@@ -97,12 +102,15 @@ var startYear;
 var dataset;
 
 var datasetPictures;
-
-var ScountYears, PcountYears, McountYears,FcountYears;
-
-var totalPeopleCountYears;
-
 var datasetTotalPeople;
+var datasetGender;
+
+//arrays to count number of people for specific groups
+var ScountYears, PcountYears, McountYears,FcountYears;
+var totalPeopleCountYears;
+var femaleCountYears;
+var maleCountYears;
+
 
 
 
