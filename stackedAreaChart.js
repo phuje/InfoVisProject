@@ -465,7 +465,7 @@ function updateStackedAreaDataset(){
     //dataNode = [kupferstichS, portraitP, steinmetzF, muenzeM];
     dataset = datasetPictures;
     keys = keysPictures;
-    document.getElementById("stackedFilter").style.display = "initial";
+    document.getElementById("stackedFilter").style.display = "block";
   } else if (arraysEqual([0, 1, 1], splitparamsArray) || arraysEqual([1, 1, 1], splitparamsArray)) {
     /*dataNode = [
       kupferstichFem,

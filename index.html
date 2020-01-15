@@ -88,11 +88,12 @@
         float: left;
         padding: 10px;
         text-align: center;
+        display: block;
       }
 
       .vlines,
       .hlines {
-        stroke: rgb(150, 148, 109);
+        stroke: #757575;
         shape-rendering: crispEdges;
         stroke-width: 1px;
         stroke-opacity: 0.3;
@@ -106,6 +107,8 @@
 
       #stackedFilter{
         width: 25%;
+        display: block;
+        float: left;
         /*margin-left: 10px;*/
         /*text-align: center;*/
         padding: 10px;
@@ -148,6 +151,26 @@
         color: white;
       }
 
+      label {
+        border:1px solid #ccc;
+        padding: 10px;
+        margin:0 0 5px;
+        display:block; 
+        background: #ffffff;
+      }
+
+      label:hover {
+        background:#F5F5F5;
+        cursor:pointer;
+      }
+
+      .mainFilterLabel{
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 5;
+      }
+
     </style>
   </head>
   <body>
@@ -180,18 +203,13 @@
     <div id = "filterDiv">
       <div class="filterOptions">
         <h4>Filtere die Daten:</h4>
-        <p id="firstFilter">
-          <input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkWithDepiction"/>
-          nach "Person besitzt Abbildung oder nicht"
-        </p>
-        <p>
-          <input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkGender" />
-          nach Geschlecht
-        </p>
-        <p>
-          <input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkPicType" />
-          nach Art der Abbildung
-        </p>
+        
+        <label class="mainFilterLabel"><input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkWithDepiction"/> nach "Person besitzt Abbildung oder nicht"</label>
+      
+        <label class="mainFilterLabel"><input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkGender" /> nach Geschlecht</label>
+      
+        <label class="mainFilterLabel"><input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkPicType" /> nach Art der Abbildung</label>
+      
         <button type ="button" class = "button" id="resetButton" onclick="resetFilters()">Reset</button>
         
       </div>
@@ -199,23 +217,14 @@
       <div id="stackedFilter">
         <h4>Filtere den Stack hier: </h4>
         
-        <p>
-          <input type="checkbox" class = "stackFilterCheckbox" id="steinmetzStack"/>
-          Steinmetzarbeiten
-        </p>
-        <p>
-          <input type="checkbox" class = "stackFilterCheckbox" id="muenzeStack"/>
-          Münzen
-        </p>
-        <p>
-          <input type="checkbox" class = "stackFilterCheckbox" id="portraitStack"/>
-          Portraits
-        </p>
-        <p>
-          <input type="checkbox" class = "stackFilterCheckbox" id="kupferstichStack"/>
-          Kupferstiche
-        </p>
-      
+        <label><input type="checkbox" class = "stackFilterCheckbox" id="steinmetzStack"/> Steinmetzarbeiten</label>
+
+        <label><input type="checkbox" class = "stackFilterCheckbox" id="muenzeStack"/> Münzen</label>
+
+        <label><input type="checkbox" class = "stackFilterCheckbox" id="portraitStack"/> Portraits</label>
+
+        <label><input type="checkbox" class = "stackFilterCheckbox" id="kupferstichStack"/> Kupferstiche</label>
+
         <button type ="button" class = "button" id="filterStackButton" onclick="filterStack()">Stack filtern</button>
         <button type ="button" class = "button" id="showWholeStackButton" onclick="showWholeStack()">Reset Filter</button>
       </div>
