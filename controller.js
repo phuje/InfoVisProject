@@ -27,6 +27,12 @@ function updateVis() {
     } else {
       document.getElementById("checkWithDepiction").disabled = false;
     }
+    if(arr[0] == 1){ // if first option is checked, disable third option
+      document.getElementById("checkPicType").checked = false;
+      document.getElementById("checkPicType").disabled = true;
+    } else{
+      document.getElementById("checkPicType").disabled = false;
+    }
   
     /**updates bubble chart with filter as defined in arr array that contains the filter booleans */
     splitparamsArray = arr;
