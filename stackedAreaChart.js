@@ -77,6 +77,12 @@ var getHoverText = function(d) {
     case "female":
       text = "Frauen";
       break;
+    case "pic":
+      text = "Alle Personen, von denen eine Abbildung existiert";
+      break;
+    case "nopic":
+      text = "Alle Personen, von denen keine Abbildung existiert";
+      break;
     default:
       break;
   }
@@ -123,6 +129,7 @@ d3.csv(
 
     initialiseArrays();
     
+    //iterate through all persons (rows) in csv file to count data for visualisations
     for (var i = 0; i < data.length; i++) {
       data[i].geb = parseInt(data[i].geb);
       data[i].tod = parseInt(data[i].tod);
@@ -226,6 +233,24 @@ d3.csv(
         default:
           break;
       }
+
+      if(data[i].abb == "NULL"){
+        for (
+          var j = data[i].geb - startYear;
+          j <= data[i].tod - startYear;
+          j++
+        ){
+          noPicCountYears[j]++;
+        }
+      }else{
+        for (
+          var j = data[i].geb - startYear;
+          j <= data[i].tod - startYear;
+          j++
+        ){
+          picCountYears[j]++;
+        }
+      }
     }
 
     for (var i = 0; i < numberYears; i++) {
@@ -249,8 +274,16 @@ d3.csv(
     for (var i = 0; i < numberYears; i++) {
       datasetGender[i] = {
         year: startYear + i,
-        male: maleCountYears[i],
-        female: femaleCountYears[i]
+        female: femaleCountYears[i],
+        male: maleCountYears[i]
+      };
+    }
+
+    for (var i = 0; i < numberYears; i++) {
+      datasetHasPic[i] = {
+        year: startYear + i,
+        pic: picCountYears[i],
+        nopic: noPicCountYears[i]
       };
     }
 
@@ -320,19 +353,7 @@ function buildGrid(){
 var showAll = function(d) {
   console.log("showAll");
 
-  for (var i = 0; i < numberYears; i++) {
-    datasetPictures[i] = {
-      year: startYear + i,
-      S: ScountYears[i],
-      P: PcountYears[i],
-      M: McountYears[i],
-      F: FcountYears[i]
-    };
-  }
-
-  dataset = datasetPictures;
-  keys = keysPictures;
-
+  updateStackedAreaDataset(); //to go back to original stack with all layers
   stackAndDisplayLayers();
   svg.selectAll(".layer").on("click", showDetail);
 
@@ -343,11 +364,12 @@ var showDetail = function(d) {
   hideTooltipStack(d);
 
   console.log("showDetail", d);
+
   switch (d.key) {
     case "S":
       type = "Kupferstiche";
       for (var i = 0; i < numberYears; i++) {
-        datasetPictures[i] = {
+        dataset[i] = {
           year: startYear + i,
           S: ScountYears[i],
           P: 0,
@@ -359,7 +381,7 @@ var showDetail = function(d) {
     case "P":
       type = "Porträts";
       for (var i = 0; i < numberYears; i++) {
-        datasetPictures[i] = {
+        dataset[i] = {
           year: startYear + i,
           S: 0,
           P: PcountYears[i],
@@ -371,7 +393,7 @@ var showDetail = function(d) {
     case "M":
       type = "Münzen";
       for (var i = 0; i < numberYears; i++) {
-        datasetPictures[i] = {
+        dataset[i] = {
           year: startYear + i,
           S: 0,
           P: 0,
@@ -383,7 +405,7 @@ var showDetail = function(d) {
     case "F":
       type = "Steinmetzarbeiten";
       for (var i = 0; i < numberYears; i++) {
-        datasetPictures[i] = {
+        dataset[i] = {
           year: startYear + i,
           S: 0,
           P: 0,
@@ -392,11 +414,45 @@ var showDetail = function(d) {
         };
       }
       break;
+    case "male":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          male: maleCountYears[i],
+          female: 0
+        };
+      }
+      break;
+    case "female":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          female: femaleCountYears[i],
+          male: 0
+        };
+      }
+      break;
+    case "pic":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          pic: picCountYears[i],
+          nopic: 0
+        };
+      }
+      break;
+    case "nopic":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          pic: 0,
+          nopic: noPicCountYears[i]
+        };
+      }
+      break;
     default:
       break;
   }
-  dataset = datasetPictures;
-  keys = keysPictures;
 
   stackAndDisplayLayers();
   svg.selectAll(".layer").on("click", showAll);
@@ -478,9 +534,11 @@ function stackAndDisplayLayers(){
 function initialiseArrays(){
 
   dataset = new Array(numberYears);
+  datasetOld = new Array(numberYears);
   datasetTotalPeople = new Array(numberYears);
   datasetPictures= new Array(numberYears);
   datasetGender = new Array(numberYears);
+  datasetHasPic = new Array(numberYears);
 
   ScountYears = new Array(numberYears);
   fillWithZeros(ScountYears);
@@ -498,23 +556,33 @@ function initialiseArrays(){
   fillWithZeros(maleCountYears);
   femaleCountYears = new Array(numberYears);
   fillWithZeros(femaleCountYears);
+
+  noPicCountYears = new Array(numberYears);
+  fillWithZeros(noPicCountYears);
+  picCountYears = new Array(numberYears);
+  fillWithZeros(picCountYears);
 }
 
+//udpates stacked area visualisation depending on filters selected
+//selected filters are given in splitparamsArray
 function updateStackedAreaDataset(){
+
+  dataset = [];
   if (arraysEqual([1, 0, 0], splitparamsArray)) {
-    //dataNode = [noDepiction, withDepiction];
+    console.log("Split hasPic, datasetHasPic", datasetHasPic);
+    Array.prototype.push.apply(dataset, datasetHasPic);
+    keys = keysHasPic;
   } else if (arraysEqual([1, 1, 0], splitparamsArray)) {
     //dataNode = [maleWithPic, femaleWithPic, maleWithoutPic, femaleWithoutPic];
   } else if (arraysEqual([0, 1, 0], splitparamsArray)) {
-    //dataNode = [totalMen, totalWomen];
-    dataset = datasetGender;
+    console.log("Split gender, datasetGender", datasetGender);
+    Array.prototype.push.apply(dataset, datasetGender);
     keys = keysGender;
 
   } else if (arraysEqual([0, 0, 1], splitparamsArray) || arraysEqual([1, 0, 1], splitparamsArray)) {
-    //dataNode = [kupferstichS, portraitP, steinmetzF, muenzeM];
-    dataset = datasetPictures;
+    console.log("Split type of Pic");
+    Array.prototype.push.apply(dataset, datasetPictures);
     keys = keysPictures;
-    document.getElementById("stackedFilter").style.display = "block";
   } else if (arraysEqual([0, 1, 1], splitparamsArray) || arraysEqual([1, 1, 1], splitparamsArray)) {
     /*dataNode = [
       kupferstichFem,
@@ -528,10 +596,13 @@ function updateStackedAreaDataset(){
     ];*/
   } else {
     // [0, 0, 0]
-    dataset = datasetTotalPeople;
+    Array.prototype.push.apply(dataset, datasetTotalPeople);
     keys = keysTotalPeople;
+  }
+  if(keys.length <= 2){
     document.getElementById("stackedFilter").style.display = "none";
-    
+  } else{
+    document.getElementById("stackedFilter").style.display = "block";
   }
 
 }

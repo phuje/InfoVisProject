@@ -43,10 +43,10 @@ var getColor = function(key) {
       return "#FF4081";
       break;
     case "nopic":
-      return "#9C27B0";
+      return "#009688";
       break;
     case "femPic":
-      return "#009688";
+      return "#9C27B0";
       break;
     case "malePic":
       return "#FFEB3B";
@@ -93,7 +93,8 @@ var getColor = function(key) {
 // List of groups = header of the csv files
 var keysPictures = ["S", "P", "M", "F"];
 var keysTotalPeople = ["N"];
-var keysGender = ["male", "female"];
+var keysGender = ["female", "male"];
+var keysHasPic = ["pic", "nopic"];
 
 var numberYears;
 var startYear;
@@ -101,15 +102,18 @@ var startYear;
 //dataset is an array that contains numbers for each group for each year to draw the stacked area chart
 var dataset;
 
+var datasetOld; // for switching between detail view and stack all view
+
 var datasetPictures;
 var datasetTotalPeople;
 var datasetGender;
+var datasetHasPic;
 
 //arrays to count number of people for specific groups
 var ScountYears, PcountYears, McountYears,FcountYears;
 var totalPeopleCountYears;
-var femaleCountYears;
-var maleCountYears;
+var femaleCountYears, maleCountYears;
+var noPicCountYears, picCountYears;
 
 
 
