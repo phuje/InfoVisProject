@@ -83,6 +83,30 @@ var getHoverText = function(d) {
     case "nopic":
       text = "Alle Personen, von denen keine Abbildung existiert";
       break;
+    case "maleS":
+      text = "Männer mit Kupferstichen";
+      break;
+    case "femS":
+      text = "Frauen mit Kupferstichen";
+      break;
+    case "maleP":
+      text = "Männer mit Portraits";
+      break;
+    case "femP":
+      text = "Frauen mit Portraits";
+      break;
+    case "maleM":
+      text = "Männer mit Münzen";
+      break;
+    case "femM":
+      text = "Frauen mit Münzen";
+      break;
+    case "maleF":
+      text = "Männer mit Steinmetzarbeiten";
+      break;
+    case "femF":
+      text = "Frauen mit Steinmetzarbeiten";
+      break;
     default:
       break;
   }
@@ -182,11 +206,23 @@ d3.csv(
           ) {
             ScountYears[j]++;
           }
-          /*if (data[i].sex === "m") {
-          extraMale.KupferstichS++;
-        } else if (data[i].sex === "w") {
-          extraFemale.KupferstichS++;
-        }*/
+          if (data[i].sex === "m") {
+            for (
+              var j = data[i].geb - startYear;
+              j <= data[i].tod - startYear;
+              j++
+            ) {
+              SmaleCountYears[j]++;
+            }
+          } else if (data[i].sex === "w") {
+            for (
+              var j = data[i].geb - startYear;
+              j <= data[i].tod - startYear;
+              j++
+            ) {
+              SfemaleCountYears[j]++;
+            }
+          }
           break;
         case "P":
           for (
@@ -196,11 +232,23 @@ d3.csv(
           ) {
             PcountYears[j]++;
           }
-          /*if (data[i].sex === "m") {
-          extraMale.PortraitP++;
-        } else if (data[i].sex === "w") {
-          extraFemale.PortraitP++;
-        }*/
+          if (data[i].sex === "m") {
+            for (
+              var j = data[i].geb - startYear;
+              j <= data[i].tod - startYear;
+              j++
+            ) {
+              PmaleCountYears[j]++;
+            }
+          } else if (data[i].sex === "w") {
+            for (
+              var j = data[i].geb - startYear;
+              j <= data[i].tod - startYear;
+              j++
+            ) {
+              PfemaleCountYears[j]++;
+            }
+          }
           break;
         case "M":
           for (
@@ -210,11 +258,23 @@ d3.csv(
           ) {
             McountYears[j]++;
           }
-          /*if (data[i].sex === "m") {
-          extraMale.MuenzeM++;
-        } else if (data[i].sex === "w") {
-          extraFemale.MuenzeM++;
-        }*/
+          if (data[i].sex === "m") {
+            for (
+              var j = data[i].geb - startYear;
+              j <= data[i].tod - startYear;
+              j++
+            ) {
+              MmaleCountYears[j]++;
+            }
+          } else if (data[i].sex === "w") {
+            for (
+              var j = data[i].geb - startYear;
+              j <= data[i].tod - startYear;
+              j++
+            ) {
+              MfemaleCountYears[j]++;
+            }
+          }
           break;
         case "F":
           for (
@@ -224,11 +284,23 @@ d3.csv(
           ) {
             FcountYears[j]++;
           }
-          /*if (data[i].sex === "m") {
-          extraMale.SteinmetzF++;
-        } else if (data[i].sex === "w") {
-          extraFemale.SteinmetzF++;
-        }*/
+          if (data[i].sex === "m") {
+            for (
+              var j = data[i].geb - startYear;
+              j <= data[i].tod - startYear;
+              j++
+            ) {
+              FmaleCountYears[j]++;
+            }
+          } else if (data[i].sex === "w") {
+            for (
+              var j = data[i].geb - startYear;
+              j <= data[i].tod - startYear;
+              j++
+            ) {
+              FfemaleCountYears[j]++;
+            }
+          }
           break;
         default:
           break;
@@ -284,6 +356,20 @@ d3.csv(
         year: startYear + i,
         pic: picCountYears[i],
         nopic: noPicCountYears[i]
+      };
+    }
+
+    for (var i = 0; i < numberYears; i++) {
+      datasetPicGender[i] = {
+        year: startYear + i,
+        maleS: SmaleCountYears[i],
+        femS: SfemaleCountYears[i],
+        maleP: PmaleCountYears[i],
+        femP: PfemaleCountYears[i],
+        maleM: MmaleCountYears[i],
+        femM: MfemaleCountYears[i],
+        maleF: FmaleCountYears[i],
+        femF: FfemaleCountYears[i]
       };
     }
 
@@ -450,6 +536,126 @@ var showDetail = function(d) {
         };
       }
       break;
+    case "femS":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          maleS: 0,
+          femS: SfemaleCountYears[i],
+          maleP: 0,
+          femaleP: 0,
+          maleM: 0,
+          femaleM: 0,
+          maleF: 0,
+          femaleF:0
+        };
+      }
+      break;
+    case "maleS":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          maleS: SmaleCountYears[i],
+          femS: 0,
+          maleP: 0,
+          femP: 0,
+          maleM: 0,
+          femM: 0,
+          maleF: 0,
+          femF:0
+        };
+      }
+      break;
+    case "femP":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          maleS: 0,
+          femS: 0,
+          maleP: 0,
+          femP: PfemaleCountYears[i],
+          maleM: 0,
+          femM: 0,
+          maleF: 0,
+          femF:0
+        };
+      }
+      break;
+    case "maleP":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          maleS: 0,
+          femS: 0,
+          maleP: PmaleCountYears[i],
+          femP: 0,
+          maleM: 0,
+          femM: 0,
+          maleF: 0,
+          femF:0
+        };
+      }
+      break;
+    case "femM":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          maleS: 0,
+          femS: 0,
+          maleP: 0,
+          femP: 0,
+          maleM: 0,
+          femM: MfemaleCountYears[i],
+          maleF: 0,
+          femF:0
+        };
+      }
+      break;
+    case "maleM":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          maleS: 0,
+          femS: 0,
+          maleP: 0,
+          femP: 0,
+          maleM: MmaleCountYears[i],
+          femM: 0,
+          maleF: 0,
+          femF:0
+        };
+      }
+      break;
+    case "femF":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          maleS: 0,
+          femS: 0,
+          maleP: 0,
+          femP: 0,
+          maleM: 0,
+          femM: 0,
+          maleF: 0,
+          femF: FfemaleCountYears[i]
+        };
+      }
+      break;
+    case "maleF":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          maleS: 0,
+          femS: 0,
+          maleP: 0,
+          femP: 0,
+          maleM:0,
+          femM: 0,
+          maleF:  FmaleCountYears[i],
+          femF:0
+        };
+      }
+      break;
     default:
       break;
   }
@@ -539,6 +745,7 @@ function initialiseArrays(){
   datasetPictures= new Array(numberYears);
   datasetGender = new Array(numberYears);
   datasetHasPic = new Array(numberYears);
+  datasetPicGender = new Array(numberYears);
 
   ScountYears = new Array(numberYears);
   fillWithZeros(ScountYears);
@@ -561,6 +768,23 @@ function initialiseArrays(){
   fillWithZeros(noPicCountYears);
   picCountYears = new Array(numberYears);
   fillWithZeros(picCountYears);
+
+  SmaleCountYears= new Array(numberYears);
+  SfemaleCountYears= new Array(numberYears);
+  PmaleCountYears= new Array(numberYears);
+  PfemaleCountYears = new Array(numberYears);
+  MmaleCountYears = new Array(numberYears);
+  MfemaleCountYears= new Array(numberYears); 
+  FmaleCountYears = new Array(numberYears);
+  FfemaleCountYears = new Array(numberYears);
+  fillWithZeros(SmaleCountYears);
+  fillWithZeros(SfemaleCountYears);
+  fillWithZeros(PmaleCountYears);
+  fillWithZeros(PfemaleCountYears);
+  fillWithZeros(MmaleCountYears);
+  fillWithZeros(MfemaleCountYears);
+  fillWithZeros(FmaleCountYears);
+  fillWithZeros(FfemaleCountYears);
 }
 
 //udpates stacked area visualisation depending on filters selected
@@ -594,6 +818,8 @@ function updateStackedAreaDataset(){
       steinmetzMale,
       muenzeMale
     ];*/
+    Array.prototype.push.apply(dataset, datasetPicGender);
+    keys = keysPicGender;
   } else {
     // [0, 0, 0]
     Array.prototype.push.apply(dataset, datasetTotalPeople);

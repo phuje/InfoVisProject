@@ -95,6 +95,7 @@ var keysPictures = ["S", "P", "M", "F"];
 var keysTotalPeople = ["N"];
 var keysGender = ["female", "male"];
 var keysHasPic = ["pic", "nopic"];
+var keysPicGender = ["maleS", "femS", "maleP", "femP", "maleM", "femM", "maleF", "femF"];
 
 var numberYears;
 var startYear;
@@ -108,12 +109,14 @@ var datasetPictures;
 var datasetTotalPeople;
 var datasetGender;
 var datasetHasPic;
+var datasetPicGender;
 
 //arrays to count number of people for specific groups
 var ScountYears, PcountYears, McountYears,FcountYears;
 var totalPeopleCountYears;
 var femaleCountYears, maleCountYears;
 var noPicCountYears, picCountYears;
+var SmaleCountYears, SfemaleCountYears, PmaleCountYears, PfemaleCountYears, MmaleCountYears, MfemaleCountYears, FmaleCountYears, FfemaleCountYears;
 
 
 
