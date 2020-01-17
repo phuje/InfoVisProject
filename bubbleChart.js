@@ -9,16 +9,7 @@ var svgBubble = d3
   .append("svg")
   .attr("width", "100%")
   .attr("height", height);
-/*var color = d3.scaleOrdinal([
-  "#66c2a5",
-  "#fc8d62",
-  "#8da0cb",
-  "#e78ac3",
-  "#a6d854",
-  "#ffd92f",
-  "#e5c494",
-  "#b3b3b3"
-]);*/
+
 var simulation = d3
   .forceSimulation()
   .force(

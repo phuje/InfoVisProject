@@ -703,23 +703,65 @@ var showDetail = function(d) {
 
 //filter stack button logic, for choosing to stack specific types
 function filterStack(){
-  console.log("showAll");
+  
+  if (arraysEqual([0, 0, 1], splitparamsArray) || arraysEqual([1, 0, 1], splitparamsArray)) {
+    var stackS = document.getElementById("kupferstichStack").checked ? 1 : 0;
+    var stackP = document.getElementById("portraitStack").checked ? 1 : 0;
+    var stackM = document.getElementById("muenzeStack").checked ? 1 : 0;
+    var stackF = document.getElementById("steinmetzStack").checked ? 1 : 0;
+  
+    for (var i = 0; i < numberYears; i++) {
+      dataset[i] = {
+        year: startYear + i,
+        S: stackS ? ScountYears[i] : 0,
+        P: stackP ? PcountYears[i] : 0,
+        M: stackM ? McountYears[i] : 0,
+        F: stackF ? FcountYears[i] : 0
+      };
+    }
+  } 
+  else if(arraysEqual([1, 1, 0], splitparamsArray)){ //hasPicGender
+    var femaleHasNoPic = document.getElementById("femaleHasNoPic").checked ? 1 : 0;
+    var maleHasNoPic = document.getElementById("maleHasNoPic").checked ? 1 : 0;
+    var femaleHasPic = document.getElementById("femaleHasPic").checked ? 1 : 0;
+    var maleHasPic = document.getElementById("maleHasPic").checked ? 1 : 0;
 
-  var stackS = document.getElementById("kupferstichStack").checked ? 1 : 0;
-  var stackP = document.getElementById("portraitStack").checked ? 1 : 0;
-  var stackM = document.getElementById("muenzeStack").checked ? 1 : 0;
-  var stackF = document.getElementById("steinmetzStack").checked ? 1 : 0;
+    for (var i = 0; i < numberYears; i++) {
+      dataset[i] = {
+        year: startYear + i,
+        malePic: maleHasPic ? malePicCountYears[i] : 0,
+        maleNoPic: maleHasNoPic ? maleNoPicCountYears[i] : 0,
+        femPic: femaleHasPic ? femalePicCountYears[i] : 0,
+        femNoPic: femaleHasNoPic ? femaleNoPicCountYears[i] : 0
+      };
+    }
+  }
+  else if (arraysEqual([0, 1, 1], splitparamsArray) || arraysEqual([1, 1, 1], splitparamsArray)) {
+    var steinmetzMale = document.getElementById("steinmetzMale").checked ? 1 : 0;
+    var steinmetzFemale = document.getElementById("steinmetzFemale").checked ? 1 : 0;
+    var muenzeMale = document.getElementById("muenzeMale").checked ? 1 : 0;
+    var muenzeFemale = document.getElementById("muenzeFemale").checked ? 1 : 0;
+    var portraitMale = document.getElementById("portraitMale").checked ? 1 : 0;
+    var portraitFemale = document.getElementById("portraitFemale").checked ? 1 : 0;
+    var kupferstichMale = document.getElementById("kupferstichMale").checked ? 1 : 0;
+    var kupferstichFemale = document.getElementById("kupferstichFemale").checked ? 1 : 0;
 
-  for (var i = 0; i < numberYears; i++) {
-    datasetPictures[i].year = startYear + i;
-    datasetPictures[i].S = stackS ? ScountYears[i] : 0;
-    datasetPictures[i].P = stackP ? PcountYears[i] : 0;
-    datasetPictures[i].M = stackM ? McountYears[i] : 0;
-    datasetPictures[i].F = stackF ? FcountYears[i] : 0;
+    for (var i = 0; i < numberYears; i++) {
+      dataset[i] = {
+        year: startYear + i,
+        maleS: kupferstichMale ? SmaleCountYears[i] : 0,
+        femS: kupferstichFemale ? SfemaleCountYears[i] : 0,
+        maleP: portraitMale ? PmaleCountYears[i] : 0,
+        femP: portraitFemale ? PfemaleCountYears[i] : 0,
+        maleM: muenzeMale ? MmaleCountYears[i] : 0,
+        femM: muenzeFemale ? MfemaleCountYears[i] : 0,
+        maleF: steinmetzMale ? FmaleCountYears[i] : 0,
+        femF: steinmetzFemale ? FfemaleCountYears[i] : 0
+      };
+    }
   }
 
-  dataset = datasetPictures;
-  keys = keysPictures;
+
 
   stackAndDisplayLayers();
   svg.selectAll(".layer").on("click", showDetail);
@@ -847,6 +889,8 @@ function updateStackedAreaDataset(){
     console.log("Split hasPic and gender, datasetHasPicGender", datasetHasPicGender);
     Array.prototype.push.apply(dataset, datasetHasPicGender);
     keys = keysHasPicGender;
+
+    showStackFilter("filterHasPicGender");
   } else if (arraysEqual([0, 1, 0], splitparamsArray)) {
     console.log("Split gender, datasetGender", datasetGender);
     Array.prototype.push.apply(dataset, datasetGender);
@@ -856,10 +900,15 @@ function updateStackedAreaDataset(){
     console.log("Split type of Pic");
     Array.prototype.push.apply(dataset, datasetPictures);
     keys = keysPictures;
+
+    showStackFilter("filterPictures");
+    
   } else if (arraysEqual([0, 1, 1], splitparamsArray) || arraysEqual([1, 1, 1], splitparamsArray)) {
 
     Array.prototype.push.apply(dataset, datasetPicGender);
     keys = keysPicGender;
+
+    showStackFilter("filterPicturesGender");
   } else {
     // [0, 0, 0]
     Array.prototype.push.apply(dataset, datasetTotalPeople);
@@ -878,4 +927,14 @@ function updateStackedAreaChart(){
   updateStackedAreaDataset();
   stackAndDisplayLayers();
   svg.selectAll(".layer").on("click", showDetail);
+}
+
+//adapts the stackedFilter to how only the right filter layers
+function showStackFilter(group){
+  var elements = document.getElementsByClassName("stackedSubFilter")
+
+    for (var i = 0; i < elements.length; i++){
+        elements[i].style.display = "none";
+    }
+  document.getElementById(group).style.display = "initial";
 }
