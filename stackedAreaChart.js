@@ -761,8 +761,6 @@ function filterStack(){
     }
   }
 
-
-
   stackAndDisplayLayers();
   svg.selectAll(".layer").on("click", showDetail);
 }
@@ -807,11 +805,16 @@ function stackAndDisplayLayers(){
       return getColor(d.key);
     })
     .attr("class", "layer")
+    .style("opacity", 0.4)
     .on("mouseover", showTooltipStack)
     .on("mousemove", moveTooltipStack)
     .on("mouseleave", hideTooltipStack)
     //.on("click", showAll)
     .attr("d", area);
+
+    var t = d3.transition().duration(1000);
+    d3.selectAll(".layer").transition(t).style("opacity", 0.8);
+
 }
 
 
@@ -938,3 +941,5 @@ function showStackFilter(group){
     }
   document.getElementById(group).style.display = "initial";
 }
+
+
