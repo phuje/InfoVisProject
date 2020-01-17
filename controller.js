@@ -1,7 +1,7 @@
 // updates views depending on the split parameters selected in filter
 //if main filter was changed, the views of bubble chart and stacked area chart are changed accordingly
 function updateVis() {
-    //saves by which parameters the bubbles should be split
+    //saves parameters by which to split the bubbles / stack the data
     var splitParams = {
       depiction: 0,
       gender: 0,
@@ -36,7 +36,7 @@ function updateVis() {
   
     /**updates bubble chart with filter as defined in arr array that contains the filter booleans */
     splitparamsArray = arr;
-    updateBubbleChart(arr);
+    updateBubbleChart();
     updateStackedAreaChart();
   
     

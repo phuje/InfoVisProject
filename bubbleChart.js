@@ -9,7 +9,7 @@ var svgBubble = d3
   .append("svg")
   .attr("width", "100%")
   .attr("height", height);
-var color = d3.scaleOrdinal([
+/*var color = d3.scaleOrdinal([
   "#66c2a5",
   "#fc8d62",
   "#8da0cb",
@@ -18,7 +18,7 @@ var color = d3.scaleOrdinal([
   "#ffd92f",
   "#e5c494",
   "#b3b3b3"
-]);
+]);*/
 var simulation = d3
   .forceSimulation()
   .force(
@@ -91,7 +91,7 @@ var slider = d3
   .attr("value", minZoom)
   .attr("min", minZoom)
   .attr("max", maxZoom)
-  .attr("step", (maxZoom - minZoom) / 100000)
+  .attr("step", (maxZoom - minZoom) / 1000000)
   .on("input", slided);
 
 //is called when zoom slider is moved - calculates the new sizeDivisor which scales the bubbles and updates the view
@@ -177,17 +177,17 @@ function dragended(d) {
 }
 
 
-function updateBubbleChart(arr){
+function updateBubbleChart(){
   
-  if (arraysEqual([1, 0, 0], arr)) {
+  if (arraysEqual([1, 0, 0], splitparamsArray)) {
     dataNode = [noDepiction, withDepiction];
-  } else if (arraysEqual([1, 1, 0], arr)) {
+  } else if (arraysEqual([1, 1, 0], splitparamsArray)) {
     dataNode = [maleWithPic, femaleWithPic, maleWithoutPic, femaleWithoutPic];
-  } else if (arraysEqual([0, 1, 0], arr)) {
+  } else if (arraysEqual([0, 1, 0], splitparamsArray)) {
     dataNode = [totalMen, totalWomen];
-  } else if (arraysEqual([0, 0, 1], arr) || arraysEqual([1, 0, 1], arr)) {
+  } else if (arraysEqual([0, 0, 1], splitparamsArray) || arraysEqual([1, 0, 1], splitparamsArray)) {
     dataNode = [kupferstichS, portraitP, steinmetzF, muenzeM];
-  } else if (arraysEqual([0, 1, 1], arr) || arraysEqual([1, 1, 1], arr)) {
+  } else if (arraysEqual([0, 1, 1], splitparamsArray) || arraysEqual([1, 1, 1], splitparamsArray)) {
     dataNode = [
       kupferstichFem,
       portraitFem,

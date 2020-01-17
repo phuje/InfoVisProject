@@ -1,7 +1,7 @@
 // set the dimensions and margins of the graph
 var margin = { top: 10, right: 30, bottom: 50, left: 60 },
   width = document.getElementById("stackedView").offsetWidth - margin.left - margin.right,
-  height = 550 - margin.top - margin.bottom;
+  height = 570 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 var svg = d3
@@ -174,11 +174,7 @@ d3.csv(
       }
 
       //for no filter 0, 0, 0 
-      for (
-        var j = data[i].geb - startYear;
-        j <= data[i].tod - startYear;
-        j++
-      ) {
+      for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
         totalPeopleCountYears[j]++;
       }
 
@@ -186,55 +182,31 @@ d3.csv(
       if(data[i].sex != null){
         switch (data[i].sex){
           case "m": 
-            for (
-              var j = data[i].geb - startYear;
-              j <= data[i].tod - startYear;
-              j++
-            ){
+          for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               maleCountYears[j]++;
             }
             //for pic and gender filter
             if(data[i].abb == "NULL"){
-              for (
-                var j = data[i].geb - startYear;
-                j <= data[i].tod - startYear;
-                j++
-              ){
+              for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
                 maleNoPicCountYears[j]++;
               }
             }else{
-              for (
-                var j = data[i].geb - startYear;
-                j <= data[i].tod - startYear;
-                j++
-              ){
+              for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
                 malePicCountYears[j]++;
               }
             }
           break;
           case "w": 
-            for (
-              var j = data[i].geb - startYear;
-              j <= data[i].tod - startYear;
-              j++
-            ){
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               femaleCountYears[j]++;
             }
             //for pic and gender filter
             if(data[i].abb == "NULL"){
-              for (
-                var j = data[i].geb - startYear;
-                j <= data[i].tod - startYear;
-                j++
-              ){
+              for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
                 femaleNoPicCountYears[j]++;
               }
             }else{
-              for (
-                var j = data[i].geb - startYear;
-                j <= data[i].tod - startYear;
-                j++
-              ){
+              for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
                 femalePicCountYears[j]++;
               }
             }
@@ -247,11 +219,7 @@ d3.csv(
       //filter type of depiction
       switch (data[i].abb) {
         case "S":
-          for (
-            var j = data[i].geb - startYear;
-            j <= data[i].tod - startYear;
-            j++
-          ) {
+          for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
             ScountYears[j]++;
           }
           if (data[i].sex === "m") {
@@ -263,89 +231,49 @@ d3.csv(
               SmaleCountYears[j]++;
             }
           } else if (data[i].sex === "w") {
-            for (
-              var j = data[i].geb - startYear;
-              j <= data[i].tod - startYear;
-              j++
-            ) {
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               SfemaleCountYears[j]++;
             }
           }
           break;
         case "P":
-          for (
-            var j = data[i].geb - startYear;
-            j <= data[i].tod - startYear;
-            j++
-          ) {
+          for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
             PcountYears[j]++;
           }
           if (data[i].sex === "m") {
-            for (
-              var j = data[i].geb - startYear;
-              j <= data[i].tod - startYear;
-              j++
-            ) {
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               PmaleCountYears[j]++;
             }
           } else if (data[i].sex === "w") {
-            for (
-              var j = data[i].geb - startYear;
-              j <= data[i].tod - startYear;
-              j++
-            ) {
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               PfemaleCountYears[j]++;
             }
           }
           break;
         case "M":
-          for (
-            var j = data[i].geb - startYear;
-            j <= data[i].tod - startYear;
-            j++
-          ) {
+          for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
             McountYears[j]++;
           }
           if (data[i].sex === "m") {
-            for (
-              var j = data[i].geb - startYear;
-              j <= data[i].tod - startYear;
-              j++
-            ) {
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               MmaleCountYears[j]++;
             }
           } else if (data[i].sex === "w") {
-            for (
-              var j = data[i].geb - startYear;
-              j <= data[i].tod - startYear;
-              j++
-            ) {
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               MfemaleCountYears[j]++;
             }
           }
           break;
         case "F":
-          for (
-            var j = data[i].geb - startYear;
-            j <= data[i].tod - startYear;
-            j++
-          ) {
+          for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
             FcountYears[j]++;
           }
           if (data[i].sex === "m") {
-            for (
-              var j = data[i].geb - startYear;
-              j <= data[i].tod - startYear;
-              j++
-            ) {
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               FmaleCountYears[j]++;
             }
           } else if (data[i].sex === "w") {
-            for (
-              var j = data[i].geb - startYear;
-              j <= data[i].tod - startYear;
-              j++
-            ) {
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               FfemaleCountYears[j]++;
             }
           }
@@ -355,19 +283,11 @@ d3.csv(
       }
 
       if(data[i].abb == "NULL"){
-        for (
-          var j = data[i].geb - startYear;
-          j <= data[i].tod - startYear;
-          j++
-        ){
+        for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
           noPicCountYears[j]++;
         }
       }else{
-        for (
-          var j = data[i].geb - startYear;
-          j <= data[i].tod - startYear;
-          j++
-        ){
+        for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
           picCountYears[j]++;
         }
       }
@@ -465,12 +385,27 @@ function buildXYAxes(){
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x).ticks(16));
 
+  // Add the text label for the x axis
+  svg.append("text")
+    .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.bottom*0.75) + ")")
+    .style("text-anchor", "middle")
+    .text("Jahr");
+
   y = d3
     .scaleLinear()
     .domain([0, maxY])
     .range([height, 0]);
 
   svg.append("g").call(d3.axisLeft(y));
+
+    // Add the text label for the Y axis
+  svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left)
+    .attr("x",0 - (height / 2))
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Anzahl Personen");
 }
 
 function buildGrid(){
