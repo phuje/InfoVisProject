@@ -107,6 +107,18 @@ var getHoverText = function(d) {
     case "femF":
       text = "Frauen mit Steinmetzarbeiten";
       break;
+    case "malePic":
+      text = "Alle Männer, von denen eine Abbildung existiert";
+      break;
+    case "maleNoPic":
+      text = "Alle Männer, von denen keine Abbildung existiert";
+      break;
+    case "femPic":
+      text = "Alle Frauen, von denen eine Abbildung existiert";
+      break;
+    case "femNoPic":
+      text = "Alle Frauen, von denen keine Abbildung existiert";
+      break;
     default:
       break;
   }
@@ -181,6 +193,24 @@ d3.csv(
             ){
               maleCountYears[j]++;
             }
+            //for pic and gender filter
+            if(data[i].abb == "NULL"){
+              for (
+                var j = data[i].geb - startYear;
+                j <= data[i].tod - startYear;
+                j++
+              ){
+                maleNoPicCountYears[j]++;
+              }
+            }else{
+              for (
+                var j = data[i].geb - startYear;
+                j <= data[i].tod - startYear;
+                j++
+              ){
+                malePicCountYears[j]++;
+              }
+            }
           break;
           case "w": 
             for (
@@ -189,6 +219,24 @@ d3.csv(
               j++
             ){
               femaleCountYears[j]++;
+            }
+            //for pic and gender filter
+            if(data[i].abb == "NULL"){
+              for (
+                var j = data[i].geb - startYear;
+                j <= data[i].tod - startYear;
+                j++
+              ){
+                femaleNoPicCountYears[j]++;
+              }
+            }else{
+              for (
+                var j = data[i].geb - startYear;
+                j <= data[i].tod - startYear;
+                j++
+              ){
+                femalePicCountYears[j]++;
+              }
             }
           break;
           default: break;
@@ -356,6 +404,16 @@ d3.csv(
         year: startYear + i,
         pic: picCountYears[i],
         nopic: noPicCountYears[i]
+      };
+    }
+
+    for (var i = 0; i < numberYears; i++) {
+      datasetHasPicGender[i] = {
+        year: startYear + i,
+        malePic: malePicCountYears[i],
+        maleNoPic: maleNoPicCountYears[i],
+        femPic: femalePicCountYears[i],
+        femNoPic: femaleNoPicCountYears[i]
       };
     }
 
@@ -656,6 +714,50 @@ var showDetail = function(d) {
         };
       }
       break;
+    case "malePic":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          malePic: malePicCountYears[i],
+          maleNoPic: 0,
+          femPic: 0,
+          femNoPic: 0
+        };
+      }
+      break;
+    case "maleNoPic":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          malePic: 0,
+          maleNoPic: maleNoPicCountYears[i],
+          femPic: 0,
+          femNoPic: 0
+        };
+      }
+      break;
+    case "femPic":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          malePic: 0,
+          maleNoPic: 0,
+          femPic: femalePicCountYears[i],
+          femNoPic: 0
+        };
+      }
+      break;
+    case "femNoPic":
+      for (var i = 0; i < numberYears; i++) {
+        dataset[i] = {
+          year: startYear + i,
+          malePic: 0,
+          maleNoPic: 0,
+          femPic: 0,
+          femNoPic: femaleNoPicCountYears[i]
+        };
+      }
+      break;
     default:
       break;
   }
@@ -746,6 +848,7 @@ function initialiseArrays(){
   datasetGender = new Array(numberYears);
   datasetHasPic = new Array(numberYears);
   datasetPicGender = new Array(numberYears);
+  datasetHasPicGender = new Array(numberYears);
 
   ScountYears = new Array(numberYears);
   fillWithZeros(ScountYears);
@@ -785,6 +888,15 @@ function initialiseArrays(){
   fillWithZeros(MfemaleCountYears);
   fillWithZeros(FmaleCountYears);
   fillWithZeros(FfemaleCountYears);
+
+  malePicCountYears = new Array(numberYears);
+  maleNoPicCountYears= new Array(numberYears);
+  femalePicCountYears= new Array(numberYears);
+  femaleNoPicCountYears= new Array(numberYears);
+  fillWithZeros(malePicCountYears);
+  fillWithZeros(maleNoPicCountYears);
+  fillWithZeros(femalePicCountYears);
+  fillWithZeros(femaleNoPicCountYears);
 }
 
 //udpates stacked area visualisation depending on filters selected
@@ -797,7 +909,9 @@ function updateStackedAreaDataset(){
     Array.prototype.push.apply(dataset, datasetHasPic);
     keys = keysHasPic;
   } else if (arraysEqual([1, 1, 0], splitparamsArray)) {
-    //dataNode = [maleWithPic, femaleWithPic, maleWithoutPic, femaleWithoutPic];
+    console.log("Split hasPic and gender, datasetHasPicGender", datasetHasPicGender);
+    Array.prototype.push.apply(dataset, datasetHasPicGender);
+    keys = keysHasPicGender;
   } else if (arraysEqual([0, 1, 0], splitparamsArray)) {
     console.log("Split gender, datasetGender", datasetGender);
     Array.prototype.push.apply(dataset, datasetGender);
@@ -808,16 +922,7 @@ function updateStackedAreaDataset(){
     Array.prototype.push.apply(dataset, datasetPictures);
     keys = keysPictures;
   } else if (arraysEqual([0, 1, 1], splitparamsArray) || arraysEqual([1, 1, 1], splitparamsArray)) {
-    /*dataNode = [
-      kupferstichFem,
-      portraitFem,
-      steinmetzFem,
-      muenzeFem,
-      kupferstichMale,
-      portraitMale,
-      steinmetzMale,
-      muenzeMale
-    ];*/
+
     Array.prototype.push.apply(dataset, datasetPicGender);
     keys = keysPicGender;
   } else {

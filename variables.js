@@ -46,7 +46,7 @@ var getColor = function(key) {
       return "#009688";
       break;
     case "femPic":
-      return "#9C27B0";
+      return "#303F9F";
       break;
     case "malePic":
       return "#FFEB3B";
@@ -58,7 +58,7 @@ var getColor = function(key) {
       return "#00BCD4";
       break;
     case "femS":
-      return "#C8E6C9";
+      return "#9C27B0";
       break;
     case "maleS":
       return "#4CAF50";
@@ -96,6 +96,7 @@ var keysTotalPeople = ["N"];
 var keysGender = ["female", "male"];
 var keysHasPic = ["pic", "nopic"];
 var keysPicGender = ["maleS", "femS", "maleP", "femP", "maleM", "femM", "maleF", "femF"];
+var keysHasPicGender = ["malePic", "femPic", "maleNoPic", "femNoPic"];
 
 var numberYears;
 var startYear;
@@ -110,6 +111,7 @@ var datasetTotalPeople;
 var datasetGender;
 var datasetHasPic;
 var datasetPicGender;
+var datasetHasPicGender;
 
 //arrays to count number of people for specific groups
 var ScountYears, PcountYears, McountYears,FcountYears;
@@ -117,7 +119,7 @@ var totalPeopleCountYears;
 var femaleCountYears, maleCountYears;
 var noPicCountYears, picCountYears;
 var SmaleCountYears, SfemaleCountYears, PmaleCountYears, PfemaleCountYears, MmaleCountYears, MfemaleCountYears, FmaleCountYears, FfemaleCountYears;
-
+var malePicCountYears, maleNoPicCountYears, femalePicCountYears, femaleNoPicCountYears;
 
 
 
