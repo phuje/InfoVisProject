@@ -88,7 +88,7 @@ var slider = d3
 //is called when zoom slider is moved - calculates the new sizeDivisor which scales the bubbles and updates the view
 function slided() {
   sizeDivisor = 50 / d3.select(".zoom input").property("value");
-  addBubbles();
+  addBubbles(false);
 }
 
 d3.csv(
@@ -195,36 +195,12 @@ function updateBubbleChart(){
     resetZoom();
   }
 
-  addBubbles();
+  addBubbles(true);
 }
 
-function addBubbles() {
+function addBubbles(newBubbles) {
   //remove old circles <g> element
   d3.selectAll(".node").remove();
-
-  simulation
-    .nodes(dataNode)
-    .force(
-      "collide",
-      d3
-        .forceCollide()
-        .strength(0.5)
-        .radius(function(d) {
-          //console.log(d);
-          d.radius = d.radius !== 0 ? d.radius : d.number;
-          return d.radius / sizeDivisor + nodePadding;
-        })
-        .iterations(1)
-    )
-    .on("tick", function(d) {
-      node
-        .attr("cx", function(d) {
-          return d.x;
-        })
-        .attr("cy", function(d) {
-          return d.y;
-        });
-    });
 
   var node = svgBubble
     .append("g")
@@ -233,15 +209,9 @@ function addBubbles() {
     .data(dataNode)
     .enter()
     .append("circle")
-    .attr("class", function(d) {
-      return "bubbles";
-    })
-    .attr("r", function(d) {
-      d.radius = d.radius !== 0 ? d.radius : d.number;
-      return d.radius / sizeDivisor;
-    })
+    .attr("class", "bubbles")
+    .attr("r", function(d){ if(newBubbles){ return 0;} else{return d.number / sizeDivisor;}}) //if new bubbles start with radius 0 for transition, if not newBubbles(zoom) then keep normal radius
     .attr("fill", function(d) {
-      //console.log("get color key: "+d.key);
       return getColor(d.key);
     })
     .attr("cx", function(d) {
@@ -260,6 +230,42 @@ function addBubbles() {
         .on("drag", dragged)
         .on("end", dragended)
     );
+
+  if(newBubbles){
+    d3.selectAll(".bubbles")
+    .transition()
+    .duration(1000)
+    .attr("r", function(d) {
+      //d.radius = d.radius !== 0 ? d.radius : d.number;
+      return d.number / sizeDivisor;
+    })
+  }
+
+  simulation
+    .nodes(dataNode)
+    .force(
+      "collide",
+      d3
+        .forceCollide()
+        .strength(0.5)
+        .radius(function(d) {
+          //console.log(d);
+          //d.radius = d.radius !== 0 ? d.radius : d.number;
+          return d.number / sizeDivisor + nodePadding;
+        })
+        .iterations(1)
+    )
+    .on("tick", function(d) {
+      node
+        .attr("cx", function(d) {
+          return d.x;
+        })
+        .attr("cy", function(d) {
+          return d.y;
+        });
+    });
+
+
 
   simulation.alphaTarget(0.03).restart();
 }
