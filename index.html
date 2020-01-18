@@ -27,7 +27,7 @@
       }
       .bubbles:hover {
         stroke: black;
-        opacity: 1;
+        opacity: 1 !important;
       }
       .layer {
         stroke-width: 0.5px;
@@ -70,19 +70,6 @@
         margin-top: 0.5%;
         margin-bottom: 0.5%;
         padding: 10px;
-      }
-
-      #chartSelectionBox {
-        padding: 40;
-      }
-
-      .chartSelection {
-        margin-left: 40;
-        margin-right: 40;
-      }
-
-      .chartSelection:hover {
-        color: blueviolet;
       }
 
       .filterOptions {
@@ -182,7 +169,8 @@
   <body>
     <div id="header">
       <h4 id="headerTitle">Personen, Geschlechter und Abbildungen am Habsburger Kaiserhof</h4>
-      Jede Person wurde maximal einmal abgebildet.
+      Jede Person wurde maximal einmal abgebildet. In dem Datensatz wurden nur die Personen berücksichtigt, die
+      ein Geburtsjahr und ein Todesjahr haben.
     </div>
 
     
@@ -197,8 +185,7 @@
       <div id="stackedChartSubHeader">
         <h4>Im Zeitverlauf:</h4>
         <p>
-          In dem benutzten Datensatz wurden nur die Personen berücksichtigt, die
-          ein Geburtsjahr und ein Todesjahr haben. Für jedes Jahr wurde eine
+          Für jedes Jahr wurde eine
           Person dazugezählt, wenn in diesem Jahr eine Person gelebt hat, auf die die Eigenschafter im Filter zutreffen.
         </p>
       </div>

@@ -78,10 +78,10 @@ var getHoverText = function(d) {
       text = "Frauen";
       break;
     case "pic":
-      text = "Alle Personen, von denen eine Abbildung existiert";
+      text = "Alle Personen mit Abbildung";
       break;
     case "nopic":
-      text = "Alle Personen, von denen keine Abbildung existiert";
+      text = "Alle Personen ohne Abbildung";
       break;
     case "maleS":
       text = "Männer mit Kupferstichen";
@@ -108,16 +108,16 @@ var getHoverText = function(d) {
       text = "Frauen mit Steinmetzarbeiten";
       break;
     case "malePic":
-      text = "Alle Männer, von denen eine Abbildung existiert";
+      text = "Alle Männer mit Abbildung";
       break;
     case "maleNoPic":
-      text = "Alle Männer, von denen keine Abbildung existiert";
+      text = "Alle Männer ohne Abbildung";
       break;
     case "femPic":
-      text = "Alle Frauen, von denen eine Abbildung existiert";
+      text = "Alle Frauen mit Abbildung";
       break;
     case "femNoPic":
-      text = "Alle Frauen, von denen keine Abbildung existiert";
+      text = "Alle Frauen ohne Abbildung";
       break;
     default:
       break;
@@ -777,12 +777,6 @@ d3.selectAll(".stackFilterCheckbox").property('checked', true);
 //this function stacks the data as defined in dataset and displays the corresponding layers in the chart
 function stackAndDisplayLayers(){
 
-  d3.selectAll(".layer").remove();
-
-  var stackedData = d3.stack().keys(keys)(dataset);
-
-  console.log("stackedData: ", stackedData);
-
   var area = d3
     .area()
     .x(function(d, i) {
@@ -795,25 +789,48 @@ function stackAndDisplayLayers(){
       return y(d[1]);
     }); //higher y
 
+  //for transition startpoint
+  var areaBase = d3
+    .area()
+    .x(function(d, i) {
+      return x(d.data.year);
+    })
+    .y0(function(d) {
+      return y(0);
+    }) //lower y
+    .y1(function(d) {
+      return y(0);
+    }); //higher y
+
+  //transition out
+  d3.selectAll(".layer")
+  .attr("class", "oldlayer")
+  .transition()
+      .duration(1000)
+      .attr("d", areaBase)
+      .on("end", function(d){d3.selectAll(".oldlayer").remove();});
+
+  var stackedData = d3.stack().keys(keys)(dataset);
+
+  console.log("stackedData: ", stackedData);
+
   // Show the areas
   svg
     .selectAll("mylayers")
     .data(stackedData)
     .enter()
     .append("path")
-    .style("fill", function(d) {
-      return getColor(d.key);
-    })
-    .attr("class", "layer")
-    .style("opacity", 0.4)
-    .on("mouseover", showTooltipStack)
-    .on("mousemove", moveTooltipStack)
-    .on("mouseleave", hideTooltipStack)
-    //.on("click", showAll)
-    .attr("d", area);
-
-    var t = d3.transition().duration(1000);
-    d3.selectAll(".layer").transition(t).style("opacity", 0.8);
+      .style("fill", function(d) {
+        return getColor(d.key);
+      })
+      .attr("class", "layer")
+      .attr("d", areaBase) //for transition in
+      .on("mouseover", showTooltipStack)
+      .on("mousemove", moveTooltipStack)
+      .on("mouseleave", hideTooltipStack)
+      .transition()
+      .duration(1000)
+      .attr("d", area)
 
 }
 
