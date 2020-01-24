@@ -34,7 +34,7 @@ var tooltipStack = d3
 
 // -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
 var showTooltipStack = function(d) {
-  tooltipStack.transition().duration(200);
+  tooltipStack.transition().duration(100);
   tooltipStack
     .style("opacity", 1)
     .html(getHoverText(d))
@@ -43,13 +43,13 @@ var showTooltipStack = function(d) {
 };
 var moveTooltipStack = function(d) {
   tooltipStack
-    .style("left", d3.mouse(this)[0]+document.getElementById("bubbleChart").offsetWidth  + margin.left + 30 + "px")
+    .style("left", d3.mouse(this)[0]+document.getElementById("bubbleChart").offsetWidth  + margin.left + 50 + "px")
     .style("top", d3.mouse(this)[1] + margin.top + 100+ 80+ 30 + "px");
 };
 var hideTooltipStack = function(d) {
   tooltipStack
     .transition()
-    .duration(200)
+    .duration(100)
     .style("opacity", 0);
 };
 
