@@ -1,5 +1,7 @@
 //general
-var splitparamsArray;
+var splitparamsArray = [0, 0, 0]; //default
+
+var needToChangeYScaleStack;
 
 var colorArray = ["#3A01DF", 
 "#FF0040", 

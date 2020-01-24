@@ -35,6 +35,11 @@ function updateVis() {
     }
   
     /**updates bubble chart with filter as defined in arr array that contains the filter booleans */
+    if(splitparamsArray[2] != arr[2]){ 
+      needToChangeYScaleStack = true;
+    } else{
+      needToChangeYScaleStack = false;
+    }
     splitparamsArray = arr;
     updateBubbleChart();
     updateStackedAreaChart();

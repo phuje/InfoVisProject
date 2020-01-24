@@ -39,12 +39,12 @@ var showTooltipStack = function(d) {
     .style("opacity", 1)
     .html(getHoverText(d))
     .style("left", d3.mouse(this)[0]+document.getElementById("bubbleChart").offsetWidth + "px")
-    .style("top", d3.mouse(this)[1] + margin.top +100+ 80+30 + "px");
+    .style("top", d3.mouse(this)[1] + margin.top +100+ 80+50 + "px");
 };
 var moveTooltipStack = function(d) {
   tooltipStack
     .style("left", d3.mouse(this)[0]+document.getElementById("bubbleChart").offsetWidth  + margin.left + 50 + "px")
-    .style("top", d3.mouse(this)[1] + margin.top + 100+ 80+ 30 + "px");
+    .style("top", d3.mouse(this)[1] + margin.top + 100+ 80+ 50 + "px");
 };
 var hideTooltipStack = function(d) {
   tooltipStack
@@ -396,7 +396,7 @@ function buildXYAxes(){
     .domain([0, maxY])
     .range([height, 0]);
 
-  svg.append("g").call(d3.axisLeft(y));
+  svg.append("g").attr("class", "yaxis").call(d3.axisLeft(y));
 
     // Add the text label for the Y axis
   svg.append("text")
@@ -421,7 +421,7 @@ function buildGrid(){
       //vertical grid
       svg.selectAll(".vlines").data(x.ticks(16)).enter()
       .append("line")
-          .attr("class", "hlines")
+          .attr("class", "vlines")
           .attr("x1", function(d){ return x(d);})
           .attr("x2", function(d){ return x(d);})
           .attr("y1", 0)
@@ -938,6 +938,46 @@ function updateStackedAreaDataset(){
     document.getElementById("stackedFilter").style.display = "none";
   } else{
     document.getElementById("stackedFilter").style.display = "block";
+  }
+
+  if(splitparamsArray[2] == 1){
+    y = d3
+    .scaleLinear()
+    .domain([0, 1000])
+    .range([height, 0]);
+
+    d3.selectAll(".yaxis").transition().duration(500).call(d3.axisLeft(y));
+
+    if(needToChangeYScaleStack){
+      svg.selectAll(".hlines").remove();
+      svg.selectAll(".hlines").data(y.ticks(10)).enter()
+        .append("line")
+            .attr("class", "hlines")
+            .attr("x1", 0)
+            .attr("x2", width)
+            .transition().duration(500)
+            .attr("y1", function(d){ return y(d);})
+            .attr("y2", function(d){ return y(d);});
+    }
+  } else{
+    y = d3
+    .scaleLinear()
+    .domain([0, maxY])
+    .range([height, 0]);
+    d3.selectAll(".yaxis").transition().duration(500).call(d3.axisLeft(y));
+
+    if(needToChangeYScaleStack){
+      svg.selectAll(".hlines").remove();
+      svg.selectAll(".hlines").data(y.ticks(10)).enter()
+        .append("line")
+            .attr("class", "hlines")
+            .attr("x1", 0)
+            .attr("x2", width)
+            .transition().duration(500)
+            .attr("y1", function(d){ return y(d);})
+            .attr("y2", function(d){ return y(d);});
+    }
+  
   }
 
 }
