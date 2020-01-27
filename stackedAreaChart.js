@@ -935,7 +935,7 @@ function updateStackedAreaDataset(){
   if(splitparamsArray[2] == 1){
     y = d3
     .scaleLinear()
-    .domain([0, 1000])
+      .domain([0, 800])
     .range([height, 0]);
 
     d3.selectAll(".yaxis").transition().duration(500).call(d3.axisLeft(y));
