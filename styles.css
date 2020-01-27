@@ -151,7 +151,7 @@ html {
   label:hover {
     background:#F5F5F5;
     cursor:pointer;
-    color: black
+    opacity: 0.5;
   }
 
   .mainFilterLabel{
@@ -173,50 +173,50 @@ html {
       color: white
   }
 
-  .steinmetzStack {
+  #steinmetzStackLabel {
     background: #69B0C5;
   }
 
-  .muenzeStack {
+  #muenzeStackLabel {
     background: #EDBA00;
   }
 
-  .portraitStack {
+  #portraitStackLabel {
     background: #8991F9;
   }
 
-  .kupferstichStack {
+  #kupferstichStackLabel {
     background: #F15A24;
   }
 
-  .steinmetzFemale{
+  #steinmetzFemaleLabel{
     background: #4C6E78;
   }
 
-  .steinmetzMale{
+  #steinmetzMaleLabel{
     background: #90B9C5;
   }
 
-  .muenzeFemale{
+  #muenzeFemaleLabel{
     background: #A07E00;
   }
 
-  .muenzeMale{
+  #muenzeMaleLabel{
     background: #FFCE1A;
   }
 
-  .portraitFemale{
+  #portraitFemaleLabel{
     background: #4E54AC;
   }
 
-  .portraitMale{
+  #portraitMaleLabel{
     background: #A6ACFF;
   }
 
-  .kupferstichFemale{
+  #kupferstichFemaleLabel{
     background: #A4340C;
   }
 
-  .kupferstichMale{
+  #kupferstichMaleLabel{
     background: #F47B50;
   }
