@@ -7,108 +7,93 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <div id="header">
-      <h4 id="headerTitle">Personen, Geschlechter und Abbildungen am Habsburger Kaiserhof</h4>
-      Jede Person wurde maximal einmal abgebildet. In dem Datensatz wurden nur die Personen berücksichtigt, die
-      ein Geburtsjahr und ein Todesjahr haben.
-    </div>
-
+    <div class="container">
+      <div id="header">
+        <h1 id="headerTitle">Personen, Geschlechter und Abbildungen am Habsburger Kaiserhof</h1>
+        Jede Person wurde maximal einmal abgebildet. In dem Datensatz wurden nur die Personen berücksichtigt, die
+        ein Geburtsjahr und ein Todesjahr haben.
+      </div>
+  
+      <div id="charts">
+        <div id="bubbleChart">
+          <h4>Über die gesamte Zeit kumuliert:</h4>
+          <div id="datavis"></div>
+          <p class="zoom">Zoom <br />
+            <img class="zoomIcon" src="./icons/minus.png"/>
+            <span class="zoomHolder"></span>
+            <img class="zoomIcon" src="./icons/plus.png"/>
+          </p>
+        </div>
     
-    <div id="bubbleChart">
-      <h4>Über die gesamte Zeit kumuliert:</h4>
-      <div id="datavis"></div>
-      <p class="zoom">Zoom <br />
-        <img class="zoomIcon" src="./icons/minus.png"/>
-        <span class="zoomHolder"></span>
-        <img class="zoomIcon" src="./icons/plus.png"/>
-      </p>
-    </div>
-
-    <div id="stackedView">
-      <div id="stackedChartSubHeader">
-        <h4>Im Zeitverlauf:</h4>
-        <p>
-          Für jedes Jahr wurde eine
-          Person dazugezählt, wenn in diesem Jahr eine Person gelebt hat, auf die die Eigenschafter im Filter zutreffen.
-        </p>
+        <div id="stackedView">
+          <div id="stackedChartSubHeader">
+            <h4>Im Zeitverlauf:</h4>
+            <p>
+              Für jedes Jahr wurde eine
+              Person dazugezählt, wenn in diesem Jahr eine Person gelebt hat, auf die die Eigenschafter im Filter zutreffen.
+            </p>
+          </div>
+          <div id = "stackedChart"></div>
+        </div>
       </div>
-      <div id = "stackedChart"></div>
       
-    </div>
-
-    <div id = "filterDiv">
-      <div class="filterOptions">
-        <h4>Filtere die Daten:</h4>
+  
+      <div id = "filterDiv">
+        <div class="filterOptions">
+  
+          <h4>Filtere die Daten:</h4>
+          
+          <label class="mainFilterLabel"><input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkWithDepiction"/> nach "Person besitzt Abbildung oder nicht"</label>
         
-        <label class="mainFilterLabel"><input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkWithDepiction"/> nach "Person besitzt Abbildung oder nicht"</label>
-      
-        <label class="mainFilterLabel"><input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkGender" /> nach Geschlecht</label>
-      
-        <label class="mainFilterLabel"><input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkPicType" /> nach Art der Abbildung</label>
-      
-        <button type ="button" class = "button" id="resetButton" onclick="resetFilters()">Reset</button>
+          <label class="mainFilterLabel"><input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkGender" /> nach Geschlecht</label>
         
+          <label class="mainFilterLabel"><input onclick="updateVis()" type="checkbox" class="mainFilterCheckbox" id="checkPicType" /> nach Art der Abbildung</label>
+          <button type ="button" class = "button" id="resetButton" onclick="resetFilters()">
+            Reset
+          </button>
+        </div>
+  
+        <div class="subFilter" id="stackedFilter">
+          <h4>Filtere den Stack hier: </h4>
+          
+
+          <div class ="stackedSubFilter" id="filterPictures">
+            <label id="steinmetzStackLabel"><input type="checkbox" class = "stackFilterCheckbox" id="steinmetzStack"/> Steinmetzarbeiten</label>
+            <label id="muenzeStackLabel"><input type="checkbox" class = "stackFilterCheckbox" id="muenzeStack"/> Münzen</label>
+            <label id="portraitStackLabel"><input type="checkbox" class = "stackFilterCheckbox" id="portraitStack"/> Portraits</label>
+            <label id="kupferstichStackLabel"><input type="checkbox" class = "stackFilterCheckbox" id="kupferstichStack"/> Kupferstiche</label>
+          </div>
+  
+          <div class ="stackedSubFilter" id="filterPicturesGender">
+            <label id="steinmetzFemaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="steinmetzFemale"/> Steinmetzarbeiten von Frauen</label>
+            <label id="steinmetzMaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="steinmetzMale"/> Steinmetzarbeiten von Männern</label>
+            <label id="muenzeFemaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="muenzeFemale"/> Münzen von Frauen</label>
+            <label id="muenzeMaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="muenzeMale"/> Münzen von Männern</label>
+            <label id="portraitFemaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="portraitFemale"/> Portraits von Frauen</label>
+            <label id="portraitMaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="portraitMale"/> Portraits von Männern</label>
+            <label id="kupferstichFemaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="kupferstichFemale"/> Kupferstiche von Frauen</label>
+            <label id="kupferstichMaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="kupferstichMale"/> Kupferstiche von Männern</label>
+          </div>
+  
+          <div class ="stackedSubFilter" id="filterHasPicGender">
+            <label id="femaleHasNoPicLabel"><input type="checkbox" class = "stackFilterCheckbox" id="femaleHasNoPic"/> Frauen ohne Abbildung</label>
+            <label id="maleHasNoPicLabel"><input type="checkbox" class = "stackFilterCheckbox" id="maleHasNoPic"/> Männer ohne Abbildung</label>
+            <label id="femaleHasPicLabel"><input type="checkbox" class = "stackFilterCheckbox" id="femaleHasPic"/> Frauen mit Abbildung</label>
+            <label id="maleHasPicLabel"><input type="checkbox" class = "stackFilterCheckbox" id="maleHasPic"/> Männer mit Abbildung</label>
+          </div>
+  
+          <button type ="button" class = "button" id="filterStackButton" onclick="filterStack()">Stack filtern</button>
+          <button type ="button" class = "button" id="showWholeStackButton" onclick="showWholeStack()">Reset Stack</button>
+        </div>
       </div>
-
-      <div id="stackedFilter">
-        <h4>Filtere den Stack hier: </h4>
-        <div class ="stackedSubFilter" id="filterPictures">
-          <label id="steinmetzStackLabel"><input type="checkbox" class = "stackFilterCheckbox" id="steinmetzStack"/> Steinmetzarbeiten</label>
-
-          <label id="muenzeStackLabel"><input type="checkbox" class = "stackFilterCheckbox" id="muenzeStack"/> Münzen</label>
-
-          <label id="portraitStackLabel"><input type="checkbox" class = "stackFilterCheckbox" id="portraitStack"/> Portraits</label>
-
-          <label id="kupferstichStackLabel"><input type="checkbox" class = "stackFilterCheckbox" id="kupferstichStack"/> Kupferstiche</label>
-        </div>
-
-        <div class ="stackedSubFilter" id="filterPicturesGender">
-          <label id="steinmetzFemaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="steinmetzFemale"/> Steinmetzarbeiten von Frauen</label>
-          <label id="steinmetzMaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="steinmetzMale"/> Steinmetzarbeiten von Männern</label>
-          <label id="muenzeFemaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="muenzeFemale"/> Münzen von Frauen</label>
-          <label id="muenzeMaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="muenzeMale"/> Münzen von Männern</label>
-          <label id="portraitFemaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="portraitFemale"/> Portraits von Frauen</label>
-          <label id="portraitMaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="portraitMale"/> Portraits von Männern</label>
-          <label id="kupferstichFemaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="kupferstichFemale"/> Kupferstiche von Frauen</label>
-          <label id="kupferstichMaleLabel"><input type="checkbox" class = "stackFilterCheckbox" id="kupferstichMale"/> Kupferstiche von Männern</label>
-        </div>
-
-        <div class ="stackedSubFilter" id="filterHasPicGender">
-          <label><input type="checkbox" class = "stackFilterCheckbox" id="femaleHasNoPic"/> Frauen ohne Abbildung</label>
-          <label><input type="checkbox" class = "stackFilterCheckbox" id="maleHasNoPic"/> Männer ohne Abbildung</label>
-          <label><input type="checkbox" class = "stackFilterCheckbox" id="femaleHasPic"/> Frauen mit Abbildung</label>
-          <label><input type="checkbox" class = "stackFilterCheckbox" id="maleHasPic"/> Männer mit Abbildung</label>
-        </div>
-
-        <button type ="button" class = "button" id="filterStackButton" onclick="filterStack()">Stack filtern</button>
-        <button type ="button" class = "button" id="showWholeStackButton" onclick="showWholeStack()">Reset Filter</button>
-      </div>
+  
     </div>
-
-    Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
-
+    
     <script type="text/javascript" src="variables.js"></script>
     <script src="https://d3js.org/d3.v4.js"></script>
     <script type="text/javascript" src="bubbleChart.js"></script>
     <script type="text/javascript" src="stackedAreaChart.js"></script>
     <script type="text/javascript" src="controller.js"></script>
 
-    <script>
-      /*function showBubbleChart() {
-        document.getElementById("stackedView").style.display = "none";
-        document.getElementById("selectStack").style.textDecoration = "none";
-        document.getElementById("bubbleChart").style.display = "initial";
-        document.getElementById("selectBubble").style.textDecoration =
-          "underline";
-      }
-
-      function showStackedAreaChart() {
-        document.getElementById("bubbleChart").style.display = "none";
-        document.getElementById("selectBubble").style.textDecoration = "none";
-        document.getElementById("stackedView").style.display = "initial";
-        document.getElementById("selectStack").style.textDecoration =
-          "underline";
-      }*/ 
-    </script>
   </body>
 </html>

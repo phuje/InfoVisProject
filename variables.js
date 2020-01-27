@@ -29,22 +29,22 @@ var getColor = function (key) {
       return "#FF4081";
       break;
     case "pic":
-      return "#FF4081";
+      return "#333333";
       break;
     case "nopic":
-      return "#009688";
+      return "#999999";
       break;
     case "femPic":
-      return "#303F9F";
+      return "#B21B4F";
       break;
     case "malePic":
-      return "#FFEB3B";
+      return "#111A52";
       break;
     case "femNoPic":
-      return "#9C27B0";
+      return "#FF5A92";
       break;
     case "maleNoPic":
-      return "#00BCD4";
+      return "#5F72EC";
       break;
     case "femS":
       return "#A4340C";

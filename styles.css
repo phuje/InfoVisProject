@@ -1,13 +1,13 @@
-body {
-    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    margin: 0 auto;
-    background-color: #161748;/*#f0f0f2;*/
-}
-
 html {
     box-sizing: border-box;
 }
 
+body {
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 0 auto;
+    background-color: #161748;
+    padding: 20px;
+}
   *,
   *:before,
   *:after {
@@ -48,8 +48,10 @@ html {
     float: left;
   }
 
+
+
   #bubbleChart{
-    width: 44%;
+      width: 49%;
     float: left;
     border-radius: 1em;
     background-color: #fff;
@@ -58,7 +60,7 @@ html {
   }
 
   #stackedView {
-    width: 54.5%;
+      width: 49%;
     float: left;
     border-radius: 1em;
     background-color: #fff;
@@ -69,11 +71,22 @@ html {
   }
 
   .filterOptions {
-    width: 75%;
+      width: 74%;
+    /* width: 75%; */
     float: left;
-    padding: 10px;
+    
     text-align: center;
     display: block;
+  }
+
+  #filterStackButton {
+    width: 49%;
+    float: left;
+  }
+
+  #showWholeStackButton {
+    width: 49%;
+      float: right;
   }
 
   .vlines,
@@ -90,17 +103,15 @@ html {
   }
 
   #stackedFilter{
-    width: 25%;
+    width: 24.9%;
     display: block;
-    float: left;
+    float: right;
     /*margin-left: 10px;*/
     /*text-align: center;*/
-    padding: 10px;
   }
 
   #filterDiv{
     width: 100%;
-    float: left;
   }
 
   #filterDiv h4{
@@ -111,21 +122,20 @@ html {
     text-align: center;
   }
 
-  h4{
+  /* h4{
     text-align: center;
-  }
+  } */
 
+ 
   .button{
-    border: none;
-    color: white;
     padding: 10px 16px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
     margin: 10px 2px;
-    -webkit-transition-duration: 0.4s; /* Safari */
-    transition-duration: 0.4s;
+    -webkit-transition-duration: 0.4s; 
+    transition-duration: 0.4s; 
     cursor: pointer;
     border-radius: 10px;
 
@@ -135,8 +145,12 @@ html {
   }
 
   .button:hover {
-    background-color: #f95d9b;/*#555555;*/
+    background-color: #f95d9b;
     color: white;
+  }
+
+  .filterOptions .button {
+      width: 100%
   }
 
   label {
@@ -155,7 +169,7 @@ html {
   }
 
   .mainFilterLabel{
-    width: 50%;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 5;
@@ -172,6 +186,22 @@ html {
   .stackedSubFilter {
       color: white
   }
+
+  #maleHasNoPicLabel {
+    background: #5F72EC;
+  }
+
+  #femaleHasNoPicLabel {
+    background: #FF5A92;
+  }
+
+  #femaleHasPicLabel {
+    background: #B21B4F;
+}
+
+#maleHasPicLabel {
+    background: #111A52;
+}
 
   #steinmetzStackLabel {
     background: #69B0C5;
@@ -219,4 +249,9 @@ html {
 
   #kupferstichMaleLabel{
     background: #F47B50;
+  }
+
+  .credits {
+      font-size: 10;
+      color: gray;
   }
