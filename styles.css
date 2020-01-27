@@ -1,0 +1,164 @@
+body {
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 0 auto;
+    background-color: #161748;/*#f0f0f2;*/
+  }
+
+  html {
+    box-sizing: border-box;
+  }
+  *,
+  *:before,
+  *:after {
+    box-sizing: inherit;
+  }
+
+  .bubbles {
+    stroke-width: 0.5px;
+    stroke: #3a403d;
+    opacity: 0.8;
+  }
+  .bubbles:hover {
+    stroke: black;
+    opacity: 1 !important;
+  }
+  .layer {
+    stroke-width: 0.5px;
+    stroke: #3a403d;
+    opacity: 0.8;
+  }
+
+  .layer:hover {
+    stroke: black;
+    opacity: 1;
+  }
+
+  #header {
+    width: 100%;
+    padding: 5px;
+    text-align: center;
+    color: #ececec;
+    /*background-color: aliceblue;*/
+    
+  }
+
+  #datavis {
+    width: 100%;
+    float: left;
+  }
+
+  #bubbleChart{
+    width: 44%;
+    float: left;
+    border-radius: 1em;
+    background-color: #fff;
+    margin: 0.5%;
+  }
+
+  #stackedView {
+    width: 54.5%;
+    float: left;
+    border-radius: 1em;
+    background-color: #fff;
+    margin-right: 0;
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
+    padding: 10px;
+  }
+
+  .filterOptions {
+    width: 75%;
+    float: left;
+    padding: 10px;
+    text-align: center;
+    display: block;
+  }
+
+  .vlines,
+  .hlines {
+    stroke: #757575;
+    shape-rendering: crispEdges;
+    stroke-width: 1px;
+    stroke-opacity: 0.3;
+  }
+
+  #stackedChartSubHeader{
+    width: 100%;
+    margin-left: 10px;
+    padding: 10px;
+  }
+
+  #stackedFilter{
+    width: 25%;
+    display: block;
+    float: left;
+    /*margin-left: 10px;*/
+    /*text-align: center;*/
+    padding: 10px;
+  }
+
+  #filterDiv{
+    width: 100%;
+    float: left;
+  }
+
+  #filterDiv h4{
+    color: #ececec;
+  }
+
+  .zoom{
+    text-align: center;
+  }
+
+  h4{
+    text-align: center;
+  }
+
+  .button{
+    border: none;
+    color: white;
+    padding: 10px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 10px;
+
+    background-color: #161748;
+    color: white;
+    border: 3px solid #f95d9b;
+  }
+
+  .button:hover {
+    background-color: #f95d9b;/*#555555;*/
+    color: white;
+  }
+
+  label {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin:0 0 5px;
+    display:block; 
+    background: #ffffff;
+    border-radius: 5px;
+  }
+
+  label:hover {
+    background:#F5F5F5;
+    cursor:pointer;
+  }
+
+  .mainFilterLabel{
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5;
+  }
+
+  #headerTitle{
+    text-transform: uppercase;
+  }
