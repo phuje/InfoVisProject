@@ -941,7 +941,7 @@ function updateStackedAreaDataset(){
       .domain([0, 800])
     .range([height, 0]);
 
-    d3.selectAll(".yaxis").transition().duration(500).call(d3.axisLeft(y));
+    d3.selectAll(".yaxis").transition().duration(800).call(d3.axisLeft(y));
 
     if(needToChangeYScaleStack){
       svg.selectAll(".hlines").remove();
@@ -950,7 +950,7 @@ function updateStackedAreaDataset(){
             .attr("class", "hlines")
             .attr("x1", 0)
             .attr("x2", width)
-            .transition().duration(500)
+            .transition().duration(800)
             .attr("y1", function(d){ return y(d);})
             .attr("y2", function(d){ return y(d);});
     }
@@ -959,7 +959,7 @@ function updateStackedAreaDataset(){
     .scaleLinear()
     .domain([0, maxY])
     .range([height, 0]);
-    d3.selectAll(".yaxis").transition().duration(500).call(d3.axisLeft(y));
+    d3.selectAll(".yaxis").transition().duration(800).call(d3.axisLeft(y));
 
     if(needToChangeYScaleStack){
       svg.selectAll(".hlines").remove();
@@ -968,7 +968,7 @@ function updateStackedAreaDataset(){
             .attr("class", "hlines")
             .attr("x1", 0)
             .attr("x2", width)
-            .transition().duration(500)
+            .transition().duration(800)
             .attr("y1", function(d){ return y(d);})
             .attr("y2", function(d){ return y(d);});
     }
