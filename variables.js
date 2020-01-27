@@ -3,34 +3,34 @@ var splitparamsArray = [0, 0, 0]; //default
 
 var needToChangeYScaleStack;
 
-var colorArray = ["#3A01DF", 
-"#FF0040", 
-"#FACC2E", 
-"#6E6E6E", 
-"#66c2a5", 
-"#ff9090", 
-"#034f84",
-"#8da0cb",
-"#e78ac3",
-"#80ced6",
-"#a6d854",
-"#ffd92f",
-"#622569",
-"#b3b3b3"];
+var colorArray = ["#3A01DF",
+  "#FF0040",
+  "#FACC2E",
+  "#6E6E6E",
+  "#66c2a5",
+  "#ff9090",
+  "#034f84",
+  "#8da0cb",
+  "#e78ac3",
+  "#80ced6",
+  "#a6d854",
+  "#ffd92f",
+  "#622569",
+  "#b3b3b3"];
 
-var getColor = function(key) {
+var getColor = function (key) {
   switch (key) {
     case "S":
-      return colorArray[0];
+      return "#F15A24";
       break;
     case "P":
-      return colorArray[1];
+      return "#8991F9";
       break;
     case "M":
-      return colorArray[2];
+      return "#EDBA00";
       break;
     case "F":
-      return colorArray[3];
+      return "#69B0C5";
       break;
     case "N": //totalNumberPeople
       return "#2196F3";
@@ -60,28 +60,28 @@ var getColor = function(key) {
       return "#00BCD4";
       break;
     case "femS":
-      return "#9C27B0";
+      return "#A4340C";
       break;
     case "maleS":
-      return "#4CAF50";
+      return "#F47B50";
       break;
     case "femP":
-      return "#FF5252";
+      return "#4E54AC";
       break;
     case "maleP":
-      return "#512DA8";
+      return "#A6ACFF";
       break;
     case "femM":
-      return "#E1BEE7";
+      return "#A07E00";
       break;
     case "maleM":
-      return "#E1BEE7";
+      return "#FFCE1A";
       break;
     case "femF":
-      return "#FF9800";
+      return "#4C6E78";
       break;
     case "maleF":
-      return "#FFECB3";
+      return "#90B9C5";
       break;
     default: colorArray[0];
       break;
@@ -116,7 +116,7 @@ var datasetPicGender;
 var datasetHasPicGender;
 
 //arrays to count number of people for specific groups
-var ScountYears, PcountYears, McountYears,FcountYears;
+var ScountYears, PcountYears, McountYears, FcountYears;
 var totalPeopleCountYears;
 var femaleCountYears, maleCountYears;
 var noPicCountYears, picCountYears;
