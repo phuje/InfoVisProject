@@ -54,6 +54,7 @@ html {
     border-radius: 1em;
     background-color: #fff;
     margin: 0.5%;
+    padding: 10px;
   }
 
   #stackedView {
@@ -86,7 +87,6 @@ html {
   #stackedChartSubHeader{
     width: 100%;
     margin-left: 10px;
-    padding: 10px;
   }
 
   #stackedFilter{
@@ -165,6 +165,9 @@ html {
     text-transform: uppercase;
   }
 
+  .zoomIcon{
+    width: 20px;
+  }
 
   .stackedSubFilter {
       color: white

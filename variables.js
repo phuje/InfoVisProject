@@ -118,7 +118,7 @@ var malePicCountYears, maleNoPicCountYears, femalePicCountYears, femaleNoPicCoun
 var dataNode = [];
 
 var totalPeople = {
-  descr: "Gesamtanzahl der Personen mit Geburts- und Todesjahr: ",
+  descr: "Gesamtanzahl der Personen: ",
   number: 0,
   radius: 0,
   key: "N"
