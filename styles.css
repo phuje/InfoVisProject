@@ -2,11 +2,12 @@ body {
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin: 0 auto;
     background-color: #161748;/*#f0f0f2;*/
-  }
+}
 
-  html {
+html {
     box-sizing: border-box;
-  }
+}
+
   *,
   *:before,
   *:after {
@@ -150,6 +151,7 @@ body {
   label:hover {
     background:#F5F5F5;
     cursor:pointer;
+    color: black
   }
 
   .mainFilterLabel{
@@ -161,4 +163,57 @@ body {
 
   #headerTitle{
     text-transform: uppercase;
+  }
+
+
+  .stackedSubFilter {
+      color: white
+  }
+
+  .steinmetzStack {
+    background: #69B0C5;
+  }
+
+  .muenzeStack {
+    background: #EDBA00;
+  }
+
+  .portraitStack {
+    background: #8991F9;
+  }
+
+  .kupferstichStack {
+    background: #F15A24;
+  }
+
+  .steinmetzFemale{
+    background: #4C6E78;
+  }
+
+  .steinmetzMale{
+    background: #90B9C5;
+  }
+
+  .muenzeFemale{
+    background: #A07E00;
+  }
+
+  .muenzeMale{
+    background: #FFCE1A;
+  }
+
+  .portraitFemale{
+    background: #4E54AC;
+  }
+
+  .portraitMale{
+    background: #A6ACFF;
+  }
+
+  .kupferstichFemale{
+    background: #A4340C;
+  }
+
+  .kupferstichMale{
+    background: #F47B50;
   }
