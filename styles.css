@@ -48,8 +48,6 @@ body {
     float: left;
   }
 
-
-
   #bubbleChart{
       width: 49%;
     float: left;
@@ -80,13 +78,15 @@ body {
   }
 
   #filterStackButton {
-    width: 49%;
+    width: 47%;
     float: left;
+    display: block;
   }
 
   #showWholeStackButton {
-    width: 49%;
+    width: 47%;
       float: right;
+      display: block;
   }
 
   .vlines,
@@ -122,9 +122,9 @@ body {
     text-align: center;
   }
 
-  /* h4{
+  h4{
     text-align: center;
-  } */
+  }
 
  
   .button{
