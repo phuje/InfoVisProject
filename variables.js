@@ -3,8 +3,6 @@ var splitparamsArray = [0, 0, 0]; //default
 
 var needToChangeYScaleStack;
 
-
-
 var getColor = function (key) {
   switch (key) {
     case "S":
