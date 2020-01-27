@@ -34,7 +34,7 @@ var tooltipStack = d3
 
 // -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
 var showTooltipStack = function(d) {
-  tooltipStack.transition().duration(100);
+  //tooltipStack.transition().duration(100);
   tooltipStack
     .style("opacity", 1)
     .html(getHoverText(d))
@@ -47,12 +47,11 @@ var moveTooltipStack = function(d) {
     .style("top", d3.mouse(this)[1] + margin.top + 100+ 80+ 50 + "px");
 };
 var hideTooltipStack = function(d) {
-  tooltipStack
-    .transition()
-    .duration(100)
+  tooltipStack//.transition().duration(100)
     .style("opacity", 0);
 };
 
+//gets the text that should be displayed when user hovers on layer depending on the key of the data
 var getHoverText = function(d) {
   var text = "";
   switch (d.key) {
@@ -131,17 +130,14 @@ var getHoverText = function(d) {
 var x, y;
 var maxY = 2500;
 
-// color palette
-/*var color = d3.scaleOrdinal()
-.domain(keys)
-.range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf'])*/
-
+//initialises arrays with zero values
 var fillWithZeros = function(d) {
   for (var i = 0; i < d.length; i++) {
     d[i] = 0;
   }
 };
 
+//filters dataset to only include peuple with birth and death year
 function isValidData(dataItem){
   dataItem.geb = parseInt(dataItem.geb);
   dataItem.tod = parseInt(dataItem.tod);
@@ -151,7 +147,7 @@ function isValidData(dataItem){
 
 // Parse the Data and count numbers
 d3.csv(
-  "https://raw.githubusercontent.com/phuje/Data-test/master/datensatz.csv",
+  "https://raw.githubusercontent.com/phuje/Data-test/master/datensatz.csv", //get dataset from github raw file
   function(data) {
     console.log("data", data);
     
@@ -302,7 +298,6 @@ d3.csv(
         F: FcountYears[i]
       };
     }
-    //console.log("dataset ", dataset);
 
     for (var i = 0; i < numberYears; i++) {
       datasetTotalPeople[i] = {
@@ -350,10 +345,6 @@ d3.csv(
         femF: FfemaleCountYears[i]
       };
     }
-
-    console.log("femaleArray", femaleCountYears);
-    
-    //dataset = datasetPictures;
     
     updateStackedAreaDataset();
 
@@ -361,11 +352,8 @@ d3.csv(
 
     buildGrid();
 
-    
     stackAndDisplayLayers();
 
-
-    //showAll();
   }
 
 );
@@ -398,7 +386,7 @@ function buildXYAxes(){
 
   svg.append("g").attr("class", "yaxis").call(d3.axisLeft(y));
 
-    // Add the text label for the Y axis
+  // Add the text label for the Y axis
   svg.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin.left)
@@ -408,6 +396,7 @@ function buildXYAxes(){
     .text("Anzahl Personen");
 }
 
+//builds the grid lines according to the data 
 function buildGrid(){
       //horizontal grid
       svg.selectAll(".hlines").data(y.ticks(8)).enter()
@@ -802,7 +791,7 @@ function stackAndDisplayLayers(){
       return y(0);
     }); //higher y
 
-  //transition out
+  //transition out old layer
   d3.selectAll(".layer")
   .attr("class", "oldlayer")
   .transition()
@@ -814,7 +803,7 @@ function stackAndDisplayLayers(){
 
   console.log("stackedData: ", stackedData);
 
-  // Show the areas
+  // Show the areas and transition them in
   svg
     .selectAll("mylayers")
     .data(stackedData)
@@ -934,12 +923,15 @@ function updateStackedAreaDataset(){
     Array.prototype.push.apply(dataset, datasetTotalPeople);
     keys = keysTotalPeople;
   }
+
+  //only show stacked filter array when there are more than two layers
   if(keys.length <= 2){
     document.getElementById("stackedFilter").style.display = "none";
   } else{
     document.getElementById("stackedFilter").style.display = "block";
   }
 
+  // 
   if(splitparamsArray[2] == 1){
     y = d3
     .scaleLinear()
@@ -982,6 +974,8 @@ function updateStackedAreaDataset(){
 
 }
 
+
+
 //called by controller when filter has changed
 function updateStackedAreaChart(){
   updateStackedAreaDataset();
@@ -989,7 +983,7 @@ function updateStackedAreaChart(){
   svg.selectAll(".layer").on("click", showDetail);
 }
 
-//adapts the stackedFilter to how only the right filter layers
+//adapts the stackedFilter to show only the right filter layers
 function showStackFilter(group){
   var elements = document.getElementsByClassName("stackedSubFilter")
 
