@@ -147,7 +147,7 @@
       }
 
       label {
-        border: 1px solid #ccc;
+        /*border: 1px solid #ccc;*/
         padding: 10px;
         margin:0 0 5px;
         display:block; 
@@ -164,11 +164,15 @@
         width: 50%;
         margin-left: auto;
         margin-right: auto;
-        margin-bottom: 5;
+      
       }
 
       #headerTitle{
         text-transform: uppercase;
+      }
+
+      .zoomIcon{
+        width: 20px;
       }
 
     </style>
@@ -184,7 +188,11 @@
     <div id="bubbleChart">
       <h4>Über die gesamte Zeit kumuliert:</h4>
       <div id="datavis"></div>
-      <p class="zoom">Zoom <br /></p>
+      <p class="zoom">Zoom <br />
+        <img class="zoomIcon" src="./icons/minus.png"/>
+        <span class="zoomHolder"></span>
+        <img class="zoomIcon" src="./icons/plus.png"/>
+      </p>
     </div>
 
     <div id="stackedView">
@@ -247,6 +255,8 @@
         <button type ="button" class = "button" id="showWholeStackButton" onclick="showWholeStack()">Reset Filter</button>
       </div>
     </div>
+
+    Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
 
     <script type="text/javascript" src="variables.js"></script>
     <script src="https://d3js.org/d3.v4.js"></script>

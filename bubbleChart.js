@@ -74,7 +74,7 @@ var hideTooltip = function(d) {
 var minZoom = 1;
 var maxZoom = 10;
 var slider = d3
-  .select(".zoom")
+  .select(".zoomHolder")
   .append("input")
   .datum({})
   .attr("type", "range")
