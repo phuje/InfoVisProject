@@ -3,20 +3,7 @@ var splitparamsArray = [0, 0, 0]; //default
 
 var needToChangeYScaleStack;
 
-var colorArray = ["#3A01DF",
-  "#FF0040",
-  "#FACC2E",
-  "#6E6E6E",
-  "#66c2a5",
-  "#ff9090",
-  "#034f84",
-  "#8da0cb",
-  "#e78ac3",
-  "#80ced6",
-  "#a6d854",
-  "#ffd92f",
-  "#622569",
-  "#b3b3b3"];
+
 
 var getColor = function (key) {
   switch (key) {
@@ -83,7 +70,7 @@ var getColor = function (key) {
     case "maleF":
       return "#90B9C5";
       break;
-    default: colorArray[0];
+    default: "#2196F3";
       break;
   }
 };
