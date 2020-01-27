@@ -1,7 +1,7 @@
-var margin = { top: 10 , right: 10, bottom: 10, left: 10 },
+var margin = { top: 10, right: 10, bottom: 10, left: 10 },
   width = document.getElementById("bubbleChart").offsetWidth - margin.left - margin.right,
-  height = 600/*window.innerHeight*/ ,
-  sizeDivisor = 50,
+  height = 490//600/*window.innerHeight*/ ,
+sizeDivisor = 50,
   nodePadding = 2.5;
 
 var svgBubble = d3

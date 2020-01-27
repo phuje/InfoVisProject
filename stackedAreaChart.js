@@ -1,7 +1,7 @@
 // set the dimensions and margins of the graph
 var margin = { top: 10, right: 30, bottom: 50, left: 60 },
   width = document.getElementById("stackedView").offsetWidth - margin.left - margin.right,
-  height = 570 - margin.top - margin.bottom;
+  height = 450 - margin.top - margin.bottom;  //570 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 var svg = d3
@@ -33,26 +33,26 @@ var tooltipStack = d3
   .style("position", "absolute");
 
 // -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
-var showTooltipStack = function (d) {
+var showTooltipStack = function(d) {
   //tooltipStack.transition().duration(100);
   tooltipStack
     .style("opacity", 1)
     .html(getHoverText(d))
-    .style("left", d3.mouse(this)[0] + document.getElementById("bubbleChart").offsetWidth + "px")
-    .style("top", d3.mouse(this)[1] + margin.top + 100 + 80 + 50 + "px");
+    .style("left", d3.mouse(this)[0]+document.getElementById("bubbleChart").offsetWidth + "px")
+    .style("top", d3.mouse(this)[1] + margin.top +100+ 80+50 + "px");
 };
-var moveTooltipStack = function (d) {
+var moveTooltipStack = function(d) {
   tooltipStack
-    .style("left", d3.mouse(this)[0] + document.getElementById("bubbleChart").offsetWidth + margin.left + 50 + "px")
-    .style("top", d3.mouse(this)[1] + margin.top + 100 + 80 + 50 + "px");
+    .style("left", d3.mouse(this)[0]+document.getElementById("bubbleChart").offsetWidth  + margin.left + 50 + "px")
+    .style("top", d3.mouse(this)[1] + margin.top + 100+ 80+ 50 + "px");
 };
-var hideTooltipStack = function (d) {
+var hideTooltipStack = function(d) {
   tooltipStack//.transition().duration(100)
     .style("opacity", 0);
 };
 
 //gets the text that should be displayed when user hovers on layer depending on the key of the data
-var getHoverText = function (d) {
+var getHoverText = function(d) {
   var text = "";
   switch (d.key) {
     case "S":
@@ -131,36 +131,36 @@ var x, y;
 var maxY = 2500;
 
 //initialises arrays with zero values
-var fillWithZeros = function (d) {
+var fillWithZeros = function(d) {
   for (var i = 0; i < d.length; i++) {
     d[i] = 0;
   }
 };
 
 //filters dataset to only include peuple with birth and death year
-function isValidData(dataItem) {
+function isValidData(dataItem){
   dataItem.geb = parseInt(dataItem.geb);
   dataItem.tod = parseInt(dataItem.tod);
-  return !isNaN(dataItem.geb) && !isNaN(dataItem.tod);
+  return !isNaN (dataItem.geb) && !isNaN (dataItem.tod);
 }
 
 
 // Parse the Data and count numbers
 d3.csv(
   "https://raw.githubusercontent.com/phuje/Data-test/master/datensatz.csv", //get dataset from github raw file
-  function (data) {
+  function(data) {
     console.log("data", data);
-
+    
     var filteredData = data.filter(isValidData);
-    var latestYear = Math.max.apply(Math, filteredData.map(function (o) { return o.tod; }));
+    var latestYear = Math.max.apply(Math, filteredData.map(function(o) { return o.tod;}));
     console.log("latestYear ", latestYear);
-    startYear = Math.min.apply(Math, filteredData.map(function (o) { return o.geb; }));
-    console.log("startYear", startYear);
-    numberYears = latestYear - startYear + 1;
-    console.log("numberYears", numberYears);
+    startYear = Math.min.apply(Math, filteredData.map(function (o) { return o.geb;}));
+    console.log("startYear",startYear);
+    numberYears = latestYear -startYear +1;
+    console.log("numberYears",numberYears);
 
     initialiseArrays();
-
+    
     //iterate through all persons (rows) in csv file to count data for visualisations
     for (var i = 0; i < data.length; i++) {
       data[i].geb = parseInt(data[i].geb);
@@ -170,52 +170,52 @@ d3.csv(
       }
 
       //for no filter 0, 0, 0 
-      for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+      for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
         totalPeopleCountYears[j]++;
       }
 
       //for gender filter
-      if (data[i].sex != null) {
-        switch (data[i].sex) {
-          case "m":
-            for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+      if(data[i].sex != null){
+        switch (data[i].sex){
+          case "m": 
+          for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               maleCountYears[j]++;
             }
             //for pic and gender filter
-            if (data[i].abb == "NULL") {
-              for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+            if(data[i].abb == "NULL"){
+              for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
                 maleNoPicCountYears[j]++;
               }
-            } else {
-              for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+            }else{
+              for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
                 malePicCountYears[j]++;
               }
             }
-            break;
-          case "w":
-            for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+          break;
+          case "w": 
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               femaleCountYears[j]++;
             }
             //for pic and gender filter
-            if (data[i].abb == "NULL") {
-              for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+            if(data[i].abb == "NULL"){
+              for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
                 femaleNoPicCountYears[j]++;
               }
-            } else {
-              for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+            }else{
+              for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
                 femalePicCountYears[j]++;
               }
             }
-            break;
+          break;
           default: break;
         }
       }
-
+      
 
       //filter type of depiction
       switch (data[i].abb) {
         case "S":
-          for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+          for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
             ScountYears[j]++;
           }
           if (data[i].sex === "m") {
@@ -227,49 +227,49 @@ d3.csv(
               SmaleCountYears[j]++;
             }
           } else if (data[i].sex === "w") {
-            for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               SfemaleCountYears[j]++;
             }
           }
           break;
         case "P":
-          for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+          for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
             PcountYears[j]++;
           }
           if (data[i].sex === "m") {
-            for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               PmaleCountYears[j]++;
             }
           } else if (data[i].sex === "w") {
-            for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               PfemaleCountYears[j]++;
             }
           }
           break;
         case "M":
-          for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+          for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
             McountYears[j]++;
           }
           if (data[i].sex === "m") {
-            for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               MmaleCountYears[j]++;
             }
           } else if (data[i].sex === "w") {
-            for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               MfemaleCountYears[j]++;
             }
           }
           break;
         case "F":
-          for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+          for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
             FcountYears[j]++;
           }
           if (data[i].sex === "m") {
-            for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               FmaleCountYears[j]++;
             }
           } else if (data[i].sex === "w") {
-            for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+            for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
               FfemaleCountYears[j]++;
             }
           }
@@ -278,12 +278,12 @@ d3.csv(
           break;
       }
 
-      if (data[i].abb == "NULL") {
-        for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+      if(data[i].abb == "NULL"){
+        for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
           noPicCountYears[j]++;
         }
-      } else {
-        for (var j = data[i].geb - startYear; j <= data[i].tod - startYear; j++) {
+      }else{
+        for (var j = data[i].geb - startYear;j <= data[i].tod - startYear; j++) {
           picCountYears[j]++;
         }
       }
@@ -345,7 +345,7 @@ d3.csv(
         femF: FfemaleCountYears[i]
       };
     }
-
+    
     updateStackedAreaDataset();
 
     buildXYAxes();
@@ -358,11 +358,11 @@ d3.csv(
 
 );
 
-function buildXYAxes() {
+function buildXYAxes(){
   x = d3
     .scaleLinear()
     .domain(
-      d3.extent(dataset, function (d) {
+      d3.extent(dataset, function(d) {
         return d.year;
       })
     )
@@ -375,7 +375,7 @@ function buildXYAxes() {
 
   // Add the text label for the x axis
   svg.append("text")
-    .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.bottom * 0.75) + ")")
+    .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.bottom*0.75) + ")")
     .style("text-anchor", "middle")
     .text("Jahr");
 
@@ -390,35 +390,35 @@ function buildXYAxes() {
   svg.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin.left)
-    .attr("x", 0 - (height / 2))
+    .attr("x",0 - (height / 2))
     .attr("dy", "1em")
     .style("text-anchor", "middle")
     .text("Anzahl Personen");
 }
 
 //builds the grid lines according to the data 
-function buildGrid() {
-  //horizontal grid
-  svg.selectAll(".hlines").data(y.ticks(8)).enter()
-    .append("line")
-    .attr("class", "hlines")
-    .attr("x1", 0)
-    .attr("x2", width)
-    .attr("y1", function (d) { return y(d); })
-    .attr("y2", function (d) { return y(d); });
-
-  //vertical grid
-  svg.selectAll(".vlines").data(x.ticks(16)).enter()
-    .append("line")
-    .attr("class", "vlines")
-    .attr("x1", function (d) { return x(d); })
-    .attr("x2", function (d) { return x(d); })
-    .attr("y1", 0)
-    .attr("y2", height);
+function buildGrid(){
+      //horizontal grid
+      svg.selectAll(".hlines").data(y.ticks(8)).enter()
+      .append("line")
+          .attr("class", "hlines")
+          .attr("x1", 0)
+          .attr("x2", width)
+          .attr("y1", function(d){ return y(d);})
+          .attr("y2", function(d){ return y(d);});
+  
+      //vertical grid
+      svg.selectAll(".vlines").data(x.ticks(16)).enter()
+      .append("line")
+          .attr("class", "vlines")
+          .attr("x1", function(d){ return x(d);})
+          .attr("x2", function(d){ return x(d);})
+          .attr("y1", 0)
+          .attr("y2", height);
 }
 
 //all layers are shown
-var showAll = function (d) {
+var showAll = function(d) {
   console.log("showAll");
 
   updateStackedAreaDataset(); //to go back to original stack with all layers
@@ -428,7 +428,7 @@ var showAll = function (d) {
 };
 
 //when a layer is clicked, it shows only this layer
-var showDetail = function (d) {
+var showDetail = function(d) {
   hideTooltipStack(d);
 
   console.log("showDetail", d);
@@ -529,7 +529,7 @@ var showDetail = function (d) {
           maleM: 0,
           femaleM: 0,
           maleF: 0,
-          femaleF: 0
+          femaleF:0
         };
       }
       break;
@@ -544,7 +544,7 @@ var showDetail = function (d) {
           maleM: 0,
           femM: 0,
           maleF: 0,
-          femF: 0
+          femF:0
         };
       }
       break;
@@ -559,7 +559,7 @@ var showDetail = function (d) {
           maleM: 0,
           femM: 0,
           maleF: 0,
-          femF: 0
+          femF:0
         };
       }
       break;
@@ -574,7 +574,7 @@ var showDetail = function (d) {
           maleM: 0,
           femM: 0,
           maleF: 0,
-          femF: 0
+          femF:0
         };
       }
       break;
@@ -589,7 +589,7 @@ var showDetail = function (d) {
           maleM: 0,
           femM: MfemaleCountYears[i],
           maleF: 0,
-          femF: 0
+          femF:0
         };
       }
       break;
@@ -604,7 +604,7 @@ var showDetail = function (d) {
           maleM: MmaleCountYears[i],
           femM: 0,
           maleF: 0,
-          femF: 0
+          femF:0
         };
       }
       break;
@@ -631,10 +631,10 @@ var showDetail = function (d) {
           femS: 0,
           maleP: 0,
           femP: 0,
-          maleM: 0,
+          maleM:0,
           femM: 0,
-          maleF: FmaleCountYears[i],
-          femF: 0
+          maleF:  FmaleCountYears[i],
+          femF:0
         };
       }
       break;
@@ -691,14 +691,14 @@ var showDetail = function (d) {
 };
 
 //filter stack button logic, for choosing to stack specific types
-function filterStack() {
-
+function filterStack(){
+  
   if (arraysEqual([0, 0, 1], splitparamsArray) || arraysEqual([1, 0, 1], splitparamsArray)) {
     var stackS = document.getElementById("kupferstichStack").checked ? 1 : 0;
     var stackP = document.getElementById("portraitStack").checked ? 1 : 0;
     var stackM = document.getElementById("muenzeStack").checked ? 1 : 0;
     var stackF = document.getElementById("steinmetzStack").checked ? 1 : 0;
-
+  
     for (var i = 0; i < numberYears; i++) {
       dataset[i] = {
         year: startYear + i,
@@ -708,8 +708,8 @@ function filterStack() {
         F: stackF ? FcountYears[i] : 0
       };
     }
-  }
-  else if (arraysEqual([1, 1, 0], splitparamsArray)) { //hasPicGender
+  } 
+  else if(arraysEqual([1, 1, 0], splitparamsArray)){ //hasPicGender
     var femaleHasNoPic = document.getElementById("femaleHasNoPic").checked ? 1 : 0;
     var maleHasNoPic = document.getElementById("maleHasNoPic").checked ? 1 : 0;
     var femaleHasPic = document.getElementById("femaleHasPic").checked ? 1 : 0;
@@ -755,7 +755,7 @@ function filterStack() {
 }
 
 //this function is called when the stack filter reset button is pressed. it resets the stacked area chart to show all layers
-function showWholeStack() {
+function showWholeStack(){
   showAll();
   d3.selectAll(".stackFilterCheckbox").property('checked', true);
 }
@@ -764,40 +764,40 @@ function showWholeStack() {
 d3.selectAll(".stackFilterCheckbox").property('checked', true);
 
 //this function stacks the data as defined in dataset and displays the corresponding layers in the chart
-function stackAndDisplayLayers() {
+function stackAndDisplayLayers(){
 
   var area = d3
     .area()
-    .x(function (d, i) {
+    .x(function(d, i) {
       return x(d.data.year);
     })
-    .y0(function (d) {
+    .y0(function(d) {
       return y(d[0]);
     }) //lower y
-    .y1(function (d) {
+    .y1(function(d) {
       return y(d[1]);
     }); //higher y
 
   //for transition startpoint
   var areaBase = d3
     .area()
-    .x(function (d, i) {
+    .x(function(d, i) {
       return x(d.data.year);
     })
-    .y0(function (d) {
+    .y0(function(d) {
       return y(0);
     }) //lower y
-    .y1(function (d) {
+    .y1(function(d) {
       return y(0);
     }); //higher y
 
   //transition out old layer
   d3.selectAll(".layer")
-    .attr("class", "oldlayer")
-    .transition()
-    .duration(1000)
-    .attr("d", areaBase)
-    .on("end", function (d) { d3.selectAll(".oldlayer").remove(); });
+  .attr("class", "oldlayer")
+  .transition()
+      .duration(1000)
+      .attr("d", areaBase)
+      .on("end", function(d){d3.selectAll(".oldlayer").remove();});
 
   var stackedData = d3.stack().keys(keys)(dataset);
 
@@ -809,28 +809,28 @@ function stackAndDisplayLayers() {
     .data(stackedData)
     .enter()
     .append("path")
-    .style("fill", function (d) {
-      return getColor(d.key);
-    })
-    .attr("class", "layer")
-    .attr("d", areaBase) //for transition in
-    .on("mouseover", showTooltipStack)
-    .on("mousemove", moveTooltipStack)
-    .on("mouseleave", hideTooltipStack)
-    .transition()
-    .duration(1000)
-    .attr("d", area)
+      .style("fill", function(d) {
+        return getColor(d.key);
+      })
+      .attr("class", "layer")
+      .attr("d", areaBase) //for transition in
+      .on("mouseover", showTooltipStack)
+      .on("mousemove", moveTooltipStack)
+      .on("mouseleave", hideTooltipStack)
+      .transition()
+      .duration(1000)
+      .attr("d", area)
 
 }
 
 
 //initialize arrays
-function initialiseArrays() {
+function initialiseArrays(){
 
   dataset = new Array(numberYears);
   datasetOld = new Array(numberYears);
   datasetTotalPeople = new Array(numberYears);
-  datasetPictures = new Array(numberYears);
+  datasetPictures= new Array(numberYears);
   datasetGender = new Array(numberYears);
   datasetHasPic = new Array(numberYears);
   datasetPicGender = new Array(numberYears);
@@ -858,12 +858,12 @@ function initialiseArrays() {
   picCountYears = new Array(numberYears);
   fillWithZeros(picCountYears);
 
-  SmaleCountYears = new Array(numberYears);
-  SfemaleCountYears = new Array(numberYears);
-  PmaleCountYears = new Array(numberYears);
+  SmaleCountYears= new Array(numberYears);
+  SfemaleCountYears= new Array(numberYears);
+  PmaleCountYears= new Array(numberYears);
   PfemaleCountYears = new Array(numberYears);
   MmaleCountYears = new Array(numberYears);
-  MfemaleCountYears = new Array(numberYears);
+  MfemaleCountYears= new Array(numberYears); 
   FmaleCountYears = new Array(numberYears);
   FfemaleCountYears = new Array(numberYears);
   fillWithZeros(SmaleCountYears);
@@ -876,9 +876,9 @@ function initialiseArrays() {
   fillWithZeros(FfemaleCountYears);
 
   malePicCountYears = new Array(numberYears);
-  maleNoPicCountYears = new Array(numberYears);
-  femalePicCountYears = new Array(numberYears);
-  femaleNoPicCountYears = new Array(numberYears);
+  maleNoPicCountYears= new Array(numberYears);
+  femalePicCountYears= new Array(numberYears);
+  femaleNoPicCountYears= new Array(numberYears);
   fillWithZeros(malePicCountYears);
   fillWithZeros(maleNoPicCountYears);
   fillWithZeros(femalePicCountYears);
@@ -887,7 +887,7 @@ function initialiseArrays() {
 
 //udpates stacked area visualisation depending on filters selected
 //selected filters are given in splitparamsArray
-function updateStackedAreaDataset() {
+function updateStackedAreaDataset(){
 
   dataset = [];
   if (arraysEqual([1, 0, 0], splitparamsArray)) {
@@ -911,7 +911,7 @@ function updateStackedAreaDataset() {
     keys = keysPictures;
 
     showStackFilter("filterPictures");
-
+    
   } else if (arraysEqual([0, 1, 1], splitparamsArray) || arraysEqual([1, 1, 1], splitparamsArray)) {
 
     Array.prototype.push.apply(dataset, datasetPicGender);
@@ -925,51 +925,51 @@ function updateStackedAreaDataset() {
   }
 
   //only show stacked filter array when there are more than two layers
-  if (keys.length <= 2) {
+  if(keys.length <= 2){
     document.getElementById("stackedFilter").style.display = "none";
-  } else {
+  } else{
     document.getElementById("stackedFilter").style.display = "block";
   }
 
   // 
-  if (splitparamsArray[2] == 1) {
+  if(splitparamsArray[2] == 1){
     y = d3
-      .scaleLinear()
-      .domain([0, 1000])
-      .range([height, 0]);
+    .scaleLinear()
+    .domain([0, 1000])
+    .range([height, 0]);
 
     d3.selectAll(".yaxis").transition().duration(500).call(d3.axisLeft(y));
 
-    if (needToChangeYScaleStack) {
+    if(needToChangeYScaleStack){
       svg.selectAll(".hlines").remove();
       svg.selectAll(".hlines").data(y.ticks(10)).enter()
         .append("line")
-        .attr("class", "hlines")
-        .attr("x1", 0)
-        .attr("x2", width)
-        .transition().duration(500)
-        .attr("y1", function (d) { return y(d); })
-        .attr("y2", function (d) { return y(d); });
+            .attr("class", "hlines")
+            .attr("x1", 0)
+            .attr("x2", width)
+            .transition().duration(500)
+            .attr("y1", function(d){ return y(d);})
+            .attr("y2", function(d){ return y(d);});
     }
-  } else {
+  } else{
     y = d3
-      .scaleLinear()
-      .domain([0, maxY])
-      .range([height, 0]);
+    .scaleLinear()
+    .domain([0, maxY])
+    .range([height, 0]);
     d3.selectAll(".yaxis").transition().duration(500).call(d3.axisLeft(y));
 
-    if (needToChangeYScaleStack) {
+    if(needToChangeYScaleStack){
       svg.selectAll(".hlines").remove();
       svg.selectAll(".hlines").data(y.ticks(10)).enter()
         .append("line")
-        .attr("class", "hlines")
-        .attr("x1", 0)
-        .attr("x2", width)
-        .transition().duration(500)
-        .attr("y1", function (d) { return y(d); })
-        .attr("y2", function (d) { return y(d); });
+            .attr("class", "hlines")
+            .attr("x1", 0)
+            .attr("x2", width)
+            .transition().duration(500)
+            .attr("y1", function(d){ return y(d);})
+            .attr("y2", function(d){ return y(d);});
     }
-
+  
   }
 
 }
@@ -977,19 +977,19 @@ function updateStackedAreaDataset() {
 
 
 //called by controller when filter has changed
-function updateStackedAreaChart() {
+function updateStackedAreaChart(){
   updateStackedAreaDataset();
   stackAndDisplayLayers();
   svg.selectAll(".layer").on("click", showDetail);
 }
 
 //adapts the stackedFilter to show only the right filter layers
-function showStackFilter(group) {
+function showStackFilter(group){
   var elements = document.getElementsByClassName("stackedSubFilter")
 
-  for (var i = 0; i < elements.length; i++) {
-    elements[i].style.display = "none";
-  }
+    for (var i = 0; i < elements.length; i++){
+        elements[i].style.display = "none";
+    }
   document.getElementById(group).style.display = "initial";
 }
 
