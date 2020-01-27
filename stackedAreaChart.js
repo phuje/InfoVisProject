@@ -371,7 +371,10 @@ function buildXYAxes(){
   svg
     .append("g")
     .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x).ticks(16));
+    .call(
+      d3.axisBottom(x)
+        .ticks(16)
+        .tickFormat(d3.format("d"))); //to remove comma delimiter for year numbers
 
   // Add the text label for the x axis
   svg.append("text")
