@@ -20,7 +20,7 @@ var getColor = function (key) {
       return "#69B0C5";
       break;
     case "N": //totalNumberPeople
-      return "#2196F3";
+      return "#03A9F4";
       break;
     case "male":
       return "#303F9F";
